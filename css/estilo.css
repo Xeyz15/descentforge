@@ -1,0 +1,297 @@
+/* DescentForge — hoja de estilo del sitio.
+
+   La paleta sale del logo y de `DescentForge/colores.png`, medida sobre el
+   propio archivo: azul marino muy oscuro (#0d1125) y crema dorada (#f2e3ba).
+   No se usa ninguna tipografía ni ningún color de Fantasy Flight Games. */
+
+:root {
+  --tinta:      #0d1125;   /* el fondo del logo, medido */
+  --tinta-alta: #141a35;   /* tarjetas y bloques */
+  --tinta-baja: #080b18;   /* pie y zonas hundidas */
+  --oro:        #f2e3ba;   /* el crema del logo, medido */
+  --oro-vivo:   #e8cf8a;   /* acentos y enlaces */
+  --oro-tenue:  rgba(242, 227, 186, .62);
+  --linea:      rgba(242, 227, 186, .16);
+  --brasa:      #c8622a;   /* el fuego del yunque: solo para lo que urge */
+  --ancho: 1080px;
+  --serif: Georgia, 'Times New Roman', serif;
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  /* Los dos valores a pelo van ANTES a propósito: si por lo que sea las
+     variables no llegan a aplicarse, la página se ve con sus colores en vez de
+     con el blanco y negro por defecto del navegador, que parece que no hay
+     estilo ninguno. Un navegador que entienda `var()` se queda con la segunda
+     línea; uno que no, con la primera. */
+  background: #0d1125;
+  background: var(--tinta);
+  color: #f2e3ba;
+  color: var(--oro);
+  font: 16px/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+a { color: var(--oro-vivo); }
+
+.envoltura { max-width: var(--ancho); margin: 0 auto; padding: 0 24px; }
+
+/* ── barra de navegación ─────────────────────────────────────────────── */
+.barra {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(13, 17, 37, .92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--linea);
+}
+.barra .envoltura { display: flex; align-items: center; gap: 12px; height: 62px; }
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--oro); }
+.marca img { width: 34px; height: 34px; border-radius: 7px; }
+.marca b { font-family: var(--serif); font-size: 18px; letter-spacing: .04em; }
+
+.nav { display: flex; gap: 1px; margin-left: auto; flex-wrap: wrap; }
+.nav a {
+  color: var(--oro-tenue); text-decoration: none; font-size: 15px;
+  padding: 7px 8px; border-radius: 6px; white-space: nowrap;
+}
+.nav a:hover { color: var(--oro); background: rgba(242, 227, 186, .07); }
+/* la página en la que estás, marcada también para quien navega con lector */
+.nav a[aria-current="page"] { color: var(--oro); background: rgba(242, 227, 186, .1); }
+
+/* «Editor Online» es lo único de la barra que parece un botón, y a propósito:
+   es lo único que lleva a otra página a hacer algo, no a leer. */
+.nav a.nav-boton {
+  background: var(--oro); color: var(--tinta); font-weight: 700;
+  padding: 7px 12px; margin-left: 5px;
+}
+.nav a.nav-boton:hover,
+.nav a.nav-boton[aria-current="page"] { background: #fff3d2; color: var(--tinta); }
+
+.idiomas { display: flex; border: 1px solid var(--linea); border-radius: 6px; overflow: hidden; }
+.idiomas button {
+  background: none; border: 0; color: var(--oro-tenue);
+  font: 600 12px var(--sans); padding: 6px 10px; cursor: pointer;
+}
+.idiomas button[aria-pressed="true"] { background: var(--oro); color: var(--tinta); }
+
+.abrir-menu { display: none; background: none; border: 1px solid var(--linea);
+  color: var(--oro); border-radius: 6px; padding: 6px 10px; cursor: pointer; margin-left: auto; }
+
+/* ── portada ─────────────────────────────────────────────────────────── */
+.portada { position: relative; overflow: hidden; padding: 76px 0 64px; text-align: center; }
+/* el resplandor de la fragua, hecho con degradados: ninguna imagen de fondo */
+.portada::before {
+  content: ''; position: absolute; inset: -40% -10% auto; height: 620px;
+  background: radial-gradient(ellipse at 50% 30%, rgba(200, 98, 42, .22), transparent 62%),
+              radial-gradient(ellipse at 50% 45%, rgba(242, 227, 186, .09), transparent 58%);
+  pointer-events: none;
+}
+.portada > * { position: relative; }
+.portada img.logo { width: 172px; height: 172px; margin: 0 auto 22px; border-radius: 22px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .55); }
+.portada h1 { font-family: var(--serif); font-size: clamp(38px, 7vw, 62px); margin: 0 0 6px;
+  letter-spacing: .02em; }
+.portada .lema { font-size: clamp(17px, 2.4vw, 21px); color: var(--oro-tenue);
+  max-width: 640px; margin: 0 auto 8px; }
+.portada .subrayado { font-size: 15px; color: var(--oro-tenue); max-width: 620px;
+  margin: 14px auto 30px; }
+
+/* La portada en dos columnas: el texto a la izquierda, las capturas a la
+   derecha, apiladas. La columna de la derecha mide justo lo que mide una
+   captura (`.tiro`), así que las dos salen del mismo número. */
+.portada-rejilla { display: grid; grid-template-columns: minmax(0, 1fr) 363px;
+  gap: 52px; align-items: center; text-align: left; }
+/* El logo NO se alinea a la izquierda con el texto: se queda centrado sobre su
+   columna, arriba del todo. Lo hace ya `.portada img.logo` con su `auto`, así
+   que aquí no hay nada que decir. */
+.portada-rejilla .lema,
+.portada-rejilla .subrayado { margin-left: 0; }
+.portada-rejilla .botones { justify-content: flex-start; }
+.portada-rejilla .tiros { flex-direction: column; align-items: center;
+  gap: 26px; margin: 0; }
+.portada-rejilla .tiro { width: 100%; }
+
+.botones { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.boton {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 13px 24px; border-radius: 8px; text-decoration: none;
+  font-weight: 600; font-size: 15px; border: 1px solid transparent;
+}
+.boton.principal { background: var(--oro); color: var(--tinta); }
+.boton.principal:hover { background: #fff3d2; }
+.boton.secundario { border-color: var(--linea); color: var(--oro); }
+.boton.secundario:hover { background: rgba(242, 227, 186, .08); }
+
+/* la tira de arte propio bajo la portada */
+.tira { display: flex; justify-content: center; gap: 4px; margin-top: 46px; flex-wrap: wrap; }
+.tira .casilla {
+  width: 62px; height: 62px; border-radius: 4px; position: relative;
+  background-size: cover; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .35);
+}
+.tira .casilla img { position: absolute; inset: 8%; width: 84%; height: 84%; object-fit: contain; }
+
+/* ── cabecera de las páginas de dentro ───────────────────────────────── */
+/* La portada entera (logo grande, tira de arte) la lleva solo la principal;
+   editor.html y escenarios.html abren con esto, que es la misma cosa a media
+   altura para que se note que estás dentro y no en otro sitio. */
+.cabecera { position: relative; overflow: hidden; padding: 54px 0 44px; text-align: center; }
+.cabecera::before {
+  content: ''; position: absolute; inset: -60% -10% auto; height: 460px;
+  background: radial-gradient(ellipse at 50% 40%, rgba(200, 98, 42, .18), transparent 62%),
+              radial-gradient(ellipse at 50% 50%, rgba(242, 227, 186, .07), transparent 58%);
+  pointer-events: none;
+}
+.cabecera > * { position: relative; }
+.cabecera h1 { font-family: var(--serif); font-size: clamp(30px, 5.5vw, 46px); margin: 0 0 10px;
+  letter-spacing: .02em; }
+.cabecera p { color: var(--oro-tenue); font-size: 17px; max-width: 660px; margin: 0 auto; }
+.cabecera .botones { margin-top: 26px; }
+
+/* ── secciones ───────────────────────────────────────────────────────── */
+section { padding: 62px 0; border-top: 1px solid var(--linea); }
+section.hundida { background: var(--tinta-baja); }
+h2 { font-family: var(--serif); font-size: clamp(26px, 4vw, 34px); margin: 0 0 10px; }
+h3 { font-family: var(--serif); font-size: 20px; margin: 0 0 8px; }
+.entradilla { color: var(--oro-tenue); max-width: 720px; margin: 0 0 34px; font-size: 17px; }
+p { margin: 0 0 14px; }
+.apagado { color: var(--oro-tenue); }
+
+.rejilla { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(268px, 1fr)); }
+.tarjeta {
+  background: var(--tinta-alta); border: 1px solid var(--linea);
+  border-radius: 10px; padding: 22px;
+}
+.tarjeta h3 { display: flex; align-items: center; gap: 9px; }
+.tarjeta .icono { font-size: 21px; line-height: 1; }
+.tarjeta p:last-child { margin-bottom: 0; }
+
+/* las dos piezas: editor y mod */
+.piezas { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; align-items: stretch; }
+.pieza { background: var(--tinta-alta); border: 1px solid var(--linea);
+  border-radius: 12px; padding: 26px; }
+.pieza .etiqueta { display: inline-block; font-size: 12px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--tinta); background: var(--oro);
+  padding: 3px 9px; border-radius: 4px; margin-bottom: 12px; font-weight: 700; }
+.pieza ul { margin: 0; padding-left: 19px; }
+.pieza li { margin-bottom: 7px; }
+
+/* Un bloque dentro de una sección que junta dos cosas (el editor y el mod
+   van en la misma sección, pero cada uno con su propio encabezado). */
+.bloque + .bloque { margin-top: 46px; padding-top: 38px; border-top: 1px solid var(--linea); }
+.bloque > h3 { font-size: 24px; border-left: 3px solid var(--oro-vivo);
+  padding-left: 13px; margin-bottom: 12px; }
+
+/* banda: un titular y un botón, para mandar a otra página sin gastar
+   media pantalla en algo que todavía no existe */
+.banda { display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  flex-wrap: wrap; background: var(--tinta-alta); border: 1px solid var(--linea);
+  border-radius: 12px; padding: 26px; }
+.banda > div { flex: 1 1 380px; }
+
+/* Capturas del editor: rectas y con sombra, para que se lea que son pantallas
+   de verdad sin robarle sitio al texto. El pie va debajo de cada una. */
+.tiros { display: flex; justify-content: center; gap: 34px; flex-wrap: wrap;
+  margin: 46px 0 0; }
+.tiro { width: min(363px, 100%); margin: 0; }
+.tiro img {
+  width: 100%; height: auto; border-radius: 8px;
+  border: 1px solid var(--linea); box-shadow: 0 18px 40px rgba(0, 0, 0, .5);
+}
+.tiro figcaption { text-align: center; font-size: 13px; color: var(--oro-tenue);
+  margin-top: 14px; }
+
+/* cifras */
+.cifras { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(122px, 1fr));
+  margin-top: 30px; }
+.cifra { text-align: center; padding: 16px 8px; background: var(--tinta-alta);
+  border: 1px solid var(--linea); border-radius: 9px; }
+.cifra b { display: block; font-family: var(--serif); font-size: 29px; color: var(--oro); }
+.cifra span { font-size: 12.5px; color: var(--oro-tenue); }
+
+/* pasos */
+.pasos { counter-reset: paso; display: grid; gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.paso { position: relative; padding: 24px 22px 22px 22px; background: var(--tinta-alta);
+  border: 1px solid var(--linea); border-radius: 10px; }
+.paso::before {
+  counter-increment: paso; content: counter(paso);
+  position: absolute; top: -15px; left: 22px;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--oro); color: var(--tinta);
+  display: grid; place-items: center; font-weight: 700; font-family: var(--serif);
+}
+.paso h3 { margin-top: 8px; }
+
+/* hueco para las capturas que faltan */
+.captura {
+  border: 1px dashed var(--linea); border-radius: 10px;
+  aspect-ratio: 16 / 9; display: grid; place-items: center; text-align: center;
+  color: var(--oro-tenue); font-size: 14px; padding: 20px;
+  background: repeating-linear-gradient(45deg, rgba(242,227,186,.02) 0 12px, transparent 12px 24px);
+}
+
+/* Caja de «esto todavía no está»: la galería vacía y el hueco donde irá el
+   formulario de subida. Lo mismo que `.captura`, pero sin proporción fija. */
+.hueco { border: 1px dashed var(--linea); border-radius: 10px; padding: 36px 24px;
+  text-align: center; color: var(--oro-tenue);
+  background: repeating-linear-gradient(45deg, rgba(242,227,186,.02) 0 12px, transparent 12px 24px); }
+.hueco b { display: block; color: var(--oro); font-family: var(--serif);
+  font-size: 19px; margin-bottom: 8px; }
+.hueco p:last-child { margin-bottom: 0; }
+
+/* preguntas */
+details { border-bottom: 1px solid var(--linea); padding: 16px 0; }
+details summary { cursor: pointer; font-weight: 600; list-style: none; }
+details summary::-webkit-details-marker { display: none; }
+details summary::before { content: '▸ '; color: var(--oro-vivo); }
+details[open] summary::before { content: '▾ '; }
+details p { margin: 12px 0 0; color: var(--oro-tenue); }
+
+/* avisos */
+.aviso { border-left: 3px solid var(--brasa); background: rgba(200, 98, 42, .08);
+  padding: 15px 18px; border-radius: 0 8px 8px 0; margin: 22px 0; }
+.pronto { display: inline-block; font-size: 11.5px; letter-spacing: .08em;
+  text-transform: uppercase; border: 1px solid var(--linea); color: var(--oro-tenue);
+  padding: 2px 8px; border-radius: 20px; margin-left: 8px; vertical-align: middle; }
+
+/* pie */
+footer { background: var(--tinta-baja); border-top: 1px solid var(--linea);
+  padding: 40px 0 34px; font-size: 14px; color: var(--oro-tenue); }
+footer .legal { border: 1px solid var(--linea); border-radius: 9px; padding: 18px;
+  margin-bottom: 22px; }
+footer a { color: var(--oro-vivo); }
+.pie-filas { display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+/* la invitación a ayudar: se lee antes que la línea de créditos, pero sin
+   robarle el sitio al aviso legal */
+.ayuda { border-left: 3px solid var(--oro-vivo); padding-left: 14px; margin: 0 0 20px; }
+.ayuda a { font-weight: 600; }
+
+/* ── responsive ──────────────────────────────────────────────────────── */
+/* La portada vuelve a una sola columna centrada antes que el resto: dos
+   columnas con 363 px fijos a la derecha se quedan sin sitio para el texto
+   mucho antes de que estorbe el menú. */
+@media (max-width: 900px) {
+  .portada-rejilla { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+  .portada-rejilla .lema,
+  .portada-rejilla .subrayado { margin-left: auto; }
+  .portada-rejilla .botones { justify-content: center; }
+  .portada-rejilla .tiros { flex-direction: row; flex-wrap: wrap; }
+}
+
+@media (max-width: 860px) {
+  .piezas { grid-template-columns: 1fr; }
+  .nav { display: none; width: 100%; order: 3; flex-direction: column; padding-bottom: 12px; }
+  .nav.abierto { display: flex; }
+  .nav a.nav-boton { margin-left: 0; text-align: center; }
+  .barra .envoltura { flex-wrap: wrap; height: auto; padding-top: 10px; padding-bottom: 10px; }
+  .abrir-menu { display: block; }
+  .idiomas { order: 2; }
+}
+
+/* Quien prefiera menos movimiento, que no lo tenga. */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

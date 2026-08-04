@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escenarios de la comunidad — DescentForge</title>
+<meta name="description" content="Misiones y campañas hechas por jugadores para Descent: Leyendas de las Tinieblas. Súbelas, búscalas y descárgalas de un clic.">
+<link rel="icon" href="img/favicon.webp" type="image/webp">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<!-- ══ barra ══════════════════════════════════════════════════════════ -->
+<header class="barra">
+  <div class="envoltura">
+    <a class="marca" href="index.html"><img src="img/logo-192.webp" alt=""><b>DescentForge</b></a>
+    <button class="abrir-menu" id="abrirMenu" aria-expanded="false" aria-label="Menú">☰</button>
+    <nav class="nav" id="nav">
+      <a href="index.html#que-es"       data-es="Qué es"       data-en="What is it">Qué es</a>
+      <a href="index.html#editor-y-mod" data-es="Editor y mod" data-en="Editor and mod">Editor y mod</a>
+      <a href="index.html#como"         data-es="Funcionamiento" data-en="How it works">Funcionamiento</a>
+      <a href="index.html#descargas"    data-es="Descargas"    data-en="Downloads">Descargas</a>
+      <a href="index.html#preguntas"    data-es="Preguntas"    data-en="FAQ">Preguntas</a>
+      <a href="escenarios.html" aria-current="page" data-es="Escenarios" data-en="Scenarios">Escenarios</a>
+      <a class="nav-boton" href="editor.html"
+         data-es="Editor Online" data-en="Online Editor">Editor Online</a>
+    </nav>
+    <div class="idiomas" role="group" aria-label="Idioma">
+      <button data-lang="es" aria-pressed="true">ES</button>
+      <button data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ cabecera ═══════════════════════════════════════════════════════ -->
+<div class="cabecera">
+  <div class="envoltura">
+    <h1>
+      <span data-es="Escenarios de la comunidad" data-en="Community scenarios">Escenarios de la comunidad</span>
+      <span class="pronto" data-es="Próximamente" data-en="Coming soon">Próximamente</span>
+    </h1>
+    <p data-es="Las misiones que hace la gente, en un solo sitio: subirlas, buscarlas, votarlas y descargarlas de un clic. Dieciséis misiones vienen en la caja; las demás las escribís vosotros."
+       data-en="The quests people make, all in one place: upload them, browse them, vote and download in one click. Sixteen quests come in the box; the rest are written by you.">
+      Las misiones que hace la gente, en un solo sitio: subirlas, buscarlas, votarlas y descargarlas
+      de un clic. Dieciséis misiones vienen en la caja; las demás las escribís vosotros.
+    </p>
+    <div class="botones">
+      <a class="boton principal" href="#" data-aviso
+         data-aviso-es="La galería todavía no está montada: hace falta un servidor que compruebe cada escenario antes de publicarlo. Mientras tanto, los archivos se pasan a mano."
+         data-aviso-en="The gallery is not built yet: it needs a server that checks every scenario before publishing it. Meanwhile, files are passed around by hand."
+         data-es="⬆ Subir un escenario" data-en="⬆ Upload a scenario">⬆ Subir un escenario</a>
+      <a class="boton secundario" href="editor.html"
+         data-es="Crear uno primero" data-en="Build one first">Crear uno primero</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ la galería ═════════════════════════════════════════════════════ -->
+<section id="galeria" class="hundida">
+  <div class="envoltura">
+    <h2 data-es="La galería" data-en="The gallery">La galería</h2>
+    <p class="entradilla"
+       data-es="Todavía no hay nada que enseñar aquí, y decirlo es más honrado que llenarla de ejemplos falsos. Cuando abra, cada escenario tendrá su ficha."
+       data-en="There is nothing to show here yet, and saying so is more honest than filling it with fake examples. When it opens, every scenario will have its own card.">
+      Todavía no hay nada que enseñar aquí, y decirlo es más honrado que llenarla de ejemplos falsos.
+      Cuando abra, cada escenario tendrá su ficha.
+    </p>
+
+    <div class="hueco">
+      <p>
+        <b data-es="Aún no hay escenarios publicados" data-en="No scenarios published yet">Aún no hay escenarios publicados</b>
+      </p>
+      <p style="margin:0"
+         data-es="Sé el primero: monta una misión con el editor y guárdala. El día que esto abra, se sube tal cual — el formato del archivo no va a cambiar."
+         data-en="Be the first: build a quest with the editor and keep it. The day this opens, you upload it as it is — the file format is not going to change.">
+        Sé el primero: monta una misión con el editor y guárdala. El día que esto abra, se sube tal
+        cual — el formato del archivo no va a cambiar.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ cómo será ══════════════════════════════════════════════════════ -->
+<section id="como-sera">
+  <div class="envoltura">
+    <h2 data-es="Cómo va a funcionar" data-en="How it will work">Cómo va a funcionar</h2>
+    <p class="entradilla"
+       data-es="Sin cuentas de pago, sin anuncios y sin nada que instalar: subes el archivo que te dio el editor y ya está publicado."
+       data-en="No paid accounts, no ads and nothing to install: you upload the file the editor gave you and it is published.">
+      Sin cuentas de pago, sin anuncios y sin nada que instalar: subes el archivo que te dio el
+      editor y ya está publicado.
+    </p>
+    <div class="pasos">
+      <div class="paso">
+        <h3 data-es="Subes el archivo" data-en="You upload the file">Subes el archivo</h3>
+        <p data-es="El .dmap o el .dcamp que exportaste. De ahí se sacan solos el título, cuántos héroes admite y qué caja hace falta: no hay un formulario largo que rellenar."
+           data-en="The &lt;code&gt;.dmap&lt;/code&gt; or &lt;code&gt;.dcamp&lt;/code&gt; you exported. The title, how many heroes it takes and which box it needs come straight out of it: there is no long form to fill in.">
+          El <code>.dmap</code> o el <code>.dcamp</code> que exportaste. De ahí se sacan solos el
+          título, cuántos héroes admite y qué caja hace falta: no hay un formulario largo que rellenar.
+        </p>
+      </div>
+      <div class="paso">
+        <h3 data-es="Se comprueba" data-en="It gets checked">Se comprueba</h3>
+        <p data-es="Antes de publicarse, el escenario pasa las mismas comprobaciones que hace el editor. Uno roto no llega a la galería y a quien lo sube se le dice qué falla."
+           data-en="Before being published, the scenario runs the same checks the editor does. A broken one never reaches the gallery, and whoever uploaded it is told what is wrong.">
+          Antes de publicarse, el escenario pasa las mismas comprobaciones que hace el editor. Uno
+          roto no llega a la galería y a quien lo sube se le dice qué falla.
+        </p>
+      </div>
+      <div class="paso">
+        <h3 data-es="Se juega" data-en="It gets played">Se juega</h3>
+        <p data-es="Cualquiera lo descarga de un clic, lo mete en el juego y lo juega con el mod. Y si le ha gustado, lo vota."
+           data-en="Anyone downloads it in one click, drops it in the game and plays it with the mod. And votes for it if they liked it.">
+          Cualquiera lo descarga de un clic, lo mete en el juego y lo juega con el mod. Y si le ha
+          gustado, lo vota.
+        </p>
+      </div>
+    </div>
+
+    <div class="rejilla" style="margin-top:34px">
+      <div class="tarjeta">
+        <h3><span class="icono">📋</span><span data-es="Qué se verá de cada uno" data-en="What each one will show">Qué se verá de cada uno</span></h3>
+        <p data-es="Título, descripción, cuántos héroes admite, cuánto dura y qué caja hace falta. Y el archivo, claro."
+           data-en="Title, description, how many heroes it takes, how long it runs and which box it needs. And the file, of course.">
+          Título, descripción, cuántos héroes admite, cuánto dura y qué caja hace falta.
+          Y el archivo, claro.
+        </p>
+      </div>
+      <div class="tarjeta">
+        <h3><span class="icono">🤝</span><span data-es="Confiamos en la comunidad" data-en="We trust the community">Confiamos en la comunidad</span></h3>
+        <p data-es="Cada cual responde de lo que sube: de haber jugado su escenario y de que lo que escriba sea suyo. Aquí no hay ningún tribunal revisando misiones — hay jugadores que las prueban y avisan."
+           data-en="Everyone answers for what they upload: for having played their own scenario and for writing their own words. There is no committee vetting quests here — there are players who try them and speak up.">
+          Cada cual responde de lo que sube: de haber jugado su escenario y de que lo que escriba sea
+          suyo. Aquí no hay ningún tribunal revisando misiones — hay jugadores que las prueban y avisan.
+        </p>
+      </div>
+      <div class="tarjeta">
+        <h3><span class="icono">📖</span><span data-es="Mientras tanto" data-en="Meanwhile">Mientras tanto</span></h3>
+        <p data-es="El editor ya trae una campaña de ejemplo entera, «El Invierno de los Cuervos», con seis escenarios. Sirve para ver cómo se monta algo largo."
+           data-en="The editor already ships a full example campaign, “The Winter of Crows”, with six scenarios. Good for seeing how a long thing is put together.">
+          El editor ya trae una campaña de ejemplo entera, «El Invierno de los Cuervos», con seis
+          escenarios. Sirve para ver cómo se monta algo largo.
+        </p>
+      </div>
+    </div>
+
+    <div class="aviso">
+      <p style="margin:0"
+         data-es="&lt;b&gt;Lo que subas sigue siendo tuyo.&lt;/b&gt; Un escenario es un archivo de texto con tus ideas: aquí solo se aloja y se enseña. Nada de lo que se publique puede llevar dentro material de Fantasy Flight Games."
+         data-en="&lt;b&gt;What you upload stays yours.&lt;/b&gt; A scenario is a text file with your ideas: this place only hosts it and shows it. Nothing published here may carry Fantasy Flight Games material inside.">
+        <b>Lo que subas sigue siendo tuyo.</b> Un escenario es un archivo de texto con tus ideas:
+        aquí solo se aloja y se enseña. Nada de lo que se publique puede llevar dentro material de
+        Fantasy Flight Games.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ pie ════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="envoltura">
+    <div class="legal">
+      <p data-es="&lt;b&gt;DescentForge es un proyecto de aficionados&lt;/b&gt;, sin ánimo de lucro y &lt;b&gt;sin ninguna afiliación&lt;/b&gt; con Fantasy Flight Games ni con Asmodee. Descent: Leyendas de las Tinieblas, sus nombres, sus imágenes y sus reglas pertenecen a sus dueños."
+         data-en="&lt;b&gt;DescentForge is a non-profit fan project&lt;/b&gt;, with &lt;b&gt;no affiliation whatsoever&lt;/b&gt; with Fantasy Flight Games or Asmodee. Descent: Legends of the Dark, its names, images and rules belong to their owners.">
+        <b>DescentForge es un proyecto de aficionados</b>, sin ánimo de lucro y <b>sin ninguna
+        afiliación</b> con Fantasy Flight Games ni con Asmodee. Descent: Leyendas de las Tinieblas,
+        sus nombres, sus imágenes y sus reglas pertenecen a sus dueños.
+      </p>
+      <p data-es="Esta herramienta &lt;b&gt;no sustituye al juego: lo necesita&lt;/b&gt;. Si no lo tienes y te interesa, búscalo en tu tienda de juegos de mesa habitual."
+         data-en="This tool &lt;b&gt;does not replace the game: it needs it&lt;/b&gt;. If you do not own it and are curious, look for it at your usual board game shop.">
+        Esta herramienta <b>no sustituye al juego: lo necesita</b>. Si no lo tienes y te interesa,
+        búscalo en tu tienda de juegos de mesa habitual.
+      </p>
+      <!-- Este párrafo es el mismo en las tres páginas: si se cambia aquí, se
+           cambia en index.html y en editor.html. La dirección de BTC va aquí
+           cuando la haya. -->
+      <p style="margin-bottom:0"
+         data-es="DescentForge es &lt;b&gt;gratis y completo&lt;/b&gt;, sin anuncios y sin nada de pago: no hay ninguna parte cerrada. Si aun así quieres agradecer las horas que hay detrás, se aceptan &lt;b&gt;donaciones voluntarias&lt;/b&gt; — a quien hace la herramienta, nunca por el juego ni por su contenido. La dirección de Bitcoin se pondrá aquí más adelante."
+         data-en="DescentForge is &lt;b&gt;free and complete&lt;/b&gt;, with no ads and nothing paid: no part of it is locked. If you still want to thank the hours behind it, &lt;b&gt;voluntary donations&lt;/b&gt; are welcome — to whoever makes the tool, never for the game or its content. A Bitcoin address will go here later on.">
+        DescentForge es <b>gratis y completo</b>, sin anuncios y sin nada de pago: no hay ninguna
+        parte cerrada. Si aun así quieres agradecer las horas que hay detrás, se aceptan
+        <b>donaciones voluntarias</b> — a quien hace la herramienta, nunca por el juego ni por su
+        contenido. La dirección de Bitcoin se pondrá aquí más adelante.
+      </p>
+    </div>
+    <!-- El grupo de Telegram: el único enlace externo del sitio. Va con
+         rel="noopener noreferrer" porque abre en otra pestaña. -->
+    <p class="ayuda"
+       data-es="¿Quieres arrimar el hombro? Hay un grupo de Telegram para hablar del desarrollo — probar, proponer, avisar de fallos o ponerse a ello: &lt;a href=&quot;https://t.me/+5mVXEQzDLvdlNTJk&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;entrar al Telegram&lt;/a&gt;."
+       data-en="Want to lend a hand? There is a Telegram group to talk about the development — testing, ideas, bug reports or actually building: &lt;a href=&quot;https://t.me/+5mVXEQzDLvdlNTJk&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;join the Telegram&lt;/a&gt;.">
+      ¿Quieres arrimar el hombro? Hay un grupo de Telegram para hablar del desarrollo — probar,
+      proponer, avisar de fallos o ponerse a ello:
+      <a href="https://t.me/+5mVXEQzDLvdlNTJk" target="_blank" rel="noopener noreferrer">entrar al Telegram</a>.
+    </p>
+    <div class="pie-filas">
+      <span>DescentForge · <span data-es="hecho por aficionados, para la mesa" data-en="made by fans, for the table">hecho por aficionados, para la mesa</span></span>
+      <span><a href="https://padlet.com/thexeyz/descent-forge-bugs-and-feedback-prl4js7shwmnimt3" target="_blank" rel="noopener noreferrer" data-es="Reportar un fallo" data-en="Report a bug">Reportar un fallo</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/sitio.js"></script>
+</body>
+</html>

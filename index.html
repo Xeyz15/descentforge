@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DescentForge — crea tus propias misiones para Descent: Leyendas de las Tinieblas</title>
+<meta name="description" content="Editor de escenarios y campañas para Descent: Leyendas de las Tinieblas, y el mod que los juega dentro de la aplicación oficial. Proyecto de aficionados, gratuito y sin afiliación con Fantasy Flight Games.">
+<link rel="icon" href="img/favicon.webp" type="image/webp">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<!-- ══ barra ══════════════════════════════════════════════════════════ -->
+<header class="barra">
+  <div class="envoltura">
+    <a class="marca" href="#"><img src="img/logo-192.webp" alt=""><b>DescentForge</b></a>
+    <button class="abrir-menu" id="abrirMenu" aria-expanded="false" aria-label="Menú">☰</button>
+    <nav class="nav" id="nav">
+      <a href="#que-es"       data-es="Qué es"       data-en="What is it">Qué es</a>
+      <a href="#editor-y-mod" data-es="Editor y mod" data-en="Editor and mod">Editor y mod</a>
+      <a href="#como"         data-es="Funcionamiento" data-en="How it works">Funcionamiento</a>
+      <a href="#descargas"    data-es="Descargas"    data-en="Downloads">Descargas</a>
+      <a href="#preguntas"    data-es="Preguntas"    data-en="FAQ">Preguntas</a>
+      <a href="escenarios.html" data-es="Escenarios" data-en="Scenarios">Escenarios</a>
+      <a class="nav-boton" href="editor.html"
+         data-es="Editor Online" data-en="Online Editor">Editor Online</a>
+    </nav>
+    <div class="idiomas" role="group" aria-label="Idioma">
+      <button data-lang="es" aria-pressed="true">ES</button>
+      <button data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ portada ════════════════════════════════════════════════════════ -->
+<div class="portada">
+  <!-- Dos columnas: el texto a la izquierda y las capturas a la derecha. Por
+       debajo de 900 px vuelve a una sola columna centrada, que es como estaba. -->
+  <div class="envoltura portada-rejilla">
+   <div>
+    <img class="logo" src="img/logo.webp" width="512" height="512"
+         alt="DescentForge: una D con un yunque y un martillo">
+    <h1>DescentForge</h1>
+    <p class="lema"
+       data-es="Crea tus propias misiones para Descent: Leyendas de las Tinieblas, y juégalas en la aplicación oficial."
+       data-en="Build your own quests for Descent: Legends of the Dark, and play them inside the official app.">
+      Crea tus propias misiones para Descent: Leyendas de las Tinieblas, y juégalas en la aplicación oficial.
+    </p>
+    <p class="subrayado"
+       data-es="Un editor que se abre en el navegador y un mod que enseña a la aplicación a leer lo que has hecho. Tu tablero, tus enemigos, tus héroes, tus leyes. &lt;b&gt;La caja se acaba; tu leyenda, no.&lt;/b&gt; Que empiece la epopeya."
+       data-en="An editor that runs in your browser and a mod that teaches the app to read what you made. Your board, your enemies, your heroes, your rules. &lt;b&gt;The box runs out; your legend does not.&lt;/b&gt; Let the epic begin.">
+      Un editor que se abre en el navegador y un mod que enseña a la aplicación a leer lo que has hecho.
+      Tu tablero, tus enemigos, tus héroes, tus leyes.
+      <b>La caja se acaba; tu leyenda, no.</b> Que empiece la epopeya.
+    </p>
+
+    <div class="botones">
+      <a class="boton principal" href="#descargas"
+         data-es="⬇ Descargar" data-en="⬇ Download">⬇ Descargar</a>
+      <a class="boton secundario" href="#como"
+         data-es="Cómo funciona" data-en="How it works">Cómo funciona</a>
+    </div>
+   </div>
+
+    <!-- Aquí estaba la tira decorativa de suelos y objetos (arte propio). La
+         sustituyen las capturas: quien llega quiere ver la herramienta, no un
+         adorno. El arte sigue en img/ y la tira vuelve reponiendo el bloque
+         `.tira`, que su CSS no se ha tocado.
+
+         Las capturas salen de `tools/preparar_capturas.py`, no se sacan a
+         mano. Sin `loading="lazy"`: pesan 24 y 48 KB, y con la captura
+         headless salían vacías. -->
+    <div class="tiros">
+      <figure class="tiro">
+        <img src="img/captura-tablero.webp" width="960" height="600"
+             alt="El editor con un escenario montado: las losetas encajadas, objetos sobre el tablero, dos enemigos y la salida de los héroes, con el panel de objetivos abierto a la derecha">
+        <figcaption data-es="Un escenario y sus objetivos" data-en="A scenario and its objectives">Un escenario y sus objetivos</figcaption>
+      </figure>
+      <figure class="tiro">
+        <img src="img/captura-campana.webp" width="960" height="600"
+             alt="El editor en modo campaña: la lista de diálogos a la izquierda, el mapa del mundo con las paradas marcadas en el centro, y la ficha de un diálogo con su personaje y su texto a la derecha">
+        <figcaption data-es="Una campaña y sus diálogos" data-en="A campaign and its dialogues">Una campaña y sus diálogos</figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+
+<!-- ══ qué es ═════════════════════════════════════════════════════════ -->
+<section id="que-es">
+  <div class="envoltura">
+    <h2 data-es="Qué es" data-en="What is it">Qué es</h2>
+    <p class="entradilla"
+       data-es="Descent: Leyendas de las Tinieblas es un juego de mesa con una aplicación que lleva la partida. La caja trae dieciséis misiones; cuando cae la última, se apagan las antorchas. &lt;b&gt;DescentForge existe para volver a encenderlas&lt;/b&gt;: gestas nuevas, enemigos nuevos y muchas más noches heroicas alrededor de la mesa."
+       data-en="Descent: Legends of the Dark is a board game with an app that runs the game. The box holds sixteen quests; when the last one falls, the torches go out. &lt;b&gt;DescentForge exists to light them again&lt;/b&gt;: new deeds, new enemies and many more heroic nights around the table.">
+      Descent: Leyendas de las Tinieblas es un juego de mesa con una aplicación que lleva la partida.
+      La caja trae dieciséis misiones; cuando cae la última, se apagan las antorchas.
+      <b>DescentForge existe para volver a encenderlas</b>: gestas nuevas, enemigos nuevos y muchas
+      más noches heroicas alrededor de la mesa.
+    </p>
+
+    <div class="piezas">
+      <div class="pieza">
+        <span class="etiqueta" data-es="Pieza 1" data-en="Part 1">Pieza 1</span>
+        <h3 data-es="Un editor en el navegador" data-en="An editor in your browser">Un editor en el navegador</h3>
+        <p data-es="Montas el tablero con las losetas de tu caja, colocas los enemigos y el terreno, escribes los objetivos y dices qué pasa cuando: «al cruzar esa puerta, salen dos lobos». Se guarda como un archivo pequeño que puedes pasarle a quien quieras."
+           data-en="You lay out the board with the tiles from your box, place enemies and terrain, write the objectives and say what happens when: “crossing that door, two wolves appear”. It saves as a small file you can hand to anyone.">
+          Montas el tablero con las losetas de tu caja, colocas los enemigos y el terreno, escribes
+          los objetivos y dices qué pasa cuando: «al cruzar esa puerta, salen dos lobos».
+          Se guarda como un archivo pequeño que puedes pasarle a quien quieras.
+        </p>
+      </div>
+      <div class="pieza">
+        <span class="etiqueta" data-es="Pieza 2" data-en="Part 2">Pieza 2</span>
+        <h3 data-es="Un mod para la aplicación" data-en="A mod for the app">Un mod para la aplicación</h3>
+        <p data-es="La aplicación oficial no sabe leer tus misiones. El mod le enseña: monta el escenario, saca los enemigos, lleva la cuenta de los objetivos y ejecuta tus disparadores. Usa las mismas ventanas, las mismas cartas y las mismas voces que el juego."
+           data-en="The official app cannot read your quests. The mod teaches it to: it lays out the scenario, brings out the enemies, tracks the objectives and runs your triggers. It uses the same dialogs, the same cards and the same voices as the game.">
+          La aplicación oficial no sabe leer tus misiones. El mod le enseña: monta el escenario,
+          saca los enemigos, lleva la cuenta de los objetivos y ejecuta tus disparadores.
+          Usa las mismas ventanas, las mismas cartas y las mismas voces que el juego.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ editor y mod ═══════════════════════════════════════════════════
+     Van juntos a propósito: son las dos mitades de lo mismo y solo tienen
+     sentido la una con la otra. El detalle del editor no está aquí, está en
+     su propia página (editor.html); aquí queda lo justo para entenderlo. -->
+<section id="editor-y-mod" class="hundida">
+  <div class="envoltura">
+    <h2 data-es="El editor y el mod" data-en="The editor and the mod">El editor y el mod</h2>
+    <p class="entradilla"
+       data-es="Dos programas y un archivo entre ellos. Uno sirve para crear la misión; el otro, para jugarla dentro de la aplicación oficial. No se hablan entre sí: lo único que viaja es el archivo que exportas."
+       data-en="Two programs with a file in between. One is for building the quest; the other for playing it inside the official app. They never talk to each other: the only thing that travels is the file you export.">
+      Dos programas y un archivo entre ellos. Uno sirve para crear la misión; el otro, para jugarla
+      dentro de la aplicación oficial. No se hablan entre sí: lo único que viaja es el archivo que
+      exportas.
+    </p>
+
+    <div class="bloque">
+      <h3 data-es="El editor" data-en="The editor">El editor</h3>
+      <p data-es="Es un solo archivo HTML: se abre en el navegador y funciona sin instalar nada y sin conexión. Montas el tablero con las losetas de tu caja, colocas enemigos y terreno, escribes los objetivos y dices qué pasa cuando. Todo se hace con la interfaz — si algo no se puede hacer pulsando, es que falta en el editor."
+         data-en="It is a single HTML file: it opens in your browser and works with nothing installed and no connection. You lay out the board with the tiles from your box, place enemies and terrain, write the objectives and say what happens when. Everything is done through the interface — if something cannot be done by clicking, it is missing from the editor.">
+        Es un solo archivo HTML: se abre en el navegador y funciona sin instalar nada y sin conexión.
+        Montas el tablero con las losetas de tu caja, colocas enemigos y terreno, escribes los
+        objetivos y dices qué pasa cuando. Todo se hace con la interfaz — si algo no se puede hacer
+        pulsando, es que falta en el editor.
+      </p>
+
+      <!-- Estas seis tarjetas están también en editor.html, y a propósito: son
+           lo que hay que ver para entender qué se puede hacer, y quien llega a
+           la principal no tiene por qué pasar por la otra página. Si se cambia
+           una, se cambia en las dos. -->
+      <div class="rejilla" style="margin-bottom:26px">
+        <div class="tarjeta">
+          <h3><span class="icono">🗺️</span><span data-es="El tablero de tu caja" data-en="Your box's board">El tablero de tu caja</span></h3>
+          <p data-es="Las losetas con su forma real, medida contra el juego. Suelos, alfombras, agua, lava y varias alturas. El editor te avisa si te pasas de lo que trae la caja o si usas piezas del Acto II."
+             data-en="The tiles with their real shape, measured against the game. Floors, rugs, water, lava and several levels. The editor warns you if you go past what the box holds or use Act II pieces.">
+            Las losetas con su forma real, medida contra el juego. Suelos, alfombras, agua, lava y varias
+            alturas. El editor te avisa si te pasas de lo que trae la caja o si usas piezas del Acto II.
+          </p>
+        </div>
+        <div class="tarjeta">
+          <h3><span class="icono">⚔️</span><span data-es="Enemigos y héroes" data-en="Enemies and heroes">Enemigos y héroes</span></h3>
+          <p data-es="Todos los del juego, con sus niveles de dificultad reales, sus rasgos, sus debilidades y sus resistencias. Y el aviso de cuántas miniaturas trae la caja, para que no pidas cinco lobos si vienen cuatro."
+             data-en="All of them, with their real difficulty tiers, traits, weaknesses and resistances. Plus a warning of how many miniatures the box has, so you do not ask for five wolves when four come in it.">
+            Todos los del juego, con sus niveles de dificultad reales, sus rasgos, sus debilidades y sus
+            resistencias. Y el aviso de cuántas miniaturas trae la caja, para que no pidas cinco lobos
+            si vienen cuatro.
+          </p>
+        </div>
+        <div class="tarjeta">
+          <h3><span class="icono">🎯</span><span data-es="Objetivos y derrotas" data-en="Objectives and defeats">Objetivos y derrotas</span></h3>
+          <p data-es="Cien objetivos y doce formas de perder, sacados de contar lo que hacen las misiones oficiales. El editor te dice cuáles juzga la aplicación sola y cuáles se declaran en la mesa."
+             data-en="A hundred objectives and twelve ways to lose, taken from counting what the official quests do. The editor tells you which ones the app judges by itself and which are declared at the table.">
+            Cien objetivos y doce formas de perder, sacados de contar lo que hacen las misiones oficiales.
+            El editor te dice cuáles juzga la aplicación sola y cuáles se declaran en la mesa.
+          </p>
+        </div>
+        <div class="tarjeta">
+          <h3><span class="icono">⚡</span><span data-es="Disparadores" data-en="Triggers">Disparadores</span></h3>
+          <p data-es="Una frase de tres partes: &lt;b&gt;cuándo&lt;/b&gt; pasa algo, &lt;b&gt;solo si&lt;/b&gt; se cumple tal cosa, &lt;b&gt;entonces&lt;/b&gt; haz esto. Con eso están hechas las dieciséis misiones del juego. Y diecisiete plantillas listas para las formas que más se repiten."
+             data-en="A three-part sentence: &lt;b&gt;when&lt;/b&gt; something happens, &lt;b&gt;only if&lt;/b&gt; such a thing holds, &lt;b&gt;then&lt;/b&gt; do this. That is what the game's sixteen quests are made of. Plus seventeen ready-made templates for the most repeated shapes.">
+            Una frase de tres partes: <b>cuándo</b> pasa algo, <b>solo si</b> se cumple tal cosa,
+            <b>entonces</b> haz esto. Con eso están hechas las dieciséis misiones del juego.
+            Y diecisiete plantillas listas para las formas que más se repiten.
+          </p>
+        </div>
+        <div class="tarjeta">
+          <h3><span class="icono">🧭</span><span data-es="Campañas" data-en="Campaigns">Campañas</span></h3>
+          <p data-es="Varios escenarios enhebrados sobre el mapa del mundo, con conversaciones entre medias, decisiones que ramifican, recompensas y una tienda. Como un acto del juego, hecho por ti."
+             data-en="Several scenarios threaded over the world map, with conversations in between, branching decisions, rewards and a shop. Like an act of the game, made by you.">
+            Varios escenarios enhebrados sobre el mapa del mundo, con conversaciones entre medias,
+            decisiones que ramifican, recompensas y una tienda. Como un acto del juego, hecho por ti.
+          </p>
+        </div>
+        <div class="tarjeta">
+          <h3><span class="icono">🎓</span><span data-es="Tutorial guiado" data-en="Guided tutorial">Tutorial guiado</span></h3>
+          <p data-es="No hay manual que leer: el tutorial va señalando el botón que toca sobre la propia interfaz y espera a que lo pulses. Un escenario entero y una campaña entera, paso a paso."
+             data-en="No manual to read: the tutorial points at the next button on the interface itself and waits for you to press it. A whole scenario and a whole campaign, step by step.">
+            No hay manual que leer: el tutorial va señalando el botón que toca sobre la propia interfaz
+            y espera a que lo pulses. Un escenario entero y una campaña entera, paso a paso.
+          </p>
+        </div>
+      </div>
+
+      <div class="cifras">
+        <div class="cifra"><b>48</b><span data-es="losetas" data-en="tiles">losetas</span></div>
+        <div class="cifra"><b>128</b><span data-es="enemigos" data-en="enemies">enemigos</span></div>
+        <div class="cifra"><b>29</b><span data-es="objetos" data-en="props">objetos</span></div>
+        <div class="cifra"><b>100</b><span data-es="objetivos" data-en="objectives">objetivos</span></div>
+        <div class="cifra"><b>115</b><span data-es="eventos, acciones y condiciones" data-en="events, actions and conditions">eventos, acciones y condiciones</span></div>
+        <div class="cifra"><b>17</b><span data-es="plantillas" data-en="templates">plantillas</span></div>
+      </div>
+
+      <p style="margin-top:24px">
+        <a class="boton principal" href="editor.html"
+           data-es="Ver el Editor Online →" data-en="See the Online Editor →">Ver el Editor Online →</a>
+      </p>
+    </div>
+
+    <div class="bloque">
+      <h3 data-es="El mod" data-en="The mod">El mod</h3>
+      <p style="margin-bottom:24px"
+         data-es="Se instala solo, sin cargadores externos ni programas de por medio. Añade un botón a la pantalla principal del juego y no toca nada más."
+         data-en="It installs itself, with no external loaders or extra programs. It adds one button to the game's main screen and touches nothing else.">
+        Se instala solo, sin cargadores externos ni programas de por medio.
+        Añade un botón a la pantalla principal del juego y no toca nada más.
+      </p>
+
+    <div class="rejilla">
+      <div class="tarjeta">
+        <h3><span class="icono">🧱</span><span data-es="Monta el escenario" data-en="Lays out the scenario">Monta el escenario</span></h3>
+        <p data-es="Te dice qué losetas poner y dónde, coloca el terreno y saca a los enemigos con sus cartas y sus cifras. Y en el mismo orden que el juego: primero la sala amueblada y después la gente, para que no tengas que levantar nada de la mesa."
+           data-en="It tells you which tiles to lay and where, places the terrain and brings out enemies with their cards and numbers. And in the game's own order: the furnished room first, the people after, so you never have to lift anything off the table.">
+          Te dice qué losetas poner y dónde, coloca el terreno y saca a los enemigos con sus cartas y
+          sus cifras. Y en el mismo orden que el juego: primero la sala amueblada y después la gente,
+          para que no tengas que levantar nada de la mesa.
+        </p>
+      </div>
+      <div class="tarjeta">
+        <h3><span class="icono">💬</span><span data-es="Sin interfaz propia" data-en="No interface of its own">Sin interfaz propia</span></h3>
+        <p data-es="Todo lo que sale en pantalla es del propio juego: sus cuadros de diálogo, sus tiradas, su cartel de botín, su barra de héroes. El mod no dibuja ni una ventana nueva, así que una misión tuya se ve y se juega exactamente igual que una de la caja."
+           data-en="Everything on screen belongs to the game itself: its dialogs, its rolls, its loot callout, its hero bar. The mod does not draw a single new window, so a quest of yours looks and plays exactly like one from the box.">
+          Todo lo que sale en pantalla es del propio juego: sus cuadros de diálogo, sus tiradas, su
+          cartel de botín, su barra de héroes. El mod no dibuja ni una ventana nueva, así que una
+          misión tuya se ve y se juega exactamente igual que una de la caja.
+        </p>
+      </div>
+      <div class="tarjeta">
+        <h3><span class="icono">🌍</span><span data-es="Trece idiomas" data-en="Thirteen languages">Trece idiomas</span></h3>
+        <p data-es="Los mismos que el juego, y sigue al idioma que tengas puesto en él, no al del sistema. Lo que escribas tú se enseña tal cual."
+           data-en="The same as the game's, and it follows the language set in the game, not the system's. What you write is shown as you wrote it.">
+          Los mismos que el juego, y sigue al idioma que tengas puesto en él, no al del sistema.
+          Lo que escribas tú se enseña tal cual.
+        </p>
+      </div>
+      <div class="tarjeta">
+        <h3><span class="icono">🛡️</span><span data-es="No toca tu partida" data-en="It does not touch your game">No toca tu partida</span></h3>
+        <p data-es="La campaña oficial se juega igual, y el progreso de las campañas de la comunidad se guarda aparte, junto a sus archivos. Desinstalar el mod deja el juego como estaba."
+           data-en="The official campaign plays the same, and community campaign progress is stored separately, next to its own files. Uninstalling leaves the game as it was.">
+          La campaña oficial se juega igual, y el progreso de las campañas de la comunidad se guarda
+          aparte, junto a sus archivos. Desinstalar el mod deja el juego como estaba.
+        </p>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ cómo va ════════════════════════════════════════════════════════ -->
+<section id="como">
+  <div class="envoltura">
+    <h2 data-es="Funcionamiento" data-en="How it works">Funcionamiento</h2>
+    <p class="entradilla"
+       data-es="Tres pasos. El editor y el juego no se hablan entre ellos: lo que viaja es un archivo."
+       data-en="Three steps. The editor and the game never talk to each other: what travels is a file.">
+      Tres pasos. El editor y el juego no se hablan entre ellos: lo que viaja es un archivo.
+    </p>
+    <div class="pasos">
+      <div class="paso">
+        <h3 data-es="Haces la misión" data-en="You build the quest">Haces la misión</h3>
+        <p data-es="En el editor, en tu navegador. Al terminar pulsas «Exportar» y te bajas un archivo .dmap (un escenario) o .dcamp (una campaña). Pesa unas decenas de kilobytes."
+           data-en="In the editor, in your browser. When you are done you press “Export” and get a &lt;code&gt;.dmap&lt;/code&gt; file (a scenario) or &lt;code&gt;.dcamp&lt;/code&gt; (a campaign).">
+          En el editor, en tu navegador. Al terminar pulsas «Exportar» y te bajas un archivo
+          <code>.dmap</code> (un escenario) o <code>.dcamp</code> (una campaña).
+        </p>
+      </div>
+      <div class="paso">
+        <h3 data-es="La pones en el juego" data-en="You drop it in the game">La pones en el juego</h3>
+        <p data-es="Copias el archivo a la carpeta de mapas del juego. El propio mod trae un explorador para añadirlos desde dentro, sin buscar carpetas a mano."
+           data-en="You copy the file into the game's maps folder. The mod itself has a browser to add them from inside, with no folder hunting.">
+          Copias el archivo a la carpeta de mapas del juego. El propio mod trae un explorador para
+          añadirlos desde dentro, sin buscar carpetas a mano.
+        </p>
+      </div>
+      <div class="paso">
+        <h3 data-es="La juegas" data-en="You play it">La juegas</h3>
+        <p data-es="Abres el juego, pulsas «Mapas de comunidad», eliges tus héroes y a jugar. Monta tu tablero en la mesa siguiendo lo que te dice y adelante."
+           data-en="You open the game, press “Community maps”, pick your heroes and go. Lay your board on the table as it tells you and off you go.">
+          Abres el juego, pulsas «Mapas de comunidad», eliges tus héroes y a jugar.
+          Monta tu tablero en la mesa siguiendo lo que te dice y adelante.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ escenarios ═════════════════════════════════════════════════════
+     La galería vive en su propia página (escenarios.html). Aquí solo queda
+     la puerta: en la portada quedaba grande para algo que todavía no existe. -->
+<section id="escenarios" class="hundida">
+  <div class="envoltura">
+    <div class="banda">
+      <div>
+        <h2 style="margin-bottom:6px">
+          <span data-es="Escenarios de la comunidad" data-en="Community scenarios">Escenarios de la comunidad</span>
+          <span class="pronto" data-es="Próximamente" data-en="Coming soon">Próximamente</span>
+        </h2>
+        <p style="margin:0" class="apagado"
+           data-es="Un sitio donde subir tus misiones, buscarlas, votarlas y descargarlas de un clic. Todavía no está hecho — la página cuenta qué traerá y qué falta por resolver."
+           data-en="A place to upload your quests, browse them, vote and download them in one click. Not built yet — the page explains what it will bring and what is still to be solved.">
+          Un sitio donde subir tus misiones, buscarlas, votarlas y descargarlas de un clic.
+          Todavía no está hecho — la página cuenta qué traerá y qué falta por resolver.
+        </p>
+      </div>
+      <a class="boton secundario" href="escenarios.html"
+         data-es="Ver los escenarios →" data-en="See the scenarios →">Ver los escenarios →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ descargas ══════════════════════════════════════════════════════ -->
+<section id="descargas">
+  <div class="envoltura">
+    <h2 data-es="Descargas" data-en="Downloads">Descargas</h2>
+    <p class="entradilla"
+       data-es="Dos cosas distintas: el editor sirve para crear y funciona en cualquier ordenador; el mod hace falta para jugar lo que crees, y ese sí toca la carpeta del juego."
+       data-en="Two different things: the &lt;b&gt;editor&lt;/b&gt; is for creating and runs on any computer; the &lt;b&gt;mod&lt;/b&gt; is what you need to play what you make, and that one does touch the game's folder.">
+      Dos cosas distintas: el <b>editor</b> sirve para crear y funciona en cualquier ordenador;
+      el <b>mod</b> hace falta para jugar lo que crees, y ese sí toca la carpeta del juego.
+    </p>
+
+    <div class="piezas">
+      <div class="pieza">
+        <span class="etiqueta" data-es="Para crear" data-en="To create">Para crear</span>
+        <h3>DescentForge Editor</h3>
+        <p class="apagado" data-es="Windows · macOS · Linux — no hace falta instalar nada"
+           data-en="Windows · macOS · Linux — nothing to install">Windows · macOS · Linux — no hace falta instalar nada</p>
+        <ul>
+          <li data-es="Un .zip con el editor y los ejemplos." data-en="A &lt;code&gt;.zip&lt;/code&gt; with the editor and the examples.">Un <code>.zip</code> con el editor y los ejemplos.</li>
+          <li data-es="Descomprimir y doble clic en el HTML." data-en="Unzip and double-click the HTML.">Descomprimir y doble clic en el HTML.</li>
+          <li data-es="Funciona sin conexión y no manda nada a ningún sitio." data-en="Works offline and sends nothing anywhere.">Funciona sin conexión y no manda nada a ningún sitio.</li>
+        </ul>
+        <p style="margin-top:16px">
+          <a class="boton principal" href="#" data-descarga="editor"
+             data-es="⬇ Descargar el editor" data-en="⬇ Download the editor">⬇ Descargar el editor</a>
+        </p>
+      </div>
+
+      <div class="pieza">
+        <span class="etiqueta" data-es="Para jugar" data-en="To play">Para jugar</span>
+        <h3>DescentForge Mod</h3>
+        <p class="apagado" data-es="Windows · Linux (Steam / Proton)" data-en="Windows · Linux (Steam / Proton)">Windows · Linux (Steam / Proton)</p>
+        <ul>
+          <li data-es="Un lanzador que instala o repara el mod solo." data-en="A launcher that installs or repairs the mod by itself.">Un lanzador que instala o repara el mod solo.</li>
+          <li data-es="Trae el editor y los ejemplos dentro." data-en="Ships the editor and the examples inside.">Trae el editor y los ejemplos dentro.</li>
+          <li data-es="Se puede desinstalar y el juego queda como estaba." data-en="Can be uninstalled and the game is left as it was.">Se puede desinstalar y el juego queda como estaba.</li>
+        </ul>
+        <p style="margin-top:16px">
+          <a class="boton principal" href="#" data-descarga="mod"
+             data-es="⬇ Descargar el mod" data-en="⬇ Download the mod">⬇ Descargar el mod</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="aviso">
+      <p style="margin:0"
+         data-es="Necesitas tener el juego. DescentForge no incluye Descent: Leyendas de las Tinieblas ni lo sustituye: es una herramienta para quien ya lo tiene y quiere más misiones."
+         data-en="&lt;b&gt;You need the game.&lt;/b&gt; DescentForge does not include Descent: Legends of the Dark and does not replace it: it is a tool for people who already own it and want more quests.">
+        <b>Necesitas tener el juego.</b> DescentForge no incluye Descent: Leyendas de las Tinieblas
+        ni lo sustituye: es una herramienta para quien ya lo tiene y quiere más misiones.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ preguntas ══════════════════════════════════════════════════════ -->
+<section id="preguntas">
+  <div class="envoltura">
+    <h2 data-es="Preguntas" data-en="Questions">Preguntas</h2>
+
+    <details open>
+      <summary data-es="¿Hace falta comprar algo?" data-en="Do I have to buy anything?">¿Hace falta comprar algo?</summary>
+      <p data-es="DescentForge es gratis y entero: no hay anuncios ni ninguna parte de pago, y no hay nada que desbloquear. Se aceptan donaciones voluntarias para agradecer el trabajo, pero no dan acceso a nada. Lo que sí hace falta es el juego, porque esto es una herramienta para él: sin la caja no hay tablero que montar ni figuras que mover."
+         data-en="DescentForge is free and complete: no ads, nothing paid, nothing to unlock. Voluntary donations are welcome as a thank-you for the work, but they unlock nothing. What you do need is the game, because this is a tool for it: without the box there is no board to lay out and no figures to move.">
+        DescentForge es gratis y entero: no hay anuncios ni ninguna parte de pago, y no hay nada que
+        desbloquear. Se aceptan donaciones voluntarias para agradecer el trabajo, pero no dan acceso
+        a nada. Lo que sí hace falta es el juego, porque esto es una herramienta para él: sin la caja
+        no hay tablero que montar ni figuras que mover.
+      </p>
+    </details>
+
+    <details>
+      <summary data-es="¿Se rompe mi partida oficial?" data-en="Will it break my official campaign?">¿Se rompe mi partida oficial?</summary>
+      <p data-es="No debería. La campaña oficial se juega igual, las campañas de la comunidad guardan su progreso en su propia carpeta y el mod se puede desinstalar dejando el juego como estaba. Aun así, si tienes una partida a la que le tengas cariño, haz copia antes: es un proyecto de aficionados."
+         data-en="It should not. The official campaign plays the same, community campaigns keep their progress in their own folder, and the mod can be uninstalled leaving the game as it was. Even so, if you have a campaign you care about, &lt;b&gt;back it up first&lt;/b&gt;: this is a hobby project.">
+        No debería. La campaña oficial se juega igual, las campañas de la comunidad guardan su progreso
+        en su propia carpeta y el mod se puede desinstalar dejando el juego como estaba. Aun así, si
+        tienes una partida a la que le tengas cariño, <b>haz copia antes</b>: es un proyecto de aficionados.
+      </p>
+    </details>
+
+    <details>
+      <summary data-es="¿Puedo hacer misiones sin tener el mod?" data-en="Can I build quests without the mod?">¿Puedo hacer misiones sin tener el mod?</summary>
+      <p data-es="Sí. El editor va suelto en cualquier ordenador y hasta en el navegador del móvil. El mod solo hace falta para jugar lo que has hecho."
+         data-en="Yes. The editor runs on its own on any computer, and even in a phone browser. The mod is only needed to play what you made.">
+        Sí. El editor va suelto en cualquier ordenador y hasta en el navegador del móvil.
+        El mod solo hace falta para jugar lo que has hecho.
+      </p>
+    </details>
+
+    <details>
+      <summary data-es="¿En qué idiomas está?" data-en="What languages is it in?">¿En qué idiomas está?</summary>
+      <p data-es="El editor, en español e inglés. El mod, en los trece idiomas del juego, y sigue al que tengas puesto en él. Lo que escribas tú sale tal cual, en el idioma en que lo escribas."
+         data-en="The editor, in Spanish and English. The mod, in the game's thirteen languages, and it follows whichever you have set there. What you write shows up as you wrote it.">
+        El editor, en español e inglés. El mod, en los trece idiomas del juego, y sigue al que tengas
+        puesto en él. Lo que escribas tú sale tal cual.
+      </p>
+    </details>
+
+    <details>
+      <summary data-es="¿Puedo compartir mis misiones?" data-en="Can I share my quests?">¿Puedo compartir mis misiones?</summary>
+      <p data-es="Sí, son archivos tuyos y los pasas como quieras. La galería para subirlas y votarlas está por hacer (&lt;a href=&quot;escenarios.html&quot;&gt;escenarios de la comunidad&lt;/a&gt;); mientras tanto sirve cualquier sitio donde se comparta un archivo."
+         data-en="Yes, they are your files and you pass them around however you like. The gallery for uploading and voting is still to be built (&lt;a href=&quot;escenarios.html&quot;&gt;community scenarios&lt;/a&gt;); meanwhile any place you can share a file works.">
+        Sí, son archivos tuyos y los pasas como quieras. La galería para subirlas y votarlas está por
+        hacer (<a href="escenarios.html">escenarios de la comunidad</a>); mientras tanto sirve
+        cualquier sitio donde se comparta un archivo.
+      </p>
+    </details>
+  </div>
+</section>
+
+<!-- ══ pie ════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="envoltura">
+    <div class="legal">
+      <p data-es="&lt;b&gt;DescentForge es un proyecto de aficionados&lt;/b&gt;, sin ánimo de lucro y &lt;b&gt;sin ninguna afiliación&lt;/b&gt; con Fantasy Flight Games ni con Asmodee. Descent: Leyendas de las Tinieblas, sus nombres, sus imágenes y sus reglas pertenecen a sus dueños."
+         data-en="&lt;b&gt;DescentForge is a non-profit fan project&lt;/b&gt;, with &lt;b&gt;no affiliation whatsoever&lt;/b&gt; with Fantasy Flight Games or Asmodee. Descent: Legends of the Dark, its names, images and rules belong to their owners.">
+        <b>DescentForge es un proyecto de aficionados</b>, sin ánimo de lucro y <b>sin ninguna
+        afiliación</b> con Fantasy Flight Games ni con Asmodee. Descent: Leyendas de las Tinieblas,
+        sus nombres, sus imágenes y sus reglas pertenecen a sus dueños.
+      </p>
+      <p data-es="Esta herramienta &lt;b&gt;no sustituye al juego: lo necesita&lt;/b&gt;. Si no lo tienes y te interesa, búscalo en tu tienda de juegos de mesa habitual."
+         data-en="This tool &lt;b&gt;does not replace the game: it needs it&lt;/b&gt;. If you do not own it and are curious, look for it at your usual board game shop.">
+        Esta herramienta <b>no sustituye al juego: lo necesita</b>. Si no lo tienes y te interesa,
+        búscalo en tu tienda de juegos de mesa habitual.
+      </p>
+      <!-- Donaciones: la redacción importa. Lo que se agradece es el tiempo de
+           quien hace la herramienta; NO se vende, ni se alquila, ni se cobra
+           nada del juego ni de sus contenidos, y todo sigue siendo gratis sin
+           donar. La dirección de BTC va aquí cuando la haya: sustituir el
+           <code> por ella y quitar la frase de «más adelante». -->
+      <p style="margin-bottom:0"
+         data-es="DescentForge es &lt;b&gt;gratis y completo&lt;/b&gt;, sin anuncios y sin nada de pago: no hay ninguna parte cerrada. Si aun así quieres agradecer las horas que hay detrás, se aceptan &lt;b&gt;donaciones voluntarias&lt;/b&gt; — a quien hace la herramienta, nunca por el juego ni por su contenido. La dirección de Bitcoin se pondrá aquí más adelante."
+         data-en="DescentForge is &lt;b&gt;free and complete&lt;/b&gt;, with no ads and nothing paid: no part of it is locked. If you still want to thank the hours behind it, &lt;b&gt;voluntary donations&lt;/b&gt; are welcome — to whoever makes the tool, never for the game or its content. A Bitcoin address will go here later on.">
+        DescentForge es <b>gratis y completo</b>, sin anuncios y sin nada de pago: no hay ninguna
+        parte cerrada. Si aun así quieres agradecer las horas que hay detrás, se aceptan
+        <b>donaciones voluntarias</b> — a quien hace la herramienta, nunca por el juego ni por su
+        contenido. La dirección de Bitcoin se pondrá aquí más adelante.
+      </p>
+    </div>
+    <!-- El grupo de Telegram: el único enlace externo del sitio. Va con
+         rel="noopener noreferrer" porque abre en otra pestaña. -->
+    <p class="ayuda"
+       data-es="¿Quieres arrimar el hombro? Hay un grupo de Telegram para hablar del desarrollo — probar, proponer, avisar de fallos o ponerse a ello: &lt;a href=&quot;https://t.me/+5mVXEQzDLvdlNTJk&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;entrar al Telegram&lt;/a&gt;."
+       data-en="Want to lend a hand? There is a Telegram group to talk about the development — testing, ideas, bug reports or actually building: &lt;a href=&quot;https://t.me/+5mVXEQzDLvdlNTJk&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;join the Telegram&lt;/a&gt;.">
+      ¿Quieres arrimar el hombro? Hay un grupo de Telegram para hablar del desarrollo — probar,
+      proponer, avisar de fallos o ponerse a ello:
+      <a href="https://t.me/+5mVXEQzDLvdlNTJk" target="_blank" rel="noopener noreferrer">entrar al Telegram</a>.
+    </p>
+    <div class="pie-filas">
+      <span>DescentForge · <span data-es="hecho por aficionados, para la mesa" data-en="made by fans, for the table">hecho por aficionados, para la mesa</span></span>
+      <span><a href="https://padlet.com/thexeyz/descent-forge-bugs-and-feedback-prl4js7shwmnimt3" target="_blank" rel="noopener noreferrer" data-es="Reportar un fallo" data-en="Report a bug">Reportar un fallo</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/sitio.js"></script>
+</body>
+</html>
