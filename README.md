@@ -1,10 +1,10 @@
-# DescentForge — la página
+# DescentForge — Web
 
-Página de presentación de **DescentForge**, un proyecto de aficionados para
+DescentForge es un proyecto de aficionados para
 crear misiones y campañas propias para el juego de mesa *Descent: Leyendas de
 las Tinieblas* y jugarlas dentro de su aplicación oficial.
 
-Aquí vive **solo la página**. El editor y el mod van por su cuenta.
+Aquí vive solo la página. El editor y el mod van por su cuenta.
 
 ## Qué hay dentro
 
