@@ -349,13 +349,18 @@
         <p class="apagado" data-es="Windows · macOS · Linux — no hace falta instalar nada"
            data-en="Windows · macOS · Linux — nothing to install">Windows · macOS · Linux — no hace falta instalar nada</p>
         <ul>
-          <li data-es="Un .zip con el editor y los ejemplos." data-en="A &lt;code&gt;.zip&lt;/code&gt; with the editor and the examples.">Un <code>.zip</code> con el editor y los ejemplos.</li>
-          <li data-es="Descomprimir y doble clic en el HTML." data-en="Unzip and double-click the HTML.">Descomprimir y doble clic en el HTML.</li>
-          <li data-es="Funciona sin conexión y no manda nada a ningún sitio." data-en="Works offline and sends nothing anywhere.">Funciona sin conexión y no manda nada a ningún sitio.</li>
+          <li data-es="Se abre en el navegador, sin instalar nada." data-en="Opens in your browser, nothing to install.">Se abre en el navegador, sin instalar nada.</li>
+          <li data-es="Una vez cargado funciona sin conexión." data-en="Once loaded it works offline.">Una vez cargado funciona sin conexión.</li>
+          <li data-es="No manda nada a ningún sitio: tus mapas no salen de tu ordenador." data-en="Sends nothing anywhere: your maps never leave your computer.">No manda nada a ningún sitio: tus mapas no salen de tu ordenador.</li>
         </ul>
+        <!-- Publicado el 8-ago-2026: `editor/index.html` es una copia de
+             `DescentForge/web/dist/DescentForge.html` (2 MB, un solo archivo,
+             sin peticiones a la red). Para actualizarlo se vuelve a copiar.
+             Mismo destino y mismo `target` que el botón de `editor.html`: si se
+             toca uno, se tocan los dos. -->
         <p style="margin-top:16px">
-          <a class="boton principal" href="#" data-descarga="editor"
-             data-es="⬇ Descargar el editor" data-en="⬇ Download the editor">⬇ Descargar el editor</a>
+          <a class="boton principal" href="editor/" target="_blank" rel="noopener"
+             data-es="▶ Abrir el editor" data-en="▶ Open the editor">▶ Abrir el editor</a>
         </p>
       </div>
 
@@ -365,13 +370,28 @@
         <p class="apagado" data-es="Windows · Linux (Steam / Proton)" data-en="Windows · Linux (Steam / Proton)">Windows · Linux (Steam / Proton)</p>
         <ul>
           <li data-es="Un lanzador que instala o repara el mod solo." data-en="A launcher that installs or repairs the mod by itself.">Un lanzador que instala o repara el mod solo.</li>
-          <li data-es="Trae el editor y los ejemplos dentro." data-en="Ships the editor and the examples inside.">Trae el editor y los ejemplos dentro.</li>
+          <li data-es="Trae el editor dentro, para usarlo sin conexión." data-en="Ships the editor inside, to use it offline.">Trae el editor dentro, para usarlo sin conexión.</li>
           <li data-es="Se puede desinstalar y el juego queda como estaba." data-en="Can be uninstalled and the game is left as it was.">Se puede desinstalar y el juego queda como estaba.</li>
         </ul>
+        <!-- La descarga del mod SÍ apunta a un archivo. Va a una **Release de
+             GitHub**, no a una carpeta de este repositorio, y a propósito: el
+             .zip pesa 7 MB y en el repositorio se quedaría en el historial para
+             siempre —una versión al mes son 84 MB al año que ya no se pueden
+             quitar sin reescribir la historia—. Los archivos de una Release
+             viven aparte y se pueden borrar.
+
+             `releases/latest/download/...` lo resuelve GitHub a la última
+             publicada, así que **este enlace no hay que tocarlo al sacar una
+             versión nueva**; sí el número y la firma de aquí abajo. -->
         <p style="margin-top:16px">
-          <a class="boton principal" href="#" data-descarga="mod"
-             data-es="⬇ Descargar el mod" data-en="⬇ Download the mod">⬇ Descargar el mod</a>
+          <a class="boton principal"
+             href="https://github.com/Xeyz15/descentforge/releases/latest/download/DescentForge-0.1.6.zip"
+             data-es="⬇ Descargar el mod (v0.1.6)"
+             data-en="⬇ Download the mod (v0.1.6)">⬇ Descargar el mod (v0.1.6)</a>
         </p>
+        <p class="apagado" style="margin-top:10px;font-size:13px;line-height:1.7"
+           data-es="7,1 MB · Windows 64 bits · &lt;code&gt;sha256 7119726a…609f5f&lt;/code&gt;&lt;br&gt;La primera vez Windows avisa de «editor desconocido»: el programa no está firmado. «Más información» → «Ejecutar de todas formas»."
+           data-en="7.1 MB · Windows 64-bit · &lt;code&gt;sha256 7119726a…609f5f&lt;/code&gt;&lt;br&gt;The first time, Windows warns about an “unknown publisher”: the program is not signed. “More info” → “Run anyway”.">7,1 MB · Windows 64 bits · <code>sha256 7119726a…609f5f</code><br>La primera vez Windows avisa de «editor desconocido»: el programa no está firmado. «Más información» → «Ejecutar de todas formas».</p>
       </div>
     </div>
 

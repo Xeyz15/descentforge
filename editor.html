@@ -45,13 +45,12 @@
       objetivos y lo que pasa cuando. Sin instalar nada.
     </p>
     <div class="botones">
-      <!-- El editor NO se publica en esta primera versión: el botón avisa.
-           Para publicarlo hay que copiar `DescentForge/web/dist/DescentForge.html`
-           a `editor/index.html` y cambiar este `href` por `editor/`, quitando
-           los `data-aviso`. -->
-      <a class="boton principal" href="#" data-aviso
-         data-aviso-es="El editor todavía no está publicado aquí. Se está terminando de probar; mientras tanto puedes seguir el proyecto en el Telegram del pie de página."
-         data-aviso-en="The editor is not published here yet. It is still being tested; meanwhile you can follow the project on the Telegram link in the footer."
+      <!-- El editor SÍ está publicado desde el 8-ago-2026: `editor/index.html`
+           es una copia de `DescentForge/web/dist/DescentForge.html` (2 MB, un
+           solo archivo, sin peticiones a la red). Para actualizarlo se vuelve a
+           copiar; no hay nada más que tocar. Va con `target="_blank"` para no
+           perder esta página, que es donde se explica cómo se usa. -->
+      <a class="boton principal" href="editor/" target="_blank" rel="noopener"
          data-es="Abrir el editor" data-en="Open the editor">Abrir el editor</a>
       <a class="boton secundario" href="index.html#descargas"
          data-es="⬇ Descargarlo" data-en="⬇ Download it">⬇ Descargarlo</a>

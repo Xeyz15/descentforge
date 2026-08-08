@@ -59,13 +59,13 @@
     }
   });
 
-  /* Las descargas todavía no apuntan a ningún sitio: esto es un prototipo y
-     los archivos no están publicados. Mejor decirlo que dejar un enlace muerto
-     que parezca roto.
+  /* `data-aviso`: un botón que todavía no lleva a ningún sitio dice por qué,
+     con su propio mensaje. Mejor eso que un enlace muerto que parezca roto.
 
-     `data-aviso` es lo mismo pero con un mensaje propio: lo usan el botón de
-     abrir el editor y el de subir un escenario, que no están para lo mismo y
-     no pueden decir «descarga no publicada». */
+     Desde el 8-ago-2026 solo queda uno, el de subir un escenario: la descarga
+     del mod va a su Release y el editor ya está publicado en `editor/`. Había
+     también un `data-descarga` genérico para las descargas sin publicar; se
+     quitó al quedarse sin usuarios. */
   document.addEventListener('click', function (e) {
     if (!e.target.closest) return;
 
@@ -74,14 +74,6 @@
       e.preventDefault();
       alert(propio.getAttribute('data-aviso-' + idioma) ||
             propio.getAttribute('data-aviso-es'));
-      return;
-    }
-
-    if (e.target.closest('[data-descarga]')) {
-      e.preventDefault();
-      alert(idioma === 'en'
-        ? 'Not published yet — this is a prototype of the site.'
-        : 'Todavía no está publicado: esto es un prototipo del sitio.');
     }
   });
 
