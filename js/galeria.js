@@ -47,7 +47,9 @@
       musicaAviso: 'el audio va aparte', comentar: 'Comentar o avisar de un problema', archivos: 'Archivos',
       facil: 'Fácil', normal: 'Normal', dificil: 'Difícil', guerra: 'Guerra',
       // subir
-      subirTitulo: 'Subir un escenario', elegir: 'Elige el archivo que exportó el editor',
+      subirTitulo: 'Subir un escenario', elegir: 'Suelta aquí tu escenario o pulsa para elegirlo',
+      subirSub: 'Tres pasos y está en la galería.', p1: 'El archivo', p2: 'La ficha', p3: 'Detalles',
+      cambiar: 'Pulsa o suelta otro para cambiarlo', esCampana: 'Campaña', esMapa: 'Escenario suelto', heroesN: 'héroes', mapasN: 'escenarios',
       elegirAyuda: 'Un <code>.dmap</code>, o una campaña: su <code>.dcamp</code> y todos sus <code>.dmap</code> a la vez.',
       fTitulo: 'Título', fAutor: 'Autor (el nombre que quieras que se vea)', fDesc: 'Descripción',
       fDescAyuda: 'De qué va, qué tiene de especial. Sin destripar el final.', fIdioma: 'Idioma en que está escrito',
@@ -85,7 +87,9 @@
       dialogos: 'Dialogues', inventario: 'Starting inventory', si: 'Yes', musica: 'Custom music',
       musicaAviso: 'the audio file is separate', comentar: 'Comment or report a problem', archivos: 'Files',
       facil: 'Easy', normal: 'Normal', dificil: 'Hard', guerra: 'Warfare',
-      subirTitulo: 'Upload a scenario', elegir: 'Pick the file the editor exported',
+      subirTitulo: 'Upload a scenario', elegir: 'Drop your scenario here or click to pick it',
+      subirSub: 'Three steps and it is in the gallery.', p1: 'The file', p2: 'The details', p3: 'Extras',
+      cambiar: 'Click or drop another one to change it', esCampana: 'Campaign', esMapa: 'Single scenario', heroesN: 'heroes', mapasN: 'scenarios',
       elegirAyuda: 'A <code>.dmap</code>, or a campaign: its <code>.dcamp</code> and all its <code>.dmap</code> files at once.',
       fTitulo: 'Title', fAutor: 'Author (the name you want shown)', fDesc: 'Description',
       fDescAyuda: 'What it is about, what makes it special. No spoilers for the ending.', fIdioma: 'Language it is written in',
@@ -351,16 +355,27 @@
     var aviso = el('p', 'subir-error'); aviso.setAttribute('role', 'alert');
     var decir = function (m) { aviso.textContent = m || ''; if (m && aviso.scrollIntoView) aviso.scrollIntoView({ block: 'nearest' }); };
 
+    document.getElementById('subir-sub').textContent = t('subirSub');
+    var paso = function (n, nombre) {
+      var h = el('h3', 'subir-paso'); h.appendChild(el('b', null, String(n))); h.appendChild(document.createTextNode(nombre)); return h;
+    };
+
     var entrada = el('input'); entrada.type = 'file'; entrada.multiple = true; entrada.accept = '.dmap,.dcamp,application/json';
+    var zona = el('label', 'soltar');
+    var zIcono = el('span', 'soltar-icono', '⬆'); zIcono.setAttribute('aria-hidden', 'true');
+    var zTitulo = el('b', null, t('elegir'));
     var ayudaArch = el('small'); ayudaArch.innerHTML = t('elegirAyuda');        // cadena propia, no de fuera
-    var cArch = el('label', 'campo'); cArch.appendChild(el('span', null, t('elegir'))); cArch.appendChild(entrada); cArch.appendChild(ayudaArch);
-    var leidos = el('p', 'apagado'); leidos.style.margin = '0 0 12px';
-    f.appendChild(cArch); f.appendChild(leidos);
+    var leidos = el('div', 'chips soltar-leidos');
+    zona.appendChild(entrada); zona.appendChild(zIcono); zona.appendChild(zTitulo); zona.appendChild(leidos); zona.appendChild(ayudaArch);
+    f.appendChild(paso(1, t('p1'))); f.appendChild(zona);
 
     var titulo = el('input'); titulo.maxLength = 80;
     var autor = el('input'); autor.maxLength = 40;
     try { autor.value = localStorage.getItem('descentforge.autor') || ''; } catch (e) {}
     var desc = el('textarea'); desc.rows = 5; desc.maxLength = 2000;
+    var cuenta = el('small', 'cuenta', '0 / 2000');
+    var contar = function () { cuenta.textContent = desc.value.length + ' / 2000'; };
+    desc.addEventListener('input', contar);
     var idioma = el('select'); opcion(idioma, '', '—', '');
     Object.keys(IDIOMAS).forEach(function (k) { opcion(idioma, k, k === 'otro' ? (leng() === 'en' ? 'Other' : 'Otro') : IDIOMAS[k], ''); });
     var dur = el('select'); DURACIONES.forEach(function (m) { opcion(dur, m, m ? (m >= 180 ? '180+ ' : m + ' ') + t('min') : t('noSe'), 0); });
@@ -379,32 +394,51 @@
     var acepta = el('input'); acepta.type = 'checkbox';
     var lAcepta = el('label', 'campo linea'); lAcepta.appendChild(acepta); lAcepta.appendChild(el('span', null, t('acepta')));
 
-    f.appendChild(campo(t('fTitulo'), titulo));
-    f.appendChild(campo(t('fAutor'), autor));
-    f.appendChild(campo(t('fDesc'), desc, t('fDescAyuda')));
+    f.appendChild(paso(2, t('p2')));
+    var fila0 = el('div', 'campos-fila ancha'); fila0.appendChild(campo(t('fTitulo'), titulo)); fila0.appendChild(campo(t('fAutor'), autor)); f.appendChild(fila0);
+    var cDesc = campo(t('fDesc'), desc, t('fDescAyuda')); cDesc.appendChild(cuenta); f.appendChild(cDesc);
     var fila = el('div', 'campos-fila'); fila.appendChild(campo(t('fIdioma'), idioma)); fila.appendChild(campo(t('fDuracion'), dur)); f.appendChild(fila);
+    f.appendChild(paso(3, t('p3')));
     var cEt = el('div', 'campo'); cEt.appendChild(el('span', null, t('fEtiquetas'))); cEt.appendChild(caja); f.appendChild(cEt);
     var fila2 = el('div', 'campos-fila'); fila2.appendChild(campo(t('fProbado'), probado)); fila2.appendChild(campo(t('fVersion'), version)); f.appendChild(fila2);
     f.appendChild(campo(t('fNotas'), notas, t('fNotasAyuda')));
+    lAcepta.className = 'campo linea acepta';
     f.appendChild(lAcepta);
     f.appendChild(el('p', 'apagado nota', t('necesitaCuenta')));
     f.appendChild(aviso);
 
-    entrada.addEventListener('change', function () {
-      decir(''); leidos.textContent = ''; envio.archivos = [];
-      Promise.all([].map.call(entrada.files, leer)).then(function (archivos) {
+    var cargar = function (lista) {
+      decir(''); leidos.textContent = ''; envio.archivos = []; zona.classList.remove('lleno');
+      zIcono.textContent = '⬆'; zTitulo.textContent = t('elegir');
+      if (!lista || !lista.length) return;
+      Promise.all([].map.call(lista, leer)).then(function (archivos) {
         var mal = revisar(archivos);
         if (mal) { decir(mal); return; }
         envio.archivos = archivos;
-        leidos.textContent = t('leido') + ' ' + archivos.map(function (a) { return a.nombre; }).join(', ');
         // lo que el autor ya escribió en el editor, puesto de partida
-        var principal = archivos.filter(function (a) { return /\.dcamp$/.test(a.nombre); })[0] || archivos[0];
-        var meta = (JSON.parse(principal.contenido).meta) || {};
+        var camp = archivos.filter(function (a) { return /\.dcamp$/.test(a.nombre); })[0];
+        var principal = camp || archivos[0];
+        var doc = JSON.parse(principal.contenido), meta = doc.meta || {};
+        zona.classList.add('lleno'); zIcono.textContent = '✓';
+        zTitulo.textContent = String(meta.name || principal.nombre).slice(0, 80);
+        leidos.appendChild(el('span', 'chip fuerte', t(camp ? 'esCampana' : 'esMapa')));
+        if (camp) leidos.appendChild(el('span', 'chip', (archivos.length - 1) + ' ' + t('mapasN')));
+        else if (+meta.heroCount) leidos.appendChild(el('span', 'chip', (+meta.heroCount) + ' ' + t('heroesN')));
+        archivos.forEach(function (a) { leidos.appendChild(el('span', 'chip suave', a.nombre)); });
+        ayudaArch.textContent = t('cambiar');
         if (!titulo.value && meta.name) titulo.value = String(meta.name).slice(0, 80);
         if (!autor.value && meta.author) autor.value = String(meta.author).slice(0, 40);
-        if (!desc.value && meta.description) desc.value = String(meta.description).slice(0, 2000);
+        if (!desc.value && meta.description) { desc.value = String(meta.description).slice(0, 2000); contar(); }
       }).catch(function () { decir(t('malArchivo', '?')); });
+    };
+    entrada.addEventListener('change', function () { cargar(entrada.files); });
+    ['dragenter', 'dragover'].forEach(function (n) {
+      zona.addEventListener(n, function (ev) { ev.preventDefault(); zona.classList.add('encima'); });
     });
+    ['dragleave', 'drop'].forEach(function (n) {
+      zona.addEventListener(n, function (ev) { ev.preventDefault(); zona.classList.remove('encima'); });
+    });
+    zona.addEventListener('drop', function (ev) { if (ev.dataTransfer && ev.dataTransfer.files.length) cargar(ev.dataTransfer.files); });
 
     var pie = document.getElementById('subir-pie'); pie.textContent = '';
     var cancelar = el('button', 'boton secundario', t('cancelar')); cancelar.type = 'button';
@@ -446,8 +480,10 @@
   function ultimoPaso(directo) {
     var f = document.getElementById('subir-cuerpo'); f.textContent = '';
     document.getElementById('subir-titulo').textContent = t('listoTitulo');
+    document.getElementById('subir-sub').textContent = '';
+    var hecho0 = el('div', 'subir-listo'); hecho0.appendChild(el('span', 'soltar-icono', '✓'));
     var p = el('p'); p.innerHTML = t(directo ? 'listoDirecto' : 'listoPegar');   // cadena propia
-    f.appendChild(p);
+    hecho0.appendChild(p); f.appendChild(hecho0);
     if (!directo) {
       var ta = el('textarea', 'paquete'); ta.readOnly = true; ta.rows = 4; ta.value = envio.paquete;
       ta.addEventListener('focus', function () { ta.select(); });

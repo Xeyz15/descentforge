@@ -332,28 +332,69 @@ button.boton { cursor: pointer; font-family: inherit; background: none; }
 button.boton.principal { background: var(--oro); }
 button.boton:disabled { opacity: .5; cursor: wait; }
 
-dialog.subir { background: var(--tinta); color: var(--oro); border: 1px solid var(--linea); border-radius: 12px;
-  padding: 0; width: min(640px, 94vw); max-height: 92vh; }
-dialog.subir::backdrop { background: rgba(4, 6, 14, .72); }
-dialog.subir[open] { display: flex; flex-direction: column; }
-.subir-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 16px 20px; border-bottom: 1px solid var(--linea); }
-.subir-cab h2 { margin: 0; font-size: 21px; }
-.subir-cab button { background: none; border: 0; color: var(--oro-tenue); font-size: 26px; line-height: 1; cursor: pointer; }
-.subir-cuerpo { padding: 18px 20px; overflow-y: auto; }
-.subir-pie { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; padding: 14px 20px; border-top: 1px solid var(--linea); }
+dialog.subir { background: var(--tinta); color: var(--oro); border: 1px solid rgba(242, 227, 186, .28); border-radius: 14px;
+  padding: 0; width: min(720px, 94vw); max-height: 92vh; overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .6), 0 0 0 1px rgba(0, 0, 0, .4); }
+dialog.subir::backdrop { background: rgba(4, 6, 14, .78); backdrop-filter: blur(4px); }
+dialog.subir[open] { display: flex; flex-direction: column; animation: subir-entra .22s ease-out; }
+@keyframes subir-entra { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
+.subir-cab { flex: none; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  padding: 22px 26px 18px; border-bottom: 1px solid var(--linea);
+  background: radial-gradient(120% 160% at 0% 0%, rgba(232, 207, 138, .13), transparent 60%), var(--tinta-alta); }
+.subir-cab h2 { margin: 0; font-size: 25px; line-height: 1.2; }
+.subir-cab p { margin: 4px 0 0; font-size: 14.5px; }
+.subir-cab p:empty { display: none; }
+.subir-cab button { background: none; border: 1px solid transparent; color: var(--oro-tenue); font-size: 24px; line-height: 1;
+  width: 36px; height: 36px; border-radius: 8px; cursor: pointer; flex: none; }
+.subir-cab button:hover { color: var(--oro); background: rgba(242, 227, 186, .08); border-color: var(--linea); }
+.subir-cuerpo { position: relative; padding: 6px 26px 22px; overflow-y: auto; flex: 1 1 auto; min-height: 0; scrollbar-color: rgba(242, 227, 186, .25) transparent; }
+.subir-pie { flex: none; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; padding: 16px 26px;
+  border-top: 1px solid var(--linea); background: var(--tinta-baja); }
+.subir-pie .boton { padding: 10px 20px; font-size: 15px; }
+.subir-paso { display: flex; align-items: center; gap: 11px; margin: 22px 0 14px; font-size: 18px; }
+.subir-paso b { display: inline-grid; place-items: center; width: 27px; height: 27px; border-radius: 50%;
+  background: var(--oro); color: var(--tinta); font: 700 14px var(--sans); flex: none; }
+.subir-paso::after { content: ""; flex: 1; height: 1px; background: var(--linea); }
+.soltar { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+  padding: 26px 18px 22px; border: 1.5px dashed rgba(242, 227, 186, .34); border-radius: 12px; cursor: pointer;
+  background: rgba(242, 227, 186, .035); transition: border-color .15s, background .15s; }
+.soltar:hover, .soltar.encima, .soltar:focus-within { border-color: var(--oro-vivo); background: rgba(242, 227, 186, .08); }
+.soltar.lleno { border-style: solid; border-color: rgba(232, 207, 138, .55); }
+.soltar input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.soltar > b { font-family: var(--serif); font-size: 18px; overflow-wrap: anywhere; }
+.soltar small { font-size: 13px; color: var(--oro-tenue); }
+.soltar-icono { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; font-size: 21px;
+  border: 1px solid var(--linea); background: var(--tinta-alta); color: var(--oro-vivo); }
+.soltar.lleno .soltar-icono, .subir-listo .soltar-icono { background: var(--oro); color: var(--tinta); border-color: var(--oro); font-weight: 700; }
+.soltar-leidos { justify-content: center; }
+.soltar-leidos:empty { display: none; }
+.soltar-leidos .chip { white-space: normal; overflow-wrap: anywhere; }
+.subir-listo { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 26px 6px 4px; }
+.subir-listo p { margin: 0; }
 .campo { display: flex; flex-direction: column; gap: 5px; margin: 0 0 14px; min-width: 0; }
-.campo > span { font-size: 13.5px; color: var(--oro-tenue); }
+.campo > span { font-size: 13px; color: var(--oro-tenue); letter-spacing: .02em; }
+.campo input, .campo select, .campo textarea { width: 100%; padding: 10px 12px; border-radius: 8px; transition: border-color .15s; }
+.campo input:hover, .campo select:hover, .campo textarea:hover { border-color: rgba(242, 227, 186, .34); }
+.campo textarea { resize: vertical; min-height: 64px; line-height: 1.5; }
+.campo select { appearance: none; -webkit-appearance: none; padding-right: 34px; cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--oro-vivo) 50%), linear-gradient(135deg, var(--oro-vivo) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px; background-repeat: no-repeat; }
+.campo .cuenta { align-self: flex-end; margin-top: -2px; font-variant-numeric: tabular-nums; }
 .campo small { font-size: 12.5px; color: var(--oro-tenue); }
 .campo.linea { flex-direction: row; align-items: flex-start; gap: 9px; }
 .campo.linea > span { color: var(--oro); font-size: 14.5px; }
-.campo.linea input { margin-top: 4px; }
-.campo input[type="file"] { padding: 8px; }
-.campos-fila { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-@media (max-width: 520px) { .campos-fila { grid-template-columns: 1fr; } }
-.chips.elegir .chip { cursor: pointer; user-select: none; }
+.campo.linea input { margin-top: 3px; width: 18px; height: 18px; padding: 0; flex: none; accent-color: var(--oro-vivo); cursor: pointer; }
+.campo.acepta { margin-top: 20px; padding: 14px 16px; border: 1px solid var(--linea); border-radius: 10px; background: var(--tinta-alta); cursor: pointer; }
+.campos-fila { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: end; }
+.campos-fila.ancha { grid-template-columns: 1.6fr 1fr; }
+@media (max-width: 520px) { .campos-fila, .campos-fila.ancha { grid-template-columns: 1fr; } .subir-cab, .subir-cuerpo, .subir-pie { padding-left: 16px; padding-right: 16px; } }
+.chips.elegir { gap: 7px; }
+.chips.elegir .chip { position: relative; cursor: pointer; user-select: none; padding: 6px 13px; font-size: 13px; transition: background .12s, color .12s, border-color .12s; }
+.chips.elegir .chip:hover { border-color: var(--oro-vivo); color: var(--oro); }
 .chips.elegir .chip input { position: absolute; opacity: 0; pointer-events: none; }
 .chips.elegir .chip.puesto { background: var(--oro); color: var(--tinta); border-color: var(--oro); }
-.subir-error { color: #f0a57c; min-height: 1.2em; margin: 6px 0 0; font-size: 14.5px; }
+.subir-error { color: #f6b592; margin: 12px 0 0; font-size: 14.5px; padding: 10px 14px; border-radius: 8px;
+  border: 1px solid rgba(200, 98, 42, .55); background: rgba(200, 98, 42, .14); }
+.subir-error:empty { display: none; }
 .subir .nota { font-size: 13.5px; margin: 4px 0 0; }
 textarea.paquete { width: 100%; font-family: ui-monospace, Consolas, monospace; font-size: 12px; margin-top: 12px; }
