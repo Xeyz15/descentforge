@@ -368,7 +368,7 @@ def main():
                      f"❌ **No se ha publicado.** {r.es}{lineas}\n\n"
                      f"Corrígelo en el editor, vuelve a pulsar «Subir un escenario» en la página y **edita este mensaje** "
                      f"con el paquete nuevo.\n\n"
-                     f"❌ **Not published.** {r.en}\n\nFix it in the editor, press “Upload a scenario” on the page again "
+                     f"❌ **Not published.** {r.en}{' (see the list above)' if r.lineas else ''}\n\nFix it in the editor, press “Upload a scenario” on the page again "
                      f"and **edit this message** with the new package."}
     Path(a.salida).write_text(json.dumps(resultado, ensure_ascii=False), encoding="utf-8")
     print(("✓ publicado " + resultado["id"]) if resultado["ok"] else "✗ rechazado")

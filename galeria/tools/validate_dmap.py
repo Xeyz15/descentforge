@@ -338,9 +338,10 @@ def validate(doc):
                      "usarlo no hará nada")
 
         usos = (o.get("uses") or "").strip().lower()
-        if usos not in ("", "once", "always"):
+        # un número de usos también vale (así lo escribe Bigorna: «1», «3»; «0» = siempre)
+        if usos not in ("", "once", "always") and not usos.isdigit():
             rep.err(f"objeto #{i + 1}: «{usos}» no es un límite de usos "
-                    "(solo «once» o «always», o vacío para dejarlo al objeto)")
+                    "(«once», «always», un número de usos, o vacío para dejarlo al objeto)")
         # Todas sus casillas, no solo la de origen: una campana es de 1×4 y con
         # mirar solo dónde se pulsa se colaba medio objeto fuera del tablero,
         # que en el juego sale flotando en el vacío.
