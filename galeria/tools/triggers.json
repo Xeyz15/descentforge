@@ -1432,6 +1432,437 @@
    "mod": "app"
   },
   {
+   "id": "initVariable",
+   "cat": "Flujo",
+   "name": "Dar su valor inicial a una variable",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Valor",
+     "type": "int",
+     "def": 0
+    }
+   ],
+   "engine": "SetGameIntField",
+   "mod": "app"
+  },
+  {
+   "id": "setCampaignVar",
+   "cat": "Flujo",
+   "name": "Fijar una variable de la campaña",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Valor",
+     "type": "int",
+     "def": 1
+    }
+   ],
+   "engine": "SetGameIntField",
+   "mod": "app"
+  },
+  {
+   "id": "goToObjective",
+   "cat": "Flujo",
+   "name": "Saltar a otro objetivo",
+   "params": [
+    {
+     "key": "n",
+     "label": "Objetivo (1 = el primero)",
+     "type": "int",
+     "def": 1,
+     "min": 1
+    }
+   ],
+   "engine": "SetObjective",
+   "mod": "app"
+  },
+  {
+   "id": "log",
+   "cat": "Flujo",
+   "name": "Apuntar una línea en el registro",
+   "params": [
+    {
+     "key": "text",
+     "label": "Texto",
+     "type": "text"
+    }
+   ],
+   "engine": "Log",
+   "mod": "app"
+  },
+  {
+   "id": "tableNote",
+   "cat": "Narrativa",
+   "name": "Decir algo que hacer en la mesa",
+   "params": [
+    {
+     "key": "text",
+     "label": "Texto",
+     "type": "text"
+    }
+   ],
+   "engine": "StoryMessageNode",
+   "mod": "app"
+  },
+  {
+   "id": "announceMission",
+   "cat": "Narrativa",
+   "name": "Anunciar una misión",
+   "params": [
+    {
+     "key": "text",
+     "label": "Texto",
+     "type": "text",
+     "opt": true
+    },
+    {
+     "key": "mission",
+     "label": "Nombre de la misión",
+     "type": "text",
+     "opt": true
+    }
+   ],
+   "engine": "SetObjective",
+   "mod": "app"
+  },
+  {
+   "id": "askYesNo",
+   "cat": "Narrativa",
+   "name": "Preguntar sí o no",
+   "params": [
+    {
+     "key": "text",
+     "label": "Texto",
+     "type": "text"
+    },
+    {
+     "key": "var",
+     "label": "Variable donde queda la respuesta (1 = sí)",
+     "type": "text"
+    },
+    {
+     "key": "yes",
+     "label": "Texto del sí (opcional)",
+     "type": "text",
+     "opt": true
+    },
+    {
+     "key": "no",
+     "label": "Texto del no (opcional)",
+     "type": "text",
+     "opt": true
+    }
+   ],
+   "engine": "MultipleChoiceStoryMessageNode",
+   "mod": "app"
+  },
+  {
+   "id": "additionalAction",
+   "cat": "Héroes",
+   "name": "Dar una acción adicional a un héroe",
+   "params": [],
+   "engine": "StoryMessageNode",
+   "mod": "app"
+  },
+  {
+   "id": "revealRoom",
+   "cat": "Tablero",
+   "name": "Revelar una sala",
+   "params": [
+    {
+     "key": "group",
+     "label": "Sala",
+     "type": "tilegroup"
+    }
+   ],
+   "engine": "SetVisibilityBatch",
+   "mod": "app"
+  },
+  {
+   "id": "removeRoom",
+   "cat": "Tablero",
+   "name": "Quitar una sala del tablero",
+   "params": [
+    {
+     "key": "group",
+     "label": "Sala",
+     "type": "tilegroup"
+    }
+   ],
+   "engine": "SetVisibilityBatch",
+   "mod": "app"
+  },
+  {
+   "id": "removeTile",
+   "cat": "Tablero",
+   "name": "Quitar una loseta del tablero",
+   "params": [
+    {
+     "key": "tile",
+     "label": "Loseta (su número en el mapa; 0 = la primera)",
+     "type": "int",
+     "def": 0,
+     "min": 0
+    }
+   ],
+   "engine": "SetVisibility",
+   "mod": "app"
+  },
+  {
+   "id": "reopenObject",
+   "cat": "Tablero",
+   "name": "Volver a dejar usable un objeto",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "SetInteractable",
+   "mod": "app"
+  },
+  {
+   "id": "spendObject",
+   "cat": "Tablero",
+   "name": "Dar un objeto por gastado",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "SetInteractable",
+   "mod": "app"
+  },
+  {
+   "id": "moveObject",
+   "cat": "Tablero",
+   "name": "Mover un objeto a otra casilla",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    },
+    {
+     "key": "cell",
+     "label": "Casilla",
+     "type": "cell"
+    },
+    {
+     "key": "level",
+     "label": "Altura",
+     "type": "int",
+     "def": 0,
+     "min": 0,
+     "opt": true
+    }
+   ],
+   "engine": "MoveTo",
+   "mod": "app"
+  },
+  {
+   "id": "giveGold",
+   "cat": "Botín",
+   "name": "Dar oro al grupo",
+   "params": [
+    {
+     "key": "amount",
+     "label": "Oro",
+     "type": "int",
+     "def": 10,
+     "min": 1
+    }
+   ],
+   "engine": "GiveTreasure",
+   "mod": "app"
+  },
+  {
+   "id": "removeGold",
+   "cat": "Botín",
+   "name": "Quitar oro al grupo",
+   "params": [
+    {
+     "key": "amount",
+     "label": "Oro",
+     "type": "int",
+     "def": 10,
+     "min": 1
+    }
+   ],
+   "engine": "GiveTreasure",
+   "mod": "app"
+  },
+  {
+   "id": "giveRandomItem",
+   "cat": "Botín",
+   "name": "Dar un objeto al azar",
+   "params": [
+    {
+     "key": "count",
+     "label": "Cuántos",
+     "type": "int",
+     "def": 1,
+     "min": 1
+    },
+    {
+     "key": "gold",
+     "label": "Y además oro",
+     "type": "int",
+     "def": 0,
+     "min": 0,
+     "opt": true
+    }
+   ],
+   "engine": "GiveTreasure",
+   "mod": "app"
+  },
+  {
+   "id": "removeRandomMaterial",
+   "cat": "Botín",
+   "name": "Quitar materiales al azar",
+   "params": [
+    {
+     "key": "amount",
+     "label": "Cuántos",
+     "type": "int",
+     "def": 1,
+     "min": 1
+    }
+   ],
+   "engine": "RemoveCraftingMaterials",
+   "mod": "app"
+  },
+  {
+   "id": "addItemToPool",
+   "cat": "Botín",
+   "name": "Meter un objeto en la reserva del mapa",
+   "params": [
+    {
+     "key": "item",
+     "label": "Objeto",
+     "type": "loot"
+    }
+   ],
+   "engine": "GiveTreasure",
+   "mod": "app"
+  },
+  {
+   "id": "removeItemFromPool",
+   "cat": "Botín",
+   "name": "Sacar un objeto de la reserva del mapa",
+   "params": [
+    {
+     "key": "item",
+     "label": "Objeto",
+     "type": "loot"
+    }
+   ],
+   "engine": "GiveTreasure",
+   "mod": "app"
+  },
+  {
+   "id": "enemyBonus",
+   "cat": "Enemigos",
+   "name": "Cambiar el ataque o la defensa de un enemigo",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy",
+     "opt": true
+    },
+    {
+     "key": "group",
+     "label": "Grupo",
+     "type": "group",
+     "opt": true
+    },
+    {
+     "key": "attack",
+     "label": "Ataque (+ o −)",
+     "type": "int",
+     "def": 1
+    },
+    {
+     "key": "defense",
+     "label": "Defensa (+ o −)",
+     "type": "int",
+     "def": 0
+    }
+   ],
+   "engine": "SetEnemyIntField",
+   "mod": "app"
+  },
+  {
+   "id": "escort",
+   "cat": "Enemigos",
+   "name": "Empezar una escolta",
+   "params": [
+    {
+     "key": "name",
+     "label": "Nombre del protegido",
+     "type": "text",
+     "opt": true
+    },
+    {
+     "key": "chance",
+     "label": "Probabilidad de que un enemigo vaya a por él (%)",
+     "type": "int",
+     "def": 25,
+     "min": 0,
+     "max": 100
+    },
+    {
+     "key": "hunters",
+     "label": "Grupos que van siempre a por él (separados por comas)",
+     "type": "text",
+     "opt": true
+    }
+   ],
+   "engine": "SetEnemyTargetThreat",
+   "mod": "app"
+  },
+  {
+   "id": "escortEnd",
+   "cat": "Enemigos",
+   "name": "Terminar la escolta",
+   "params": [],
+   "engine": "SetEnemyTargetThreat",
+   "mod": "app"
+  },
+  {
+   "id": "if",
+   "cat": "Flujo",
+   "name": "Si… entonces… si no",
+   "params": [],
+   "engine": "Selector",
+   "hidden": true,
+   "mod": "app"
+  },
+  {
+   "id": "playScene",
+   "cat": "Narrativa",
+   "name": "Tocar una escena de diálogo propia",
+   "params": [],
+   "engine": "StoryMessageNode",
+   "hidden": true,
+   "mod": "app"
+  },
+  {
    "id": "completeObjective",
    "cat": "Fin",
    "name": "Completar el objetivo",
@@ -2163,6 +2594,105 @@
     }
    ],
    "engine": "CheckEnemyHasTrait"
+  },
+  {
+   "id": "campaignVar",
+   "cat": "Variables",
+   "name": "Una variable de la campaña vale X",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Valor",
+     "type": "int",
+     "def": 1
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "goldAtLeast",
+   "cat": "Botín",
+   "name": "El grupo tiene al menos X de oro",
+   "params": [
+    {
+     "key": "amount",
+     "label": "Oro",
+     "type": "int",
+     "def": 10,
+     "min": 1
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "hasItem",
+   "cat": "Botín",
+   "name": "El grupo lleva un objeto",
+   "params": [
+    {
+     "key": "item",
+     "label": "Objeto",
+     "type": "loot"
+    }
+   ],
+   "engine": "CheckInventory"
+  },
+  {
+   "id": "groupsDefeated",
+   "cat": "Enemigos",
+   "name": "Han caído varios grupos",
+   "params": [
+    {
+     "key": "groups",
+     "label": "Grupos (separados por comas)",
+     "type": "text"
+    }
+   ],
+   "engine": "CheckEnemies"
+  },
+  {
+   "id": "objectVisible",
+   "cat": "Tablero",
+   "name": "Un objeto está a la vista",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "CheckVisibility"
+  },
+  {
+   "id": "roomRevealed",
+   "cat": "Tablero",
+   "name": "Una sala ya ha salido a la mesa",
+   "params": [
+    {
+     "key": "group",
+     "label": "Sala",
+     "type": "tilegroup"
+    }
+   ],
+   "engine": "CheckVisibility"
+  },
+  {
+   "id": "roomHidden",
+   "cat": "Tablero",
+   "name": "Una sala aún no ha salido",
+   "params": [
+    {
+     "key": "group",
+     "label": "Sala",
+     "type": "tilegroup"
+    }
+   ],
+   "engine": "CheckVisibility"
   },
   {
    "id": "objectiveIs",

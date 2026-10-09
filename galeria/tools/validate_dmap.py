@@ -139,6 +139,8 @@ def check_params(rep, where, spec, params):
     for key, p in declared.items():
         val = params.get(key)
         if val in (None, "", []):
+            if p.get("opt"):
+                continue                # puede ir vacío: el mod pone el suyo
             rep.err(f"{where}: falta el parámetro «{p.get('label', key)}»")
         elif p["type"] == "int" and not isinstance(val, int):
             rep.err(f"{where}: «{key}» debería ser un número")
@@ -531,14 +533,39 @@ def validate(doc):
 
         if not t.get("actions"):
             rep.err(f"{name}: no hace nada (sin acciones)")
-        for rama, rotulo in (("actions", "acción"), ("else", "si no")):
-            for a in t.get(rama) or []:
+        def acciones(lista, rotulo, hondo=0):
+            for a in lista or []:
+                par = a.get("params") or {}
+                # «si…»: lleva condiciones y dos listas de acciones dentro
+                if a.get("id") == "if":
+                    if hondo > 8:
+                        rep.err(f"{name}: demasiados «si…» unos dentro de otros")
+                        continue
+                    condiciones(par.get("conditions") or [], f"{name} · si…")
+                    dentro = par.get("then") or par.get("actions") or []
+                    if not dentro and not par.get("else"):
+                        rep.err(f"{name}: un «si…» que no hace nada en ninguna rama")
+                    acciones(dentro, "si… entonces", hondo + 1)
+                    acciones(par.get("else") or [], "si… si no", hondo + 1)
+                    continue
+                # una escena propia: una lista de cuadros de diálogo
+                if a.get("id") == "playScene":
+                    cuadros = par.get("dialogues")
+                    if not isinstance(cuadros, list) or not cuadros:
+                        rep.err(f"{name}: «playScene» sin cuadros de diálogo")
+                    elif any(not isinstance(c, dict) or not (c.get("text") or c.get("options"))
+                             for c in cuadros):
+                        rep.err(f"{name}: «playScene» tiene un cuadro vacío")
+                    continue
                 spec = ACTIONS.get(a.get("id"))
                 if not spec:
                     rep.err(f"{name}: {rotulo} «{a.get('id')}» desconocida")
                 else:
-                    check_params(rep, f"{name} · {rotulo}", spec, a.get("params", {}))
-                    check_refs(rep, f"{name} · {rotulo}", spec, a.get("params", {}))
+                    check_params(rep, f"{name} · {rotulo}", spec, par)
+                    check_refs(rep, f"{name} · {rotulo}", spec, par)
+
+        for rama, rotulo in (("actions", "acción"), ("else", "si no")):
+            acciones(t.get(rama), rotulo)
         if t.get("else") and not t.get("conditions"):
             rep.warn(f"{name}: tiene «si no» pero ninguna condición; no correrá nunca")
 
