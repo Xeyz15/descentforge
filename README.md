@@ -13,18 +13,30 @@ index.html        la principal
 editor.html       Editor Online
 escenarios.html   escenarios de la comunidad
 css/estilo.css    el estilo, común a las tres
-js/sitio.js       idioma y menú de móvil — lo único con JavaScript
+js/sitio.js       idioma y menú de móvil
+js/galeria.js     la galería: pinta mapas/indice.json y prepara las subidas
 img/              logo y arte propio
+mapas/            los escenarios publicados y su índice (lo escribe la acción)
+galeria/          lo que revisa y publica cada escenario que llega
+.github/          el formulario de subida y la acción que lo atiende
 ```
 
-Es HTML, CSS y un archivo de JavaScript de 100 líneas. **Sin dependencias, sin
-compilar y sin analítica.** El español va escrito en el HTML —así se lee aunque
+Es HTML, CSS y JavaScript a mano. **Sin dependencias, sin compilar, sin
+servidor y sin analítica.** El español va escrito en el HTML —así se lee aunque
 el JavaScript esté apagado— y el inglés viaja en atributos `data-en`.
 
-## Estado
+## Cómo se sube un escenario
 
-Primera versión. El **Editor Online** y la **galería de escenarios** están
-anunciados pero todavía no abiertos: sus botones lo dicen al pulsarlos.
+1. En la página de escenarios, **Subir un escenario**: se elige el `.dmap` (o
+   el `.dcamp` con sus mapas), se rellena la ficha y la página lo empaqueta.
+2. Eso abre un *issue* en este repositorio con el paquete ya puesto. Hace
+   falta una cuenta de GitHub; no hay más registro que ese.
+3. La acción `escenarios.yml` lo revisa con los mismos validadores que el
+   editor. Si está bien, lo publica en `mapas/` y cierra el issue; si no,
+   contesta en el propio issue con lo que falla.
+
+Para **retirar** un escenario: pestaña *Actions* → *Escenarios* → *Run
+workflow*, con su identificador (`e12`).
 
 ## Contar un fallo o echar una mano
 

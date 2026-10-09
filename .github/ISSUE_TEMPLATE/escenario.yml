@@ -1,0 +1,25 @@
+name: Subir un escenario / Upload a scenario
+description: "Se rellena solo desde la página de escenarios. / Filled in for you from the scenarios page."
+title: "Escenario: "
+labels: ["escenario"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **No escribas esto a mano.** Ve a [la página de escenarios](https://xeyz15.github.io/descentforge/escenarios.html), pulsa «Subir un escenario» y la página te trae aquí con todo relleno. Si el recuadro de abajo llega vacío, pega en él lo que la página te ha copiado (Ctrl+V).
+
+        **Do not type this by hand.** Go to [the scenarios page](https://xeyz15.github.io/descentforge/escenarios.html), press “Upload a scenario” and the page brings you here with everything filled in. If the box below arrives empty, paste into it what the page copied for you (Ctrl+V).
+  - type: textarea
+    id: datos
+    attributes:
+      label: Escenario
+      description: "El paquete que genera la página; empieza por DF1 y acaba en FIN. / The package the page generates."
+      render: text
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        Al enviarlo, una comprobación automática lo valida y, si está bien, lo publica en la galería en un par de minutos y te lo dice aquí mismo.
+
+        When you submit, an automatic check validates it and, if it is fine, publishes it in the gallery within a couple of minutes and tells you right here.

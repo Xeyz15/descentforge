@@ -1,0 +1,2282 @@
+{
+ "objectives": [
+  {
+   "id": "defeat_all",
+   "cat": "Eliminación",
+   "name": "Derrotar a todos los enemigos",
+   "text": "Derrota a todos los enemigos.",
+   "check": {
+    "event": "allEnemiesDefeated"
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "todos"
+  },
+  {
+   "id": "defeat_group",
+   "cat": "Eliminación",
+   "name": "Derrotar a un grupo",
+   "text": "Elimina al {group}.",
+   "check": {
+    "event": "groupDefeated"
+   },
+   "params": [
+    {
+     "key": "group",
+     "label": "Grupo de enemigos",
+     "type": "group"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "grupo"
+  },
+  {
+   "id": "defeat_boss",
+   "cat": "Eliminación",
+   "name": "Derrotar al jefe",
+   "text": "Derrota a {enemy}.",
+   "check": {
+    "event": "enemyDefeated"
+   },
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "jefe"
+  },
+  {
+   "id": "defeat_n",
+   "cat": "Eliminación",
+   "name": "Derrotar a N enemigos",
+   "text": "Derrota a {n} enemigos.",
+   "check": {
+    "event": "enemiesDefeatedCount",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "cuenta"
+  },
+  {
+   "id": "defeat_n_group",
+   "cat": "Eliminación",
+   "name": "Derrotar a N de un grupo",
+   "text": "Derrota a {n} miembros del {group}.",
+   "check": {
+    "event": "groupDefeatedCount",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    },
+    {
+     "key": "group",
+     "label": "Grupo de enemigos",
+     "type": "group"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "cuenta"
+  },
+  {
+   "id": "defeat_all_before_rounds",
+   "cat": "Eliminación",
+   "name": "Limpiar antes del límite",
+   "text": "Derrota a todos los enemigos antes de la ronda {rounds}.",
+   "check": {
+    "event": "allEnemiesDefeated",
+    "before": "round"
+   },
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "todos"
+  },
+  {
+   "id": "defeat_boss_alone",
+   "cat": "Eliminación",
+   "name": "Jefe sin escolta",
+   "text": "Derrota a {enemy} después de eliminar a su escolta.",
+   "check": {
+    "event": "enemyDefeated",
+    "requires": "groupDefeated"
+   },
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "group",
+     "label": "Grupo de enemigos",
+     "type": "group"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "grupo"
+  },
+  {
+   "id": "defeat_with_trait",
+   "cat": "Eliminación",
+   "name": "Matar con un tipo de daño",
+   "text": "Derrota a {enemy} usando daño {trait}.",
+   "check": {
+    "event": "enemyDefeatedByTrait"
+   },
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "trait",
+     "label": "Rasgo de daño",
+     "type": "trait"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "defeat_no_revive",
+   "cat": "Eliminación",
+   "name": "Sin resurrecciones",
+   "text": "Derrota a todos los enemigos evitando que resuciten.",
+   "check": {
+    "event": "allEnemiesDefeated",
+    "flag": "noRevive"
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "todos"
+  },
+  {
+   "id": "defeat_summoner",
+   "cat": "Eliminación",
+   "name": "Cortar las invocaciones",
+   "text": "Derrota a {enemy} para detener las invocaciones.",
+   "check": {
+    "event": "enemyDefeated",
+    "stops": "spawner"
+   },
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "jefe"
+  },
+  {
+   "id": "defeat_half",
+   "cat": "Eliminación",
+   "name": "Diezmar las filas",
+   "text": "Derrota al menos a la mitad de los enemigos.",
+   "check": {
+    "event": "enemiesDefeatedRatio",
+    "value": 0.5
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "mitad"
+  },
+  {
+   "id": "defeat_all_elites",
+   "cat": "Eliminación",
+   "name": "Eliminar a las élites",
+   "text": "Derrota a todos los enemigos nombrados.",
+   "check": {
+    "event": "namedEnemiesDefeated"
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "jefe"
+  },
+  {
+   "id": "defeat_wave",
+   "cat": "Eliminación",
+   "name": "Resistir las oleadas",
+   "text": "Sobrevive y derrota a las {n} oleadas.",
+   "check": {
+    "event": "wavesCleared",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "defeat_while_burning",
+   "cat": "Eliminación",
+   "name": "Enemigos en llamas",
+   "text": "Derrota a {n} enemigos mientras arden.",
+   "check": {
+    "event": "enemiesDefeatedOnFire",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "defeat_ranged_only",
+   "cat": "Eliminación",
+   "name": "Solo a distancia",
+   "text": "Derrota a {n} enemigos con ataques a distancia.",
+   "check": {
+    "event": "enemiesDefeatedRanged",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "defeat_last_standing",
+   "cat": "Eliminación",
+   "name": "Que no quede ninguno en pie",
+   "text": "Ningún enemigo debe seguir en juego al final de la ronda {rounds}.",
+   "check": {
+    "event": "noEnemiesAtRound"
+   },
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "todos"
+  },
+  {
+   "id": "survive_rounds",
+   "cat": "Supervivencia",
+   "name": "Sobrevivir N rondas",
+   "text": "Aguanta {rounds} rondas.",
+   "check": {
+    "event": "roundReached"
+   },
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "survive_no_death",
+   "cat": "Supervivencia",
+   "name": "Sin bajas",
+   "text": "Aguanta {rounds} rondas sin que caiga ningún héroe.",
+   "check": {
+    "event": "roundReached",
+    "flag": "noHeroDefeated"
+   },
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "survive_area",
+   "cat": "Supervivencia",
+   "name": "Mantener la posición",
+   "text": "Permanece en la zona marcada durante {rounds} rondas.",
+   "check": {
+    "event": "heldAreaRounds"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    },
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "survive_hp",
+   "cat": "Supervivencia",
+   "name": "Conservar la salud",
+   "text": "Termina con al menos el {hp}% de vida del grupo.",
+   "check": {
+    "event": "partyHealthAbove"
+   },
+   "params": [
+    {
+     "key": "hp",
+     "label": "Vida (%)",
+     "type": "int",
+     "def": 50,
+     "min": 1,
+     "max": 100
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "survive_hero",
+   "cat": "Supervivencia",
+   "name": "Proteger a un héroe",
+   "text": "{hero} debe seguir en pie al terminar.",
+   "check": {
+    "event": "heroAlive"
+   },
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "survive_outnumbered",
+   "cat": "Supervivencia",
+   "name": "En inferioridad",
+   "text": "Aguanta {rounds} rondas con refuerzos enemigos constantes.",
+   "check": {
+    "event": "roundReached",
+    "flag": "continuousSpawn"
+   },
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "survive_darkness",
+   "cat": "Supervivencia",
+   "name": "Resistir la oscuridad",
+   "text": "Sobrevive {rounds} rondas con visibilidad reducida.",
+   "check": {
+    "event": "roundReached",
+    "flag": "lowVisibility"
+   },
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "survive_no_potions",
+   "cat": "Supervivencia",
+   "name": "Sin pociones",
+   "text": "Aguanta {rounds} rondas sin usar consumibles.",
+   "check": {
+    "event": "roundReached",
+    "flag": "noConsumables"
+   },
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "survive_fire",
+   "cat": "Supervivencia",
+   "name": "Entre las llamas",
+   "text": "Sobrevive {rounds} rondas mientras el fuego se extiende.",
+   "check": {
+    "event": "roundReached",
+    "flag": "spreadingFire"
+   },
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "survive_all_heroes",
+   "cat": "Supervivencia",
+   "name": "Nadie se queda atrás",
+   "text": "Ningún héroe puede ser derrotado en toda la misión.",
+   "check": {
+    "event": "encounterEnd",
+    "flag": "noHeroDefeated"
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "survive_defend_object",
+   "cat": "Supervivencia",
+   "name": "Defender el objeto",
+   "text": "Impide que destruyan {interactable} durante {rounds} rondas.",
+   "check": {
+    "event": "objectIntactRounds"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    },
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "survive_until_help",
+   "cat": "Supervivencia",
+   "name": "Esperar refuerzos",
+   "text": "Resiste hasta que lleguen los refuerzos en la ronda {rounds}.",
+   "check": {
+    "event": "roundReached"
+   },
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "reach_cell",
+   "cat": "Movimiento",
+   "name": "Llegar a una casilla",
+   "text": "Alcanza la casilla señalada.",
+   "check": {
+    "event": "heroReachesCell"
+   },
+   "params": [
+    {
+     "key": "cell",
+     "label": "Casilla",
+     "type": "cell"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "reach_area_all",
+   "cat": "Movimiento",
+   "name": "Todos a la salida",
+   "text": "Todos los héroes deben llegar a la zona de salida.",
+   "check": {
+    "event": "allHeroesInArea"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "escape_rounds",
+   "cat": "Movimiento",
+   "name": "Huir a tiempo",
+   "text": "Escapa antes de que acabe la ronda {rounds}.",
+   "check": {
+    "event": "allHeroesInArea",
+    "before": "round"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    },
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "reach_with_item",
+   "cat": "Movimiento",
+   "name": "Huir con el objeto",
+   "text": "Consigue {loot} y llega a la salida.",
+   "check": {
+    "event": "allHeroesInArea",
+    "requires": "hasItem"
+   },
+   "params": [
+    {
+     "key": "loot",
+     "label": "Objeto/botín",
+     "type": "loot"
+    },
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "reach_climb",
+   "cat": "Movimiento",
+   "name": "Alcanzar las alturas",
+   "text": "Sube al nivel superior y alcanza la casilla marcada.",
+   "check": {
+    "event": "heroReachesCell",
+    "requires": "elevation"
+   },
+   "params": [
+    {
+     "key": "cell",
+     "label": "Casilla",
+     "type": "cell"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "reach_descend",
+   "cat": "Movimiento",
+   "name": "Descender al pozo",
+   "text": "Baja al nivel inferior y alcanza la casilla marcada.",
+   "check": {
+    "event": "heroReachesCell",
+    "requires": "elevation"
+   },
+   "params": [
+    {
+     "key": "cell",
+     "label": "Casilla",
+     "type": "cell"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "reach_all_points",
+   "cat": "Movimiento",
+   "name": "Recorrer los puntos",
+   "text": "Visita las {n} zonas marcadas.",
+   "check": {
+    "event": "areasVisited",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "escape_no_combat",
+   "cat": "Movimiento",
+   "name": "Escapar sin luchar",
+   "text": "Llega a la salida sin derrotar a ningún enemigo.",
+   "check": {
+    "event": "allHeroesInArea",
+    "flag": "noKills"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "reach_before_enemy",
+   "cat": "Movimiento",
+   "name": "Llegar antes que ellos",
+   "text": "Alcanza la casilla antes de que lo haga un enemigo.",
+   "check": {
+    "event": "heroReachesCellFirst"
+   },
+   "params": [
+    {
+     "key": "cell",
+     "label": "Casilla",
+     "type": "cell"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "cross_bridge",
+   "cat": "Movimiento",
+   "name": "Cruzar al otro lado",
+   "text": "Cruza al otro lado del puente con todo el grupo.",
+   "check": {
+    "event": "allHeroesInArea"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "reach_separately",
+   "cat": "Movimiento",
+   "name": "Dividir el grupo",
+   "text": "Coloca un héroe en cada una de las {n} zonas a la vez.",
+   "check": {
+    "event": "heroesInSeparateAreas"
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "return_start",
+   "cat": "Movimiento",
+   "name": "Volver por donde vinisteis",
+   "text": "Regresa a la zona inicial tras cumplir el objetivo previo.",
+   "check": {
+    "event": "allHeroesInArea",
+    "requires": "previousObjective"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "use_object",
+   "cat": "Interacción",
+   "name": "Usar un objeto",
+   "text": "Interactúa con {interactable}.",
+   "check": {
+    "event": "interacted"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objeto"
+  },
+  {
+   "id": "var_reaches",
+   "cat": "Interacción",
+   "name": "Llevar una variable a un valor",
+   "text": "Consigue que «{var}» llegue a {value}.",
+   "check": {
+    "event": "variableEquals",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Valor",
+     "type": "int",
+     "def": 3,
+     "min": 0
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "variable"
+  },
+  {
+   "id": "use_n_objects",
+   "cat": "Interacción",
+   "name": "Activar varios mecanismos",
+   "text": "Activa {n} mecanismos.",
+   "check": {
+    "event": "interactedCount",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objetos_n"
+  },
+  {
+   "id": "open_chest",
+   "cat": "Interacción",
+   "name": "Abrir el cofre",
+   "text": "Abre el cofre.",
+   "check": {
+    "event": "interacted",
+    "type": "Chest"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objeto"
+  },
+  {
+   "id": "open_all_chests",
+   "cat": "Interacción",
+   "name": "Saquear la sala",
+   "text": "Abre todos los cofres del mapa.",
+   "check": {
+    "event": "allChestsOpened"
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objetos_n"
+  },
+  {
+   "id": "ring_bell",
+   "cat": "Interacción",
+   "name": "Tocar la campana",
+   "text": "Haz sonar la campana.",
+   "check": {
+    "event": "interacted",
+    "type": "Bell"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objeto"
+  },
+  {
+   "id": "light_fires",
+   "cat": "Interacción",
+   "name": "Encender las hogueras",
+   "text": "Enciende las {n} hogueras.",
+   "check": {
+    "event": "firesLit",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objetos_n"
+  },
+  {
+   "id": "extinguish_fires",
+   "cat": "Interacción",
+   "name": "Apagar el incendio",
+   "text": "Apaga las {n} zonas en llamas.",
+   "check": {
+    "event": "firesExtinguished",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objetos_n"
+  },
+  {
+   "id": "read_lectern",
+   "cat": "Interacción",
+   "name": "Consultar el atril",
+   "text": "Lee el texto del atril.",
+   "check": {
+    "event": "interacted",
+    "type": "Lectern"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objeto"
+  },
+  {
+   "id": "open_door",
+   "cat": "Interacción",
+   "name": "Abrir el paso",
+   "text": "Abre la puerta bloqueada.",
+   "check": {
+    "event": "doorOpened"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objeto"
+  },
+  {
+   "id": "open_vault",
+   "cat": "Interacción",
+   "name": "Forzar la cámara",
+   "text": "Abre la cámara acorazada.",
+   "check": {
+    "event": "interacted",
+    "type": "Vault"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objeto"
+  },
+  {
+   "id": "use_shrine",
+   "cat": "Interacción",
+   "name": "Ofrenda en el altar",
+   "text": "Haz una ofrenda en el altar de sangre.",
+   "check": {
+    "event": "interacted",
+    "type": "BloodShrine"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objeto"
+  },
+  {
+   "id": "search_shelves",
+   "cat": "Interacción",
+   "name": "Registrar los estantes",
+   "text": "Registra {n} estanterías.",
+   "check": {
+    "event": "interactedCount",
+    "type": "Shelf"
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objetos_n"
+  },
+  {
+   "id": "draw_well",
+   "cat": "Interacción",
+   "name": "Sacar agua del pozo",
+   "text": "Saca agua del pozo.",
+   "check": {
+    "event": "interacted",
+    "type": "Well"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objeto"
+  },
+  {
+   "id": "brew_cauldron",
+   "cat": "Interacción",
+   "name": "Preparar el brebaje",
+   "text": "Usa el caldero con los ingredientes correctos.",
+   "check": {
+    "event": "interacted",
+    "type": "Cauldron",
+    "requires": "hasItem"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    },
+    {
+     "key": "loot",
+     "label": "Objeto/botín",
+     "type": "loot"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objeto"
+  },
+  {
+   "id": "collect_item",
+   "cat": "Recolección",
+   "name": "Conseguir un objeto",
+   "text": "Consigue {loot}.",
+   "check": {
+    "event": "itemObtained"
+   },
+   "params": [
+    {
+     "key": "loot",
+     "label": "Objeto/botín",
+     "type": "loot"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "collect_n",
+   "cat": "Recolección",
+   "name": "Reunir varios objetos",
+   "text": "Reúne {n} objetos de botín.",
+   "check": {
+    "event": "lootCount",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "collect_from_enemy",
+   "cat": "Recolección",
+   "name": "Arrebatar el botín",
+   "text": "Consigue {loot} derrotando a {enemy}.",
+   "check": {
+    "event": "itemObtained",
+    "requires": "enemyDefeated"
+   },
+   "params": [
+    {
+     "key": "loot",
+     "label": "Objeto/botín",
+     "type": "loot"
+    },
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "collect_all_loot",
+   "cat": "Recolección",
+   "name": "No dejar nada",
+   "text": "Recoge todo el botín del mapa.",
+   "check": {
+    "event": "allLootCollected"
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "collect_materials",
+   "cat": "Recolección",
+   "name": "Materiales de forja",
+   "text": "Reúne {n} materiales de fabricación.",
+   "check": {
+    "event": "materialsCount",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "deliver_item",
+   "cat": "Recolección",
+   "name": "Entregar el objeto",
+   "text": "Lleva {loot} hasta {interactable}.",
+   "check": {
+    "event": "itemDelivered"
+   },
+   "params": [
+    {
+     "key": "loot",
+     "label": "Objeto/botín",
+     "type": "loot"
+    },
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "collect_relics",
+   "cat": "Recolección",
+   "name": "Recuperar las reliquias",
+   "text": "Recupera las {n} reliquias antes de la ronda {rounds}.",
+   "check": {
+    "event": "lootCount",
+    "before": "round"
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    },
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "steal_and_run",
+   "cat": "Recolección",
+   "name": "Robar y correr",
+   "text": "Consigue {loot} y escapa por la zona marcada.",
+   "check": {
+    "event": "allHeroesInArea",
+    "requires": "hasItem"
+   },
+   "params": [
+    {
+     "key": "loot",
+     "label": "Objeto/botín",
+     "type": "loot"
+    },
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "collect_keys",
+   "cat": "Recolección",
+   "name": "Reunir las llaves",
+   "text": "Encuentra las {n} llaves para abrir el paso.",
+   "check": {
+    "event": "lootCount",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objetos_n"
+  },
+  {
+   "id": "no_loot_run",
+   "cat": "Recolección",
+   "name": "Sin tocar nada",
+   "text": "Completa la misión sin recoger ningún botín.",
+   "check": {
+    "event": "encounterEnd",
+    "flag": "noLoot"
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "escort_npc",
+   "cat": "Escolta",
+   "name": "Escoltar al aliado",
+   "text": "Lleva al aliado hasta la zona marcada.",
+   "check": {
+    "event": "npcReachesArea"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "protect_npc",
+   "cat": "Escolta",
+   "name": "Mantener con vida al aliado",
+   "text": "El aliado debe sobrevivir toda la misión.",
+   "check": {
+    "event": "encounterEnd",
+    "flag": "npcAlive"
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "escort_slow",
+   "cat": "Escolta",
+   "name": "Marcha lenta",
+   "text": "Escolta al aliado durante {rounds} rondas.",
+   "check": {
+    "event": "npcSurvivedRounds"
+   },
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "defend_position",
+   "cat": "Escolta",
+   "name": "Defender la posición",
+   "text": "Impide que los enemigos entren en la zona durante {rounds} rondas.",
+   "check": {
+    "event": "areaHeldRounds"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    },
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "protect_object",
+   "cat": "Escolta",
+   "name": "Proteger el objeto",
+   "text": "{interactable} no debe ser destruido.",
+   "check": {
+    "event": "encounterEnd",
+    "flag": "objectIntact"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "rescue_prisoner",
+   "cat": "Escolta",
+   "name": "Liberar al prisionero",
+   "text": "Libera al prisionero y llévalo a la salida.",
+   "check": {
+    "event": "npcReachesArea",
+    "requires": "interacted"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    },
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "escort_multiple",
+   "cat": "Escolta",
+   "name": "Sacar a los civiles",
+   "text": "Pon a salvo a {n} civiles.",
+   "check": {
+    "event": "npcsRescued",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "no_npc_damage",
+   "cat": "Escolta",
+   "name": "Sin un rasguño",
+   "text": "El aliado debe llegar sin perder vida.",
+   "check": {
+    "event": "npcReachesArea",
+    "flag": "npcFullHealth"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "apply_condition",
+   "cat": "Control",
+   "name": "Debilitar al enemigo",
+   "text": "Aplica {condition} a {enemy}.",
+   "check": {
+    "event": "conditionApplied"
+   },
+   "params": [
+    {
+     "key": "condition",
+     "label": "Estado",
+     "type": "condition"
+    },
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "apply_condition_n",
+   "cat": "Control",
+   "name": "Sembrar el caos",
+   "text": "Aplica {condition} a {n} enemigos.",
+   "check": {
+    "event": "conditionAppliedCount",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "condition",
+     "label": "Estado",
+     "type": "condition"
+    },
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "expose_boss",
+   "cat": "Control",
+   "name": "Romper la guardia",
+   "text": "Deja a {enemy} en estado Expuesto.",
+   "check": {
+    "event": "conditionApplied",
+    "condition": "Exposed"
+   },
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "salud"
+  },
+  {
+   "id": "reduce_hp",
+   "cat": "Control",
+   "name": "Herir al objetivo",
+   "text": "Reduce a {enemy} por debajo del {hp}% de vida.",
+   "check": {
+    "event": "enemyHealthBelow"
+   },
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "hp",
+     "label": "Vida (%)",
+     "type": "int",
+     "def": 50,
+     "min": 1,
+     "max": 100
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "salud"
+  },
+  {
+   "id": "discover_weakness",
+   "cat": "Control",
+   "name": "Descubrir la debilidad",
+   "text": "Revela la debilidad de {enemy}.",
+   "check": {
+    "event": "weaknessRevealed"
+   },
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "reduce_threat",
+   "cat": "Control",
+   "name": "Bajar la amenaza",
+   "text": "Reduce la amenaza del grupo por debajo de {n}.",
+   "check": {
+    "event": "threatBelow"
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "block_path",
+   "cat": "Control",
+   "name": "Cerrar el paso",
+   "text": "Bloquea los {n} accesos.",
+   "check": {
+    "event": "pathsBlocked",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "burn_enemies",
+   "cat": "Control",
+   "name": "Prender fuego",
+   "text": "Haz que {n} enemigos ardan a la vez.",
+   "check": {
+    "event": "enemiesOnFire",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "cleanse_party",
+   "cat": "Control",
+   "name": "Purificar al grupo",
+   "text": "Elimina todos los estados negativos del grupo.",
+   "check": {
+    "event": "partyCleansed"
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "hold_all_areas",
+   "cat": "Control",
+   "name": "Dominar el terreno",
+   "text": "Controla las {n} zonas al mismo tiempo.",
+   "check": {
+    "event": "areasControlled",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "stealth_no_alarm",
+   "cat": "Sigilo",
+   "name": "Sin dar la alarma",
+   "text": "Completa la misión sin que suene la alarma.",
+   "check": {
+    "event": "encounterEnd",
+    "flag": "noAlarm"
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "stealth_unseen",
+   "cat": "Sigilo",
+   "name": "Sin ser vistos",
+   "text": "Llega a la zona sin entrar en la línea de visión enemiga.",
+   "check": {
+    "event": "allHeroesInArea",
+    "flag": "neverSeen"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "limit_moves",
+   "cat": "Sigilo",
+   "name": "Camino corto",
+   "text": "Cumple el objetivo en menos de {rounds} rondas.",
+   "check": {
+    "event": "objectiveBeforeRound"
+   },
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "no_weapon_class",
+   "cat": "Sigilo",
+   "name": "Sin cierta arma",
+   "text": "Completa la misión sin usar armas a distancia.",
+   "check": {
+    "event": "encounterEnd",
+    "flag": "noRangedUsed"
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "avoid_area",
+   "cat": "Sigilo",
+   "name": "Zona prohibida",
+   "text": "Cumple el objetivo sin entrar en la zona marcada.",
+   "check": {
+    "event": "encounterEnd",
+    "flag": "areaUntouched"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "silent_kills",
+   "cat": "Sigilo",
+   "name": "Bajas silenciosas",
+   "text": "Derrota a {n} enemigos aislados sin testigos.",
+   "check": {
+    "event": "silentKills",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "no_damage_taken",
+   "cat": "Sigilo",
+   "name": "Intocables",
+   "text": "Completa la misión sin recibir daño.",
+   "check": {
+    "event": "encounterEnd",
+    "flag": "noDamageTaken"
+   },
+   "params": [],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "one_hero_only",
+   "cat": "Sigilo",
+   "name": "Infiltración en solitario",
+   "text": "Solo {hero} puede entrar en la zona marcada.",
+   "check": {
+    "event": "soloHeroInArea"
+   },
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    },
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "timed_objective",
+   "cat": "Tiempo",
+   "name": "Contrarreloj",
+   "text": "Cumple el objetivo antes de la ronda {rounds}.",
+   "check": {
+    "event": "objectiveBeforeRound"
+   },
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "hold_until_round",
+   "cat": "Tiempo",
+   "name": "Aguantar hasta la señal",
+   "text": "Mantén la posición hasta la ronda {rounds}.",
+   "check": {
+    "event": "areaHeldUntilRound"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    },
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rondas"
+  },
+  {
+   "id": "waves_survive",
+   "cat": "Tiempo",
+   "name": "Sobrevivir a las oleadas",
+   "text": "Resiste {n} oleadas de enemigos.",
+   "check": {
+    "event": "wavesSurvived",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "ritual_stop",
+   "cat": "Tiempo",
+   "name": "Detener el ritual",
+   "text": "Interrumpe el ritual antes de la ronda {rounds}.",
+   "check": {
+    "event": "interacted",
+    "before": "round"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    },
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "rito"
+  },
+  {
+   "id": "escape_collapse",
+   "cat": "Tiempo",
+   "name": "Salir antes del derrumbe",
+   "text": "Escapa antes de que la estructura se derrumbe en la ronda {rounds}.",
+   "check": {
+    "event": "allHeroesInArea",
+    "before": "round"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    },
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "delay_enemy",
+   "cat": "Tiempo",
+   "name": "Ganar tiempo",
+   "text": "Impide que los enemigos alcancen la zona durante {rounds} rondas.",
+   "check": {
+    "event": "areaHeldRounds"
+   },
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    },
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "choice_outcome",
+   "cat": "Narrativa",
+   "name": "Tomar una decisión",
+   "text": "Decide el destino del encuentro.",
+   "check": {
+    "event": "choiceMade"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "virtue_check",
+   "cat": "Narrativa",
+   "name": "Prueba de virtud",
+   "text": "Supera la prueba de virtud del héroe.",
+   "check": {
+    "event": "virtueCheckPassed"
+   },
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "dialogue_complete",
+   "cat": "Narrativa",
+   "name": "Completar la conversación",
+   "text": "Habla con el personaje hasta el final.",
+   "check": {
+    "event": "dialogueCompleted"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "player"
+  },
+  {
+   "id": "discover_secret",
+   "cat": "Narrativa",
+   "name": "Descubrir el secreto",
+   "text": "Encuentra el pasadizo oculto.",
+   "check": {
+    "event": "secretFound"
+   },
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "objeto"
+  }
+ ],
+ "failConditions": [
+  {
+   "id": "all_heroes_defeated",
+   "name": "Todos los héroes caen",
+   "params": []
+  },
+  {
+   "id": "round_limit",
+   "name": "Se agota el tiempo (rondas)",
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ]
+  },
+  {
+   "id": "hero_defeated",
+   "name": "Cae un héroe concreto",
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    }
+   ]
+  },
+  {
+   "id": "npc_defeated",
+   "name": "Muere el aliado escoltado",
+   "params": []
+  },
+  {
+   "id": "object_destroyed",
+   "name": "Destruyen el objeto protegido",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ]
+  },
+  {
+   "id": "enemy_reaches_area",
+   "name": "Un enemigo alcanza la zona",
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ]
+  },
+  {
+   "id": "alarm_raised",
+   "name": "Suena la alarma",
+   "params": []
+  },
+  {
+   "id": "item_lost",
+   "name": "Se pierde el objeto clave",
+   "params": [
+    {
+     "key": "loot",
+     "label": "Objeto/botín",
+     "type": "loot"
+    }
+   ]
+  },
+  {
+   "id": "party_health_below",
+   "name": "La vida del grupo baja del umbral",
+   "params": [
+    {
+     "key": "hp",
+     "label": "Vida (%)",
+     "type": "int",
+     "def": 50,
+     "min": 1,
+     "max": 100
+    }
+   ]
+  },
+  {
+   "id": "enemies_exceed",
+   "name": "Hay demasiados enemigos en juego",
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ]
+  },
+  {
+   "id": "ritual_completed",
+   "name": "El ritual enemigo se completa",
+   "params": [
+    {
+     "key": "rounds",
+     "label": "Rondas",
+     "type": "int",
+     "def": 8,
+     "min": 1
+    }
+   ]
+  },
+  {
+   "id": "hero_seen",
+   "name": "Detectan a los héroes",
+   "params": []
+  }
+ ]
+}

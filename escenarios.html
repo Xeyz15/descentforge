@@ -37,17 +37,10 @@
   <div class="envoltura">
     <h1>
       <span data-es="Escenarios de la comunidad" data-en="Community scenarios">Escenarios de la comunidad</span>
-      <span class="pronto" data-es="Próximamente" data-en="Coming soon">Próximamente</span>
     </h1>
-    <p data-es="Las misiones que hace la gente, en un solo sitio: subirlas, buscarlas, votarlas y descargarlas de un clic. Dieciséis misiones vienen en la caja; las demás las escribís vosotros."
-       data-en="The quests people make, all in one place: upload them, browse them, vote and download in one click. Sixteen quests come in the box; the rest are written by you.">
-      Las misiones que hace la gente, en un solo sitio: subirlas, buscarlas, votarlas y descargarlas
-      de un clic. Dieciséis misiones vienen en la caja; las demás las escribís vosotros.
-    </p>
+    <p data-es="Las misiones que hace la gente, en un solo sitio: subirlas, buscarlas y descargarlas de un clic. Dieciséis misiones vienen en la caja; las demás las escribís vosotros." data-en="The quests people make, all in one place: upload them, browse them and download in one click. Sixteen quests come in the box; the rest are written by you.">Las misiones que hace la gente, en un solo sitio: subirlas, buscarlas y descargarlas de un clic. Dieciséis misiones vienen en la caja; las demás las escribís vosotros.</p>
     <div class="botones">
-      <a class="boton principal" href="#" data-aviso
-         data-aviso-es="La galería todavía no está montada: hace falta un servidor que compruebe cada escenario antes de publicarlo. Mientras tanto, los archivos se pasan a mano."
-         data-aviso-en="The gallery is not built yet: it needs a server that checks every scenario before publishing it. Meanwhile, files are passed around by hand."
+      <a class="boton principal" href="#subir" data-subir
          data-es="⬆ Subir un escenario" data-en="⬆ Upload a scenario">⬆ Subir un escenario</a>
       <a class="boton secundario" href="editor.html"
          data-es="Crear uno primero" data-en="Build one first">Crear uno primero</a>
@@ -59,72 +52,39 @@
 <section id="galeria" class="hundida">
   <div class="envoltura">
     <h2 data-es="La galería" data-en="The gallery">La galería</h2>
-    <p class="entradilla"
-       data-es="Todavía no hay nada que enseñar aquí, y decirlo es más honrado que llenarla de ejemplos falsos. Cuando abra, cada escenario tendrá su ficha."
-       data-en="There is nothing to show here yet, and saying so is more honest than filling it with fake examples. When it opens, every scenario will have its own card.">
-      Todavía no hay nada que enseñar aquí, y decirlo es más honrado que llenarla de ejemplos falsos.
-      Cuando abra, cada escenario tendrá su ficha.
-    </p>
+    <p class="entradilla" data-es="Cada escenario con su ficha: para cuántos héroes es, qué caja hace falta, en qué idioma está escrito y cuánto dura. Los números salen del propio archivo, no de lo que diga quien lo sube." data-en="Every scenario with its details: how many heroes it is for, which box it needs, what language it is written in and how long it takes. The numbers come from the file itself, not from whoever uploads it.">Cada escenario con su ficha: para cuántos héroes es, qué caja hace falta, en qué idioma está escrito y cuánto dura. Los números salen del propio archivo, no de lo que diga quien lo sube.</p>
 
-    <div class="hueco">
-      <p>
-        <b data-es="Aún no hay escenarios publicados" data-en="No scenarios published yet">Aún no hay escenarios publicados</b>
-      </p>
-      <p style="margin:0"
-         data-es="Sé el primero: monta una misión con el editor y guárdala. El día que esto abra, se sube tal cual — el formato del archivo no va a cambiar."
-         data-en="Be the first: build a quest with the editor and keep it. The day this opens, you upload it as it is — the file format is not going to change.">
-        Sé el primero: monta una misión con el editor y guárdala. El día que esto abra, se sube tal
-        cual — el formato del archivo no va a cambiar.
-      </p>
-    </div>
+    <!-- La pinta `js/galeria.js` a partir de `mapas/indice.json`. Lo que ha
+         escrito la gente entra SIEMPRE con `textContent`. -->
+    <div id="galeria-viva"></div>
+    <noscript><p class="hueco">La galería necesita JavaScript. / The gallery needs JavaScript.</p></noscript>
   </div>
 </section>
 
 <!-- ══ cómo será ══════════════════════════════════════════════════════ -->
 <section id="como-sera">
   <div class="envoltura">
-    <h2 data-es="Cómo va a funcionar" data-en="How it will work">Cómo va a funcionar</h2>
-    <p class="entradilla"
-       data-es="Sin cuentas de pago, sin anuncios y sin nada que instalar: subes el archivo que te dio el editor y ya está publicado."
-       data-en="No paid accounts, no ads and nothing to install: you upload the file the editor gave you and it is published.">
-      Sin cuentas de pago, sin anuncios y sin nada que instalar: subes el archivo que te dio el
-      editor y ya está publicado.
-    </p>
+    <h2 data-es="Cómo funciona" data-en="How it works">Cómo funciona</h2>
+    <p class="entradilla" data-es="Sin anuncios, sin nada de pago y sin nada que instalar: rellenas una ficha corta, eliges el archivo que te dio el editor y se publica solo." data-en="No ads, nothing to pay and nothing to install: you fill in a short form, pick the file the editor gave you and it publishes itself.">Sin anuncios, sin nada de pago y sin nada que instalar: rellenas una ficha corta, eliges el archivo que te dio el editor y se publica solo.</p>
     <div class="pasos">
       <div class="paso">
         <h3 data-es="Subes el archivo" data-en="You upload the file">Subes el archivo</h3>
-        <p data-es="El .dmap o el .dcamp que exportaste. De ahí se sacan solos el título, cuántos héroes admite y qué caja hace falta: no hay un formulario largo que rellenar."
-           data-en="The &lt;code&gt;.dmap&lt;/code&gt; or &lt;code&gt;.dcamp&lt;/code&gt; you exported. The title, how many heroes it takes and which box it needs come straight out of it: there is no long form to fill in.">
-          El <code>.dmap</code> o el <code>.dcamp</code> que exportaste. De ahí se sacan solos el
-          título, cuántos héroes admite y qué caja hace falta: no hay un formulario largo que rellenar.
-        </p>
+        <p data-es="El &lt;code&gt;.dmap&lt;/code&gt; que exportaste, o una campaña con su &lt;code&gt;.dcamp&lt;/code&gt; y sus escenarios. Le pones título, descripción, idioma y estilo; cuántos héroes admite y qué caja hace falta se sacan solos del archivo." data-en="The &lt;code&gt;.dmap&lt;/code&gt; you exported, or a campaign with its &lt;code&gt;.dcamp&lt;/code&gt; and its scenarios. You give it a title, a description, a language and a style; how many heroes it takes and which box it needs are read from the file.">El <code>.dmap</code> que exportaste, o una campaña con su <code>.dcamp</code> y sus escenarios. Le pones título, descripción, idioma y estilo; cuántos héroes admite y qué caja hace falta se sacan solos del archivo.</p>
       </div>
       <div class="paso">
         <h3 data-es="Se comprueba" data-en="It gets checked">Se comprueba</h3>
-        <p data-es="Antes de publicarse, el escenario pasa las mismas comprobaciones que hace el editor. Uno roto no llega a la galería y a quien lo sube se le dice qué falla."
-           data-en="Before being published, the scenario runs the same checks the editor does. A broken one never reaches the gallery, and whoever uploaded it is told what is wrong.">
-          Antes de publicarse, el escenario pasa las mismas comprobaciones que hace el editor. Uno
-          roto no llega a la galería y a quien lo sube se le dice qué falla.
-        </p>
+        <p data-es="El último paso es en GitHub, con tu cuenta (es gratis): se abre un formulario ya relleno y pulsas enviar. Una comprobación automática le pasa las mismas pruebas que el editor. Uno roto no llega a la galería y se te dice qué falla; uno bueno está publicado en un par de minutos." data-en="The last step is on GitHub, with your account (it is free): a form opens already filled in and you press submit. An automatic check runs the same tests the editor does. A broken one never reaches the gallery and you are told what is wrong; a good one is published within a couple of minutes.">El último paso es en GitHub, con tu cuenta (es gratis): se abre un formulario ya relleno y pulsas enviar. Una comprobación automática le pasa las mismas pruebas que el editor. Uno roto no llega a la galería y se te dice qué falla; uno bueno está publicado en un par de minutos.</p>
       </div>
       <div class="paso">
         <h3 data-es="Se juega" data-en="It gets played">Se juega</h3>
-        <p data-es="Cualquiera lo descarga de un clic, lo mete en el juego y lo juega con el mod. Y si le ha gustado, lo vota."
-           data-en="Anyone downloads it in one click, drops it in the game and plays it with the mod. And votes for it if they liked it.">
-          Cualquiera lo descarga de un clic, lo mete en el juego y lo juega con el mod. Y si le ha
-          gustado, lo vota.
-        </p>
+        <p data-es="Cualquiera lo descarga de un clic, lo mete en la carpeta de mapas del juego y lo juega con el mod. Si quiere contarte algo, cada escenario tiene su hilo de comentarios." data-en="Anyone downloads it in one click, drops it in the game&#x27;s maps folder and plays it with the mod. If they want to tell you something, every scenario has its own comment thread.">Cualquiera lo descarga de un clic, lo mete en la carpeta de mapas del juego y lo juega con el mod. Si quiere contarte algo, cada escenario tiene su hilo de comentarios.</p>
       </div>
     </div>
 
     <div class="rejilla" style="margin-top:34px">
       <div class="tarjeta">
-        <h3><span class="icono">📋</span><span data-es="Qué se verá de cada uno" data-en="What each one will show">Qué se verá de cada uno</span></h3>
-        <p data-es="Título, descripción, cuántos héroes admite, cuánto dura y qué caja hace falta. Y el archivo, claro."
-           data-en="Title, description, how many heroes it takes, how long it runs and which box it needs. And the file, of course.">
-          Título, descripción, cuántos héroes admite, cuánto dura y qué caja hace falta.
-          Y el archivo, claro.
-        </p>
+        <h3><span class="icono">📋</span><span data-es="Qué se ve de cada uno" data-en="What each one shows">Qué se ve de cada uno</span></h3>
+        <p data-es="Título, autor, descripción, idioma, estilo y duración; para cuántos héroes es, qué caja y qué versión del mod hacen falta, cuántas losetas, enemigos y objetivos trae, y una miniatura del tablero." data-en="Title, author, description, language, style and length; how many heroes it is for, which box and which mod version it needs, how many tiles, enemies and objectives it has, and a thumbnail of the board.">Título, autor, descripción, idioma, estilo y duración; para cuántos héroes es, qué caja y qué versión del mod hacen falta, cuántas losetas, enemigos y objetivos trae, y una miniatura del tablero.</p>
       </div>
       <div class="tarjeta">
         <h3><span class="icono">🤝</span><span data-es="Confiamos en la comunidad" data-en="We trust the community">Confiamos en la comunidad</span></h3>
@@ -135,12 +95,8 @@
         </p>
       </div>
       <div class="tarjeta">
-        <h3><span class="icono">📖</span><span data-es="Mientras tanto" data-en="Meanwhile">Mientras tanto</span></h3>
-        <p data-es="El editor ya trae una campaña de ejemplo entera, «El Invierno de los Cuervos», con seis escenarios. Sirve para ver cómo se monta algo largo."
-           data-en="The editor already ships a full example campaign, “The Winter of Crows”, with six scenarios. Good for seeing how a long thing is put together.">
-          El editor ya trae una campaña de ejemplo entera, «El Invierno de los Cuervos», con seis
-          escenarios. Sirve para ver cómo se monta algo largo.
-        </p>
+        <h3><span class="icono">📖</span><span data-es="Para corregirlo o retirarlo" data-en="To fix it or take it down">Para corregirlo o retirarlo</span></h3>
+        <p data-es="Para corregir un escenario, edita el mismo mensaje de GitHub con el que lo subiste y se vuelve a publicar en su sitio. Para retirarlo, dilo en su hilo de comentarios." data-en="To fix a scenario, edit the same GitHub message you uploaded it with and it is published again in its place. To take it down, say so in its comment thread.">Para corregir un escenario, edita el mismo mensaje de GitHub con el que lo subiste y se vuelve a publicar en su sitio. Para retirarlo, dilo en su hilo de comentarios.</p>
       </div>
     </div>
 
@@ -199,6 +155,15 @@
   </div>
 </footer>
 
+<!-- ══ subir un escenario ══════════════════════════════════════════════════
+     El formulario lo monta `js/galeria.js`. -->
+<dialog id="subir" class="subir">
+  <div class="subir-cab"><h2 id="subir-titulo"></h2><button type="button" id="subir-x" aria-label="×">×</button></div>
+  <div class="subir-cuerpo" id="subir-cuerpo"></div>
+  <div class="subir-pie" id="subir-pie"></div>
+</dialog>
+
 <script src="js/sitio.js"></script>
+<script src="js/galeria.js"></script>
 </body>
 </html>

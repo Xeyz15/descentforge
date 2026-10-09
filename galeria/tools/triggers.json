@@ -1,0 +1,2743 @@
+{
+ "events": [
+  {
+   "id": "mapStart",
+   "cat": "Partida",
+   "name": "Al empezar el mapa",
+   "params": [],
+   "engine": "BeginEncounter"
+  },
+  {
+   "id": "roundStart",
+   "cat": "Partida",
+   "name": "Al empezar una ronda",
+   "params": [
+    {
+     "key": "round",
+     "label": "Ronda",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "engine": "StartCurrentEncounterTimers"
+  },
+  {
+   "id": "roundEnd",
+   "cat": "Partida",
+   "name": "Al terminar una ronda",
+   "params": [
+    {
+     "key": "round",
+     "label": "Ronda",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "engine": "EndOfRound"
+  },
+  {
+   "id": "everyNRounds",
+   "cat": "Partida",
+   "name": "Cada N rondas",
+   "params": [
+    {
+     "key": "n",
+     "label": "Cada N rondas",
+     "type": "int",
+     "def": 2,
+     "min": 0
+    }
+   ],
+   "engine": "EndOfRound"
+  },
+  {
+   "id": "objectiveComplete",
+   "cat": "Partida",
+   "name": "Al completar un objetivo",
+   "params": [],
+   "engine": "SetObjective"
+  },
+  {
+   "id": "afterTrigger",
+   "cat": "Partida",
+   "name": "Después de otro trigger",
+   "params": [
+    {
+     "key": "trigger",
+     "label": "Trigger previo",
+     "type": "trigger"
+    }
+   ],
+   "engine": "Blackboard"
+  },
+  {
+   "id": "heroEntersArea",
+   "cat": "Héroes",
+   "name": "Un héroe entra en una zona",
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "GameGridCoordinates"
+  },
+  {
+   "id": "heroEntersCell",
+   "cat": "Héroes",
+   "name": "Un héroe pisa una casilla",
+   "params": [
+    {
+     "key": "cell",
+     "label": "Casilla",
+     "type": "cell"
+    }
+   ],
+   "engine": "GameGridCoordinates"
+  },
+  {
+   "id": "allHeroesInArea",
+   "cat": "Héroes",
+   "name": "Todos los héroes en una zona",
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "GameGridCoordinates"
+  },
+  {
+   "id": "heroLeavesArea",
+   "cat": "Héroes",
+   "name": "Un héroe sale de una zona",
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "GameGridCoordinates"
+  },
+  {
+   "id": "specificHeroEnters",
+   "cat": "Héroes",
+   "name": "Un héroe concreto entra en la zona",
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    },
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "CheckHeroIsInPlay"
+  },
+  {
+   "id": "heroDefeated",
+   "cat": "Héroes",
+   "name": "Cae un héroe",
+   "params": [],
+   "engine": "PerformHeroDefeatLogic"
+  },
+  {
+   "id": "heroHealthBelow",
+   "cat": "Héroes",
+   "name": "La vida de un héroe baja del umbral",
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    },
+    {
+     "key": "pct",
+     "label": "Porcentaje",
+     "type": "int",
+     "def": 50,
+     "min": 1,
+     "max": 100
+    }
+   ],
+   "engine": "GetPlayerIntField"
+  },
+  {
+   "id": "partyHealthBelow",
+   "cat": "Héroes",
+   "name": "La vida del grupo baja del umbral",
+   "params": [
+    {
+     "key": "pct",
+     "label": "Porcentaje",
+     "type": "int",
+     "def": 50,
+     "min": 1,
+     "max": 100
+    }
+   ],
+   "engine": "GetPlayerIntField"
+  },
+  {
+   "id": "heroOnFire",
+   "cat": "Héroes",
+   "name": "Un héroe se prende fuego",
+   "params": [],
+   "engine": "CheckOnFire"
+  },
+  {
+   "id": "enemyDefeated",
+   "cat": "Enemigos",
+   "name": "Cae un enemigo concreto",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "engine": "PerformEnemyDefeatLogic"
+  },
+  {
+   "id": "groupDefeated",
+   "cat": "Enemigos",
+   "name": "Cae todo un grupo",
+   "params": [
+    {
+     "key": "group",
+     "label": "Grupo",
+     "type": "group"
+    }
+   ],
+   "engine": "FilterEnemies"
+  },
+  {
+   "id": "allEnemiesDefeated",
+   "cat": "Enemigos",
+   "name": "Caen todos los enemigos",
+   "params": [],
+   "engine": "CheckEnemyIsInPlay"
+  },
+  {
+   "id": "enemiesDefeatedCount",
+   "cat": "Enemigos",
+   "name": "Se han derrotado N enemigos",
+   "params": [
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 1,
+     "min": 0
+    }
+   ],
+   "engine": "GetGameIntField"
+  },
+  {
+   "id": "enemyHealthBelow",
+   "cat": "Enemigos",
+   "name": "La vida de un enemigo baja del umbral",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "pct",
+     "label": "Porcentaje",
+     "type": "int",
+     "def": 50,
+     "min": 1,
+     "max": 100
+    }
+   ],
+   "engine": "GetEnemyIntField"
+  },
+  {
+   "id": "enemyActivated",
+   "cat": "Enemigos",
+   "name": "Un enemigo se activa",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "engine": "PerformEnemyActivation"
+  },
+  {
+   "id": "enemyEntersArea",
+   "cat": "Enemigos",
+   "name": "Un enemigo entra en una zona",
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "GameGridCoordinates"
+  },
+  {
+   "id": "enemyCountAbove",
+   "cat": "Enemigos",
+   "name": "Hay más de N enemigos en juego",
+   "params": [
+    {
+     "key": "n",
+     "label": "Enemigos",
+     "type": "int",
+     "def": 5,
+     "min": 0
+    }
+   ],
+   "engine": "FilterEnemies"
+  },
+  {
+   "id": "threatAbove",
+   "cat": "Enemigos",
+   "name": "La amenaza supera un valor",
+   "params": [
+    {
+     "key": "n",
+     "label": "Amenaza",
+     "type": "int",
+     "def": 5,
+     "min": 0
+    }
+   ],
+   "engine": "ThreatMetric"
+  },
+  {
+   "id": "interacted",
+   "cat": "Interacción",
+   "name": "Se usa un objeto",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "InteractMessageNode"
+  },
+  {
+   "id": "doorOpened",
+   "cat": "Interacción",
+   "name": "Se abre una puerta",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "SetInteractable"
+  },
+  {
+   "id": "chestOpened",
+   "cat": "Interacción",
+   "name": "Se abre un cofre",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "GiveTreasure"
+  },
+  {
+   "id": "itemObtained",
+   "cat": "Interacción",
+   "name": "Se consigue un objeto",
+   "params": [
+    {
+     "key": "loot",
+     "label": "Objeto/botín",
+     "type": "loot"
+    }
+   ],
+   "engine": "GiveTreasure"
+  },
+  {
+   "id": "choiceMade",
+   "cat": "Interacción",
+   "name": "Se elige una opción",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    },
+    {
+     "key": "option",
+     "label": "Opción (la primera es la 0)",
+     "type": "int",
+     "def": 0,
+     "min": 0
+    }
+   ],
+   "engine": "MultipleChoiceStoryMessageNode"
+  },
+  {
+   "id": "variableEquals",
+   "cat": "Variables",
+   "name": "Una variable vale X",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Valor",
+     "type": "int",
+     "def": 1
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "variableAbove",
+   "cat": "Variables",
+   "name": "Una variable supera X",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Valor",
+     "type": "int",
+     "def": 1
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "varChanged",
+   "cat": "Variables",
+   "name": "Cambia una variable",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "roundTimer",
+   "cat": "Tiempo",
+   "name": "Salta una cuenta de rondas",
+   "params": [
+    {
+     "key": "timer",
+     "label": "Nombre de la cuenta",
+     "type": "text"
+    }
+   ],
+   "engine": "CheckGameIntField"
+  }
+ ],
+ "actions": [
+  {
+   "id": "spawnGroup",
+   "cat": "Enemigos",
+   "name": "Generar un grupo de enemigos",
+   "params": [
+    {
+     "key": "group",
+     "label": "Grupo",
+     "type": "group"
+    }
+   ],
+   "engine": "SpawnEnemy",
+   "mod": "app"
+  },
+  {
+   "id": "spawnEnemyAt",
+   "cat": "Enemigos",
+   "name": "Generar un enemigo en una casilla",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "cell",
+     "label": "Casilla",
+     "type": "cell"
+    },
+    {
+     "key": "count",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 1,
+     "min": 0
+    }
+   ],
+   "engine": "SpawnEnemy",
+   "mod": "app"
+  },
+  {
+   "id": "spawnRandom",
+   "cat": "Enemigos",
+   "name": "Generar enemigos aleatorios",
+   "params": [
+    {
+     "key": "count",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 2,
+     "min": 0
+    },
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "SpawnRandomEnemies",
+   "mod": "app"
+  },
+  {
+   "id": "removeEnemy",
+   "cat": "Enemigos",
+   "name": "Eliminar un enemigo",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "engine": "RemoveEnemy",
+   "mod": "app"
+  },
+  {
+   "id": "removeGroup",
+   "cat": "Enemigos",
+   "name": "Eliminar un grupo",
+   "params": [
+    {
+     "key": "group",
+     "label": "Grupo",
+     "type": "group"
+    }
+   ],
+   "engine": "RemoveEnemy",
+   "mod": "app"
+  },
+  {
+   "id": "removeAllEnemies",
+   "cat": "Enemigos",
+   "name": "Eliminar a todos los enemigos",
+   "params": [],
+   "engine": "RemoveAllEnemies",
+   "mod": "app"
+  },
+  {
+   "id": "healEnemy",
+   "cat": "Enemigos",
+   "name": "Curar a un enemigo",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "amount",
+     "label": "Puntos",
+     "type": "int",
+     "def": 5,
+     "min": 0
+    }
+   ],
+   "engine": "AdjustEnemyHealth",
+   "mod": "app"
+  },
+  {
+   "id": "damageEnemy",
+   "cat": "Enemigos",
+   "name": "Dañar a un enemigo",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "amount",
+     "label": "Puntos",
+     "type": "int",
+     "def": 5,
+     "min": 0
+    }
+   ],
+   "engine": "AdjustEnemyHealth",
+   "mod": "app"
+  },
+  {
+   "id": "applyConditionEnemy",
+   "cat": "Enemigos",
+   "name": "Aplicar estado a un enemigo",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "condition",
+     "label": "Estado",
+     "type": "condition"
+    }
+   ],
+   "engine": "SetEnemyBoolField",
+   "mod": "app"
+  },
+  {
+   "id": "applyConditionGroup",
+   "cat": "Enemigos",
+   "name": "Aplicar estado a un grupo",
+   "params": [
+    {
+     "key": "group",
+     "label": "Grupo",
+     "type": "group"
+    },
+    {
+     "key": "condition",
+     "label": "Estado",
+     "type": "condition"
+    }
+   ],
+   "engine": "GiveEnemyRandomStatuses",
+   "mod": "app"
+  },
+  {
+   "id": "clearConditions",
+   "cat": "Enemigos",
+   "name": "Limpiar los estados de un enemigo",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "engine": "ResetEnemyConditions",
+   "mod": "app"
+  },
+  {
+   "id": "addWeakness",
+   "cat": "Enemigos",
+   "name": "Añadir debilidad a un enemigo",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "trait",
+     "label": "Rasgo de daño",
+     "type": "trait"
+    }
+   ],
+   "engine": "AddWeaknessOrResistanceToSelectEnemy",
+   "mod": "app"
+  },
+  {
+   "id": "addResistance",
+   "cat": "Enemigos",
+   "name": "Añadir resistencia a un enemigo",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "trait",
+     "label": "Rasgo de daño",
+     "type": "trait"
+    }
+   ],
+   "engine": "AddWeaknessOrResistanceToSelectEnemy",
+   "mod": "app"
+  },
+  {
+   "id": "reduceThreat",
+   "cat": "Enemigos",
+   "name": "Reducir la amenaza",
+   "params": [
+    {
+     "key": "amount",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 2,
+     "min": 0
+    }
+   ],
+   "engine": "ReduceEnemyThreats",
+   "mod": "app"
+  },
+  {
+   "id": "setEnemyTarget",
+   "cat": "Enemigos",
+   "name": "Forzar el objetivo de un enemigo",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    }
+   ],
+   "engine": "SetEnemyTargetThreat",
+   "mod": "app"
+  },
+  {
+   "id": "damageHeroes",
+   "cat": "Héroes",
+   "name": "Dañar a los héroes",
+   "params": [
+    {
+     "key": "amount",
+     "label": "Puntos",
+     "type": "int",
+     "def": 2,
+     "min": 0
+    }
+   ],
+   "engine": "PerformAfflictionDamage",
+   "mod": "app"
+  },
+  {
+   "id": "damageHero",
+   "cat": "Héroes",
+   "name": "Dañar a un héroe",
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    },
+    {
+     "key": "amount",
+     "label": "Puntos",
+     "type": "int",
+     "def": 2,
+     "min": 0
+    }
+   ],
+   "engine": "PerformAfflictionDamage",
+   "mod": "app"
+  },
+  {
+   "id": "healHeroes",
+   "cat": "Héroes",
+   "name": "Curar a los héroes",
+   "params": [
+    {
+     "key": "amount",
+     "label": "Puntos",
+     "type": "int",
+     "def": 2,
+     "min": 0
+    }
+   ],
+   "engine": "SetPlayerIntField",
+   "mod": "app"
+  },
+  {
+   "id": "moveHeroes",
+   "cat": "Héroes",
+   "name": "Mover a los héroes a una zona",
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "MoveAllTo",
+   "mod": "mesa"
+  },
+  {
+   "id": "moveHero",
+   "cat": "Héroes",
+   "name": "Mover a un héroe a una casilla",
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    },
+    {
+     "key": "cell",
+     "label": "Casilla",
+     "type": "cell"
+    }
+   ],
+   "engine": "MoveTo",
+   "mod": "mesa"
+  },
+  {
+   "id": "setHeroOnFire",
+   "cat": "Héroes",
+   "name": "Prender fuego a un héroe",
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    }
+   ],
+   "engine": "SetFire",
+   "mod": "mesa"
+  },
+  {
+   "id": "giveLoot",
+   "cat": "Botín",
+   "name": "Entregar un objeto",
+   "params": [
+    {
+     "key": "loot",
+     "label": "Objeto/botín",
+     "type": "loot"
+    }
+   ],
+   "engine": "GiveTreasure",
+   "mod": "app"
+  },
+  {
+   "id": "giveRandomLoot",
+   "cat": "Botín",
+   "name": "Entregar botín aleatorio",
+   "params": [
+    {
+     "key": "points",
+     "label": "Puntos de recompensa",
+     "type": "int",
+     "def": 3,
+     "min": 0
+    }
+   ],
+   "engine": "GiveTreasure",
+   "mod": "app"
+  },
+  {
+   "id": "giveMaterials",
+   "cat": "Botín",
+   "name": "Entregar materiales",
+   "params": [
+    {
+     "key": "amount",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 2,
+     "min": 0
+    }
+   ],
+   "engine": "GiveTreasure",
+   "mod": "app"
+  },
+  {
+   "id": "removeItem",
+   "cat": "Botín",
+   "name": "Quitar un objeto del inventario",
+   "params": [
+    {
+     "key": "loot",
+     "label": "Objeto/botín",
+     "type": "loot"
+    }
+   ],
+   "engine": "RemoveFromInventory",
+   "mod": "app"
+  },
+  {
+   "id": "revealTiles",
+   "cat": "Tablero",
+   "name": "Sacar losetas nuevas a la mesa",
+   "params": [
+    {
+     "key": "group",
+     "label": "Grupo de losetas",
+     "type": "tilegroup"
+    }
+   ],
+   "engine": "SetVisibilityBatch",
+   "mod": "app"
+  },
+  {
+   "id": "blockCells",
+   "cat": "Tablero",
+   "name": "Bloquear casillas",
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "SetGridBlocked",
+   "mod": "app"
+  },
+  {
+   "id": "unblockCells",
+   "cat": "Tablero",
+   "name": "Desbloquear casillas",
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "SetGridBlocked",
+   "mod": "app"
+  },
+  {
+   "id": "openDoor",
+   "cat": "Tablero",
+   "name": "Abrir una puerta",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "SetVisibility",
+   "mod": "app"
+  },
+  {
+   "id": "closeDoor",
+   "cat": "Tablero",
+   "name": "Cerrar una puerta",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "SetVisibility",
+   "mod": "app"
+  },
+  {
+   "id": "lockDoor",
+   "cat": "Tablero",
+   "name": "Cerrar una puerta con llave",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "",
+   "mod": "app"
+  },
+  {
+   "id": "unlockDoor",
+   "cat": "Tablero",
+   "name": "Quitarle la llave a una puerta",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "",
+   "mod": "app"
+  },
+  {
+   "id": "setInteractable",
+   "cat": "Tablero",
+   "name": "Activar o desactivar un objeto",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    },
+    {
+     "key": "enabled",
+     "label": "Activo",
+     "type": "bool",
+     "def": true
+    }
+   ],
+   "engine": "SetInteractable",
+   "mod": "app"
+  },
+  {
+   "id": "showObject",
+   "cat": "Tablero",
+   "name": "Mostrar un objeto",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "SetVisibility",
+   "mod": "app"
+  },
+  {
+   "id": "hideObject",
+   "cat": "Tablero",
+   "name": "Ocultar un objeto",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "SetVisibility",
+   "mod": "app"
+  },
+  {
+   "id": "startFire",
+   "cat": "Tablero",
+   "name": "Prender fuego en una zona",
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "SetFireList",
+   "mod": "app"
+  },
+  {
+   "id": "highlightArea",
+   "cat": "Tablero",
+   "name": "Resaltar una zona",
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "SetHighlightBatch",
+   "mod": "app"
+  },
+  {
+   "id": "clearHighlights",
+   "cat": "Tablero",
+   "name": "Quitar los resaltados",
+   "params": [],
+   "engine": "ClearHighlights",
+   "mod": "app"
+  },
+  {
+   "id": "outlineObject",
+   "cat": "Tablero",
+   "name": "Perfilar un objeto",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "SetOutline",
+   "mod": "app"
+  },
+  {
+   "id": "showMessage",
+   "cat": "Narrativa",
+   "name": "Mostrar un texto",
+   "params": [
+    {
+     "key": "text",
+     "label": "Texto",
+     "type": "text"
+    }
+   ],
+   "engine": "StoryMessageNode",
+   "mod": "app"
+  },
+  {
+   "id": "showChoice",
+   "cat": "Narrativa",
+   "name": "Mostrar una elección múltiple",
+   "params": [
+    {
+     "key": "text",
+     "label": "Texto",
+     "type": "text"
+    },
+    {
+     "key": "options",
+     "label": "Opciones (separadas por |)",
+     "type": "text"
+    }
+   ],
+   "engine": "MultipleChoiceStoryMessageNode",
+   "mod": "app"
+  },
+  {
+   "id": "showChallenge",
+   "cat": "Narrativa",
+   "name": "Pedir una tirada a los héroes",
+   "params": [
+    {
+     "key": "text",
+     "label": "Texto",
+     "type": "text"
+    },
+    {
+     "key": "difficulty",
+     "label": "Dificultad",
+     "type": "select",
+     "options": [
+      "easy",
+      "standard",
+      "hard",
+      "extreme"
+     ],
+     "def": "standard"
+    },
+    {
+     "key": "difficulty2",
+     "label": "Dificultad para un éxito grande (opcional)",
+     "type": "select",
+     "options": [
+      "",
+      "standard",
+      "hard",
+      "extreme"
+     ],
+     "def": ""
+    }
+   ],
+   "engine": "ChallengeStoryMessageNode",
+   "mod": "app"
+  },
+  {
+   "id": "showVirtueChoice",
+   "cat": "Narrativa",
+   "name": "Elección de virtud",
+   "params": [
+    {
+     "key": "text",
+     "label": "Texto",
+     "type": "text"
+    }
+   ],
+   "engine": "StoryVirtueChoiceNode",
+   "mod": "app"
+  },
+  {
+   "id": "setObjectiveText",
+   "cat": "Narrativa",
+   "name": "Cambiar el texto del objetivo",
+   "params": [
+    {
+     "key": "text",
+     "label": "Texto",
+     "type": "text"
+    },
+    {
+     "key": "final",
+     "label": "Es el objetivo final",
+     "type": "bool",
+     "def": false
+    }
+   ],
+   "engine": "SetObjective",
+   "mod": "app"
+  },
+  {
+   "id": "playCutscene",
+   "cat": "Narrativa",
+   "name": "Reproducir una escena",
+   "params": [
+    {
+     "key": "cutscene",
+     "label": "Escena",
+     "type": "text"
+    }
+   ],
+   "engine": "PlayCutsceneNode",
+   "mod": "app"
+  },
+  {
+   "id": "focusCamera",
+   "cat": "Cámara",
+   "name": "Enfocar la cámara en una casilla",
+   "params": [
+    {
+     "key": "cell",
+     "label": "Casilla",
+     "type": "cell"
+    }
+   ],
+   "engine": "FocusCameraOn",
+   "mod": "app"
+  },
+  {
+   "id": "resetCamera",
+   "cat": "Cámara",
+   "name": "Devolver la cámara al grupo",
+   "params": [],
+   "engine": "ResetCamera",
+   "mod": "app"
+  },
+  {
+   "id": "playMusic",
+   "cat": "Cámara",
+   "name": "Cambiar la música",
+   "params": [
+    {
+     "key": "track",
+     "label": "Pista o enlace",
+     "type": "text"
+    }
+   ],
+   "engine": "SwitchQuestMusic",
+   "mod": "app"
+  },
+  {
+   "id": "playSound",
+   "cat": "Cámara",
+   "name": "Reproducir un sonido",
+   "params": [
+    {
+     "key": "sound",
+     "label": "Sonido",
+     "type": "text"
+    }
+   ],
+   "engine": "AudioEvents",
+   "mod": "app"
+  },
+  {
+   "id": "setVariable",
+   "cat": "Flujo",
+   "name": "Fijar una variable",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Valor",
+     "type": "int",
+     "def": 1
+    }
+   ],
+   "engine": "SetGameIntField",
+   "mod": "app"
+  },
+  {
+   "id": "addVariable",
+   "cat": "Flujo",
+   "name": "Sumar a una variable",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Sumar",
+     "type": "int",
+     "def": 1
+    }
+   ],
+   "engine": "SetGameIntField",
+   "mod": "app"
+  },
+  {
+   "id": "wait",
+   "cat": "Flujo",
+   "name": "Esperar (segundos)",
+   "params": [
+    {
+     "key": "seconds",
+     "label": "Segundos",
+     "type": "int",
+     "def": 1,
+     "min": 0
+    }
+   ],
+   "engine": "Wait",
+   "mod": "app"
+  },
+  {
+   "id": "enableTrigger",
+   "cat": "Flujo",
+   "name": "Activar otro trigger",
+   "params": [
+    {
+     "key": "trigger",
+     "label": "Trigger",
+     "type": "trigger"
+    }
+   ],
+   "engine": "Blackboard",
+   "mod": "app"
+  },
+  {
+   "id": "disableTrigger",
+   "cat": "Flujo",
+   "name": "Desactivar otro trigger",
+   "params": [
+    {
+     "key": "trigger",
+     "label": "Trigger",
+     "type": "trigger"
+    }
+   ],
+   "engine": "Blackboard",
+   "mod": "app"
+  },
+  {
+   "id": "runTrigger",
+   "cat": "Flujo",
+   "name": "Lanzar otro trigger ahora",
+   "params": [
+    {
+     "key": "trigger",
+     "label": "Trigger",
+     "type": "trigger"
+    }
+   ],
+   "engine": "Blackboard",
+   "mod": "app"
+  },
+  {
+   "id": "subVariable",
+   "cat": "Flujo",
+   "name": "Restar a una variable",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Restar",
+     "type": "int",
+     "def": 1
+    }
+   ],
+   "engine": "SetGameIntField",
+   "mod": "app"
+  },
+  {
+   "id": "randomVariable",
+   "cat": "Flujo",
+   "name": "Poner una variable al azar",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "min",
+     "label": "Desde",
+     "type": "int",
+     "def": 1
+    },
+    {
+     "key": "max",
+     "label": "Hasta",
+     "type": "int",
+     "def": 6
+    }
+   ],
+   "engine": "SetGameIntField",
+   "mod": "app"
+  },
+  {
+   "id": "startRoundTimer",
+   "cat": "Flujo",
+   "name": "Empezar una cuenta de rondas",
+   "params": [
+    {
+     "key": "timer",
+     "label": "Nombre de la cuenta",
+     "type": "text"
+    },
+    {
+     "key": "every",
+     "label": "Cada cuántas rondas",
+     "type": "int",
+     "def": 2,
+     "min": 1
+    },
+    {
+     "key": "times",
+     "label": "Cuántas veces (0 = hasta el final)",
+     "type": "int",
+     "def": 0,
+     "min": 0
+    }
+   ],
+   "engine": "SetGameIntField",
+   "mod": "app"
+  },
+  {
+   "id": "stopRoundTimer",
+   "cat": "Flujo",
+   "name": "Parar una cuenta de rondas",
+   "params": [
+    {
+     "key": "timer",
+     "label": "Nombre de la cuenta",
+     "type": "text"
+    }
+   ],
+   "engine": "SetGameIntField",
+   "mod": "app"
+  },
+  {
+   "id": "completeObjective",
+   "cat": "Fin",
+   "name": "Completar el objetivo",
+   "params": [],
+   "engine": "SetObjective",
+   "mod": "app"
+  },
+  {
+   "id": "winEncounter",
+   "cat": "Fin",
+   "name": "Ganar el encuentro",
+   "params": [],
+   "engine": "EndEncounter",
+   "mod": "app"
+  },
+  {
+   "id": "loseEncounter",
+   "cat": "Fin",
+   "name": "Perder el encuentro",
+   "params": [],
+   "engine": "EndEncounter",
+   "mod": "app"
+  },
+  {
+   "id": "addEnemyToReserve",
+   "cat": "Enemigos",
+   "name": "Meter un enemigo en la reserva",
+   "text": "A partir de ahora {enemy} puede salir en las generaciones al azar.",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "engine": "AddEnemyModelToReserveList",
+   "mod": "app"
+  },
+  {
+   "id": "removeEnemyFromReserve",
+   "cat": "Enemigos",
+   "name": "Sacar un enemigo de la reserva",
+   "text": "{enemy} deja de salir en las generaciones al azar.",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "engine": "RemoveEnemyModelFromReserveList",
+   "mod": "app"
+  },
+  {
+   "id": "showEnemyActivation",
+   "cat": "Enemigos",
+   "name": "Enseñar la carta de activación",
+   "text": "Se enseña la activación de {enemy}.",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "engine": "DisplayEnemyActivation",
+   "mod": "app"
+  },
+  {
+   "id": "renameEnemy",
+   "cat": "Enemigos",
+   "name": "Cambiarle el nombre a un enemigo",
+   "text": "{enemy} pasa a llamarse «{name}».",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "name",
+     "label": "Nombre nuevo",
+     "type": "text"
+    }
+   ],
+   "engine": "SetEnemyStringField",
+   "mod": "app"
+  },
+  {
+   "id": "enemyDropsLoot",
+   "cat": "Botín",
+   "name": "Soltar botín al caer",
+   "text": "Cuando caiga {enemy}, suelta botín.",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "points",
+     "label": "Puntos de recompensa",
+     "type": "int",
+     "def": 3,
+     "min": 0
+    }
+   ],
+   "engine": "PerformEnemyLootDrop",
+   "mod": "app"
+  },
+  {
+   "id": "damageRandomHero",
+   "cat": "Héroes",
+   "name": "Dañar a un héroe al azar",
+   "text": "Un héroe al azar recibe {amount} de daño.",
+   "params": [
+    {
+     "key": "amount",
+     "label": "Daño",
+     "type": "int",
+     "def": 1,
+     "min": 1
+    }
+   ],
+   "engine": "GetRandomPlayerIndex",
+   "mod": "app"
+  },
+  {
+   "id": "giveRecipe",
+   "cat": "Botín",
+   "name": "Enseñar una receta al grupo",
+   "text": "El grupo aprende la receta y la apunta como ya hecha.",
+   "params": [
+    {
+     "key": "recipe",
+     "label": "Receta",
+     "type": "recipe"
+    }
+   ],
+   "engine": "AddRecipeToDiscovered",
+   "mod": "app"
+  },
+  {
+   "id": "removeMaterials",
+   "cat": "Botín",
+   "name": "Quitar materiales",
+   "text": "El grupo entrega {amount} de sus materiales.",
+   "params": [
+    {
+     "key": "material",
+     "label": "Material",
+     "type": "material"
+    },
+    {
+     "key": "amount",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 1,
+     "min": 1
+    }
+   ],
+   "engine": "RemoveCraftingMaterials",
+   "mod": "app"
+  },
+  {
+   "id": "blockRandomSpawn",
+   "cat": "Enemigos",
+   "name": "Prohibir que un enemigo salga al azar",
+   "text": "{enemy} ya no puede salir en las generaciones al azar.",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "engine": "AddEnemyToRandomSpawnBlockList",
+   "mod": "app"
+  },
+  {
+   "id": "unblockRandomSpawn",
+   "cat": "Enemigos",
+   "name": "Volver a permitir que un enemigo salga al azar",
+   "text": "{enemy} vuelve a poder salir en las generaciones al azar.",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "engine": "RemoveEnemyFromRandSpawnBlockList",
+   "mod": "app"
+  }
+ ],
+ "conditions": [
+  {
+   "id": "varEquals",
+   "cat": "Variables",
+   "name": "La variable vale X",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Valor",
+     "type": "int",
+     "def": 1
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "varAbove",
+   "cat": "Variables",
+   "name": "La variable supera X",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Valor",
+     "type": "int",
+     "def": 1
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "varBelow",
+   "cat": "Variables",
+   "name": "La variable es menor que X",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Valor",
+     "type": "int",
+     "def": 1
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "varNotEquals",
+   "cat": "Variables",
+   "name": "La variable NO vale X",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "value",
+     "label": "Valor",
+     "type": "int",
+     "def": 1
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "varBetween",
+   "cat": "Variables",
+   "name": "La variable está entre dos valores",
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "min",
+     "label": "Desde",
+     "type": "int",
+     "def": 0
+    },
+    {
+     "key": "max",
+     "label": "Hasta",
+     "type": "int",
+     "def": 3
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "triggerFired",
+   "cat": "Flujo",
+   "name": "Otro trigger ya ha saltado",
+   "params": [
+    {
+     "key": "trigger",
+     "label": "Trigger",
+     "type": "trigger"
+    }
+   ],
+   "engine": "Blackboard"
+  },
+  {
+   "id": "triggerNotFired",
+   "cat": "Flujo",
+   "name": "Otro trigger todavía no ha saltado",
+   "params": [
+    {
+     "key": "trigger",
+     "label": "Trigger",
+     "type": "trigger"
+    }
+   ],
+   "engine": "Blackboard"
+  },
+  {
+   "id": "heroCount",
+   "cat": "Héroes",
+   "name": "El grupo es de N héroes",
+   "params": [
+    {
+     "key": "n",
+     "label": "Héroes",
+     "type": "int",
+     "def": 2,
+     "min": 0
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "heroCountAtLeast",
+   "cat": "Héroes",
+   "name": "El grupo es de N héroes o más",
+   "params": [
+    {
+     "key": "n",
+     "label": "Héroes",
+     "type": "int",
+     "def": 3,
+     "min": 0
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "enemyCountAtLeast",
+   "cat": "Enemigos",
+   "name": "Hay N enemigos o más en juego",
+   "params": [
+    {
+     "key": "n",
+     "label": "Enemigos",
+     "type": "int",
+     "def": 1,
+     "min": 0
+    }
+   ],
+   "engine": "FilterEnemies"
+  },
+  {
+   "id": "defeatedAtLeast",
+   "cat": "Enemigos",
+   "name": "Se han derrotado N enemigos o más",
+   "params": [
+    {
+     "key": "n",
+     "label": "Enemigos",
+     "type": "int",
+     "def": 1,
+     "min": 0
+    }
+   ],
+   "engine": "FilterEnemies"
+  },
+  {
+   "id": "groupAlive",
+   "cat": "Enemigos",
+   "name": "Queda alguien de un grupo",
+   "params": [
+    {
+     "key": "group",
+     "label": "Grupo",
+     "type": "group"
+    }
+   ],
+   "engine": "FilterEnemies"
+  },
+  {
+   "id": "groupDefeated",
+   "cat": "Enemigos",
+   "name": "Un grupo ya ha caído entero",
+   "params": [
+    {
+     "key": "group",
+     "label": "Grupo",
+     "type": "group"
+    }
+   ],
+   "engine": "FilterEnemies"
+  },
+  {
+   "id": "roundAtLeast",
+   "cat": "Tiempo",
+   "name": "Estamos en la ronda N o posterior",
+   "params": [
+    {
+     "key": "round",
+     "label": "Ronda",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "roundBefore",
+   "cat": "Tiempo",
+   "name": "Antes de la ronda N",
+   "params": [
+    {
+     "key": "round",
+     "label": "Ronda",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "enemyInPlay",
+   "cat": "Enemigos",
+   "name": "Un enemigo sigue en juego",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "engine": "CheckEnemyIsInPlay"
+  },
+  {
+   "id": "enemyNotInPlay",
+   "cat": "Enemigos",
+   "name": "Un enemigo ya no está en juego",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    }
+   ],
+   "engine": "CheckEnemyIsInPlay"
+  },
+  {
+   "id": "enemyHasCondition",
+   "cat": "Enemigos",
+   "name": "Un enemigo tiene un estado",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "condition",
+     "label": "Estado",
+     "type": "condition"
+    }
+   ],
+   "engine": "EnemyConditionTask"
+  },
+  {
+   "id": "enemyCountBelow",
+   "cat": "Enemigos",
+   "name": "Quedan menos de N enemigos",
+   "params": [
+    {
+     "key": "n",
+     "label": "Enemigos",
+     "type": "int",
+     "def": 3,
+     "min": 0
+    }
+   ],
+   "engine": "FilterEnemies"
+  },
+  {
+   "id": "heroInPlay",
+   "cat": "Héroes",
+   "name": "Un héroe sigue en pie",
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    }
+   ],
+   "engine": "CheckHeroIsInPlay"
+  },
+  {
+   "id": "heroInArea",
+   "cat": "Héroes",
+   "name": "Un héroe está en la zona",
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    },
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "GameGridCoordinates"
+  },
+  {
+   "id": "partyHasItem",
+   "cat": "Héroes",
+   "name": "El grupo tiene un objeto",
+   "params": [
+    {
+     "key": "loot",
+     "label": "Objeto/botín",
+     "type": "loot"
+    }
+   ],
+   "engine": "CheckMaterialValues"
+  },
+  {
+   "id": "heroHasTrinket",
+   "cat": "Héroes",
+   "name": "Un héroe lleva un amuleto",
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    }
+   ],
+   "engine": "CheckPlayerTrinket"
+  },
+  {
+   "id": "objectUsed",
+   "cat": "Interacción",
+   "name": "Ya se usó un objeto",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "objectNotUsed",
+   "cat": "Interacción",
+   "name": "Aún no se ha usado un objeto",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "doorLocked",
+   "cat": "Interacción",
+   "name": "La puerta sigue con llave",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": ""
+  },
+  {
+   "id": "doorUnlocked",
+   "cat": "Interacción",
+   "name": "La puerta ya no tiene llave",
+   "params": [
+    {
+     "key": "interactable",
+     "label": "Objeto",
+     "type": "interactable"
+    }
+   ],
+   "engine": ""
+  },
+  {
+   "id": "isOnFire",
+   "cat": "Tablero",
+   "name": "Hay fuego en la zona",
+   "params": [
+    {
+     "key": "area",
+     "label": "Zona",
+     "type": "area"
+    }
+   ],
+   "engine": "CheckOnFire"
+  },
+  {
+   "id": "difficultyIs",
+   "cat": "Partida",
+   "name": "La dificultad es",
+   "params": [
+    {
+     "key": "difficulty",
+     "label": "Dificultad",
+     "type": "select",
+     "options": [
+      "easy",
+      "normal",
+      "hard",
+      "warfare"
+     ]
+    }
+   ],
+   "engine": "CheckGameStringField"
+  },
+  {
+   "id": "chance",
+   "cat": "Partida",
+   "name": "Con una probabilidad",
+   "text": "Solo {pct} de las veces.",
+   "params": [
+    {
+     "key": "pct",
+     "label": "Probabilidad (%)",
+     "type": "int",
+     "def": 50,
+     "min": 1,
+     "max": 100
+    }
+   ],
+   "engine": "ProbabilitySelector"
+  },
+  {
+   "id": "heroVirtueIs",
+   "cat": "Héroes",
+   "name": "La virtud de un héroe",
+   "text": "Si la virtud de {hero} llega a {value}.",
+   "params": [
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero"
+    },
+    {
+     "key": "value",
+     "label": "Valor mínimo",
+     "type": "int",
+     "def": 1,
+     "min": 0
+    }
+   ],
+   "engine": "CheckHeroVirtue"
+  },
+  {
+   "id": "enemyHasTrait",
+   "cat": "Enemigos",
+   "name": "El enemigo tiene un rasgo",
+   "text": "Si {enemy} es de tipo {trait}.",
+   "params": [
+    {
+     "key": "enemy",
+     "label": "Enemigo",
+     "type": "enemy"
+    },
+    {
+     "key": "trait",
+     "label": "Rasgo",
+     "type": "select",
+     "options": [
+      "Melee",
+      "Ranged",
+      "Striker",
+      "Tank",
+      "Support",
+      "Debuffer",
+      "Fast",
+      "Slow",
+      "Flying",
+      "Huge",
+      "Small",
+      "Intelligent",
+      "Creature",
+      "Undead",
+      "Dragonkind",
+      "Uthuk",
+      "Otherworldly",
+      "Construct",
+      "Wild",
+      "Fire",
+      "Cold",
+      "Civilized",
+      "Subterranean",
+      "Water",
+      "MagicUser",
+      "Raider",
+      "Mercenary",
+      "Stealthy",
+      "Incorporeal",
+      "Humanoid",
+      "UndeadFaction",
+      "UthukFaction",
+      "DragonFaction",
+      "BaronialFaction"
+     ]
+    }
+   ],
+   "engine": "CheckEnemyHasTrait"
+  },
+  {
+   "id": "objectiveIs",
+   "cat": "Objetivos",
+   "name": "El objetivo en curso es el N",
+   "text": "Solo si el grupo va por el objetivo principal {n}.",
+   "params": [
+    {
+     "key": "n",
+     "label": "Objetivo (1 = el primero)",
+     "type": "int",
+     "def": 1,
+     "min": 1
+    }
+   ],
+   "engine": "CheckGameIntField"
+  },
+  {
+   "id": "objectiveDone",
+   "cat": "Objetivos",
+   "name": "Ya se ha cumplido el objetivo N",
+   "text": "Solo si el objetivo principal {n} ya está hecho.",
+   "params": [
+    {
+     "key": "n",
+     "label": "Objetivo (1 = el primero)",
+     "type": "int",
+     "def": 1,
+     "min": 1
+    }
+   ],
+   "engine": "CheckGameIntField"
+  }
+ ],
+ "presets": [
+  {
+   "id": "ambush",
+   "name": "Emboscada al entrar",
+   "desc": "Al pisar una zona aparecen enemigos y se muestra un aviso.",
+   "trigger": {
+    "name": "Emboscada",
+    "once": true,
+    "event": {
+     "id": "heroEntersArea",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "spawnGroup",
+      "params": {}
+     },
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "¡Una trampa! Salen enemigos de las sombras."
+      }
+     },
+     {
+      "id": "focusCamera",
+      "params": {}
+     }
+    ]
+   }
+  },
+  {
+   "id": "reinforcements",
+   "name": "Refuerzos por ronda",
+   "desc": "Cada 2 rondas llegan enemigos aleatorios.",
+   "trigger": {
+    "name": "Refuerzos",
+    "once": false,
+    "event": {
+     "id": "everyNRounds",
+     "params": {
+      "n": 2
+     }
+    },
+    "conditions": [
+     {
+      "id": "roundBefore",
+      "params": {
+       "round": 10
+      }
+     }
+    ],
+    "actions": [
+     {
+      "id": "spawnRandom",
+      "params": {
+       "count": 2
+      }
+     },
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "Llegan más enemigos."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "boss_phase",
+   "name": "Segunda fase del jefe",
+   "desc": "Cuando el jefe baja de vida, se cura, gana resistencia y grita.",
+   "trigger": {
+    "name": "Fase 2",
+    "once": true,
+    "event": {
+     "id": "enemyHealthBelow",
+     "params": {
+      "pct": 50
+     }
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "«¡Aún no habéis visto nada!»"
+      }
+     },
+     {
+      "id": "healEnemy",
+      "params": {
+       "amount": 10
+      }
+     },
+     {
+      "id": "addResistance",
+      "params": {
+       "trait": "Slash"
+      }
+     },
+     {
+      "id": "spawnGroup",
+      "params": {}
+     }
+    ]
+   }
+  },
+  {
+   "id": "locked_door",
+   "name": "Puerta con llave",
+   "desc": "Al conseguir la llave se abre la puerta y se avisa.",
+   "trigger": {
+    "name": "Abrir puerta",
+    "once": true,
+    "event": {
+     "id": "itemObtained",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "openDoor",
+      "params": {}
+     },
+     {
+      "id": "unblockCells",
+      "params": {}
+     },
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "La cerradura cede. El paso queda libre."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "trap",
+   "name": "Trampa en el suelo",
+   "desc": "Al pisar una casilla, daño a los héroes y fuego.",
+   "trigger": {
+    "name": "Trampa",
+    "once": true,
+    "event": {
+     "id": "heroEntersCell",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "¡El suelo cede bajo vuestros pies!"
+      }
+     },
+     {
+      "id": "damageHeroes",
+      "params": {
+       "amount": 3
+      }
+     },
+     {
+      "id": "startFire",
+      "params": {}
+     }
+    ]
+   }
+  },
+  {
+   "id": "reward_chest",
+   "name": "Recompensa al limpiar",
+   "desc": "Al derrotar al grupo aparece botín.",
+   "trigger": {
+    "name": "Recompensa",
+    "once": true,
+    "event": {
+     "id": "groupDefeated",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "Entre los restos brilla algo."
+      }
+     },
+     {
+      "id": "giveRandomLoot",
+      "params": {
+       "points": 4
+      }
+     },
+     {
+      "id": "completeObjective",
+      "params": {}
+     }
+    ]
+   }
+  },
+  {
+   "id": "timed_escape",
+   "name": "Cuenta atrás",
+   "desc": "Al llegar a una ronda, si no han escapado, se pierde.",
+   "trigger": {
+    "name": "Derrumbe",
+    "once": true,
+    "event": {
+     "id": "roundStart",
+     "params": {
+      "round": 10
+     }
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "La bóveda se desploma."
+      }
+     },
+     {
+      "id": "loseEncounter",
+      "params": {}
+     }
+    ]
+   }
+  },
+  {
+   "id": "story_choice",
+   "name": "Decisión narrativa",
+   "desc": "Un atril plantea una elección con consecuencias.",
+   "trigger": {
+    "name": "Decisión",
+    "once": true,
+    "event": {
+     "id": "interacted",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showChoice",
+      "params": {
+       "text": "El libro pide un sacrificio a cambio de poder.",
+       "options": "Aceptar|Rechazar"
+      }
+     },
+     {
+      "id": "setVariable",
+      "params": {
+       "var": "eleccion",
+       "value": 1
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "abrir_sala",
+   "name": "Se abre una sala nueva",
+   "name_en": "A new room opens up",
+   "desc": "Al cruzar una puerta aparecen losetas nuevas y se enfocan.",
+   "desc_en": "Crossing a door reveals new tiles and focuses on them.",
+   "trigger": {
+    "name": "Se abre la sala",
+    "once": true,
+    "event": {
+     "id": "doorOpened",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "La puerta cede y detrás hay más de lo que parecía.",
+       "text_en": "The door gives way, and behind it there is more than it seemed."
+      }
+     },
+     {
+      "id": "revealTiles",
+      "params": {}
+     },
+     {
+      "id": "focusCamera",
+      "params": {}
+     }
+    ]
+   }
+  },
+  {
+   "id": "senalar",
+   "name": "Mirad aquí",
+   "name_en": "Look over here",
+   "desc": "Resalta unas casillas, enfoca la cámara, avisa y luego lo limpia.",
+   "desc_en": "Highlights some spaces, focuses the camera, says something, then clears it.",
+   "trigger": {
+    "name": "Señalar",
+    "once": true,
+    "event": {
+     "id": "mapStart",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "highlightArea",
+      "params": {}
+     },
+     {
+      "id": "focusCamera",
+      "params": {}
+     },
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "Algo ahí no encaja.",
+       "text_en": "Something over there does not fit."
+      }
+     },
+     {
+      "id": "wait",
+      "params": {
+       "seconds": 3
+      }
+     },
+     {
+      "id": "clearHighlights",
+      "params": {}
+     }
+    ]
+   }
+  },
+  {
+   "id": "cambia_objetivo",
+   "name": "Cambia el objetivo",
+   "name_en": "The objective changes",
+   "desc": "Al caer un grupo, la misión pasa a pedir otra cosa.",
+   "desc_en": "When a group falls, the mission starts asking for something else.",
+   "trigger": {
+    "name": "Nuevo objetivo",
+    "once": true,
+    "event": {
+     "id": "groupDefeated",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "Se acabaron. Pero eso de ahí sigue abierto.",
+       "text_en": "That is the last of them. But that thing is still open."
+      }
+     },
+     {
+      "id": "setObjectiveText",
+      "params": {
+       "text": "Cerrad lo que han abierto.",
+       "text_en": "Close what they opened."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "aparece_algo",
+   "name": "Aparece algo en el tablero",
+   "name_en": "Something appears on the board",
+   "desc": "Un objeto que no estaba se pone, se enfoca y se avisa.",
+   "desc_en": "A prop that was not there appears, gets focused and announced.",
+   "trigger": {
+    "name": "Aparece",
+    "once": true,
+    "event": {
+     "id": "roundStart",
+     "params": {
+      "round": 3
+     }
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showObject",
+      "params": {}
+     },
+     {
+      "id": "focusCamera",
+      "params": {}
+     },
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "Donde no había nada, ahora hay algo.",
+       "text_en": "Where there was nothing, now there is something."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "botin_al_caer",
+   "name": "Lo que llevaba encima",
+   "name_en": "What it was carrying",
+   "desc": "Al derrotar a un enemigo concreto, suelta botín.",
+   "desc_en": "Defeating one specific enemy drops loot.",
+   "trigger": {
+    "name": "Botín",
+    "once": true,
+    "event": {
+     "id": "enemyDefeated",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "enemyDropsLoot",
+      "params": {
+       "points": 4
+      }
+     },
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "Llevaba algo encima que no era suyo.",
+       "text_en": "It was carrying something that was not its own."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "a_lo_mejor",
+   "name": "A lo mejor pasa, a lo mejor no",
+   "name_en": "It might happen, it might not",
+   "desc": "Una de cada dos veces, al empezar la ronda pasa algo.",
+   "desc_en": "Half the time, something happens at the start of the round.",
+   "trigger": {
+    "name": "Azar",
+    "once": false,
+    "event": {
+     "id": "roundStart",
+     "params": {}
+    },
+    "conditions": [
+     {
+      "id": "chance",
+      "params": {
+       "pct": 50
+      }
+     }
+    ],
+    "actions": [
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "Algo se mueve donde no debería.",
+       "text_en": "Something stirs where it should not."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "prueba_virtud",
+   "name": "Una prueba de virtud",
+   "name_en": "A test of virtue",
+   "desc": "Se le plantea al grupo una elección que mira su virtud.",
+   "desc_en": "The party is offered a choice that looks at their virtue.",
+   "trigger": {
+    "name": "Virtud",
+    "once": true,
+    "event": {
+     "id": "interacted",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showVirtueChoice",
+      "params": {
+       "text": "Lo que hay escrito aquí pide algo de vosotros.",
+       "text_en": "What is written here asks something of you."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "ensena_activacion",
+   "name": "Enseña cómo actúa un enemigo",
+   "name_en": "Show how an enemy acts",
+   "desc": "Saca la carta de activación de un enemigo al aparecer.",
+   "desc_en": "Shows an enemy's activation card when it appears.",
+   "trigger": {
+    "name": "Activación",
+    "once": true,
+    "event": {
+     "id": "enemyActivated",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showEnemyActivation",
+      "params": {}
+     }
+    ]
+   }
+  },
+  {
+   "id": "asi_se_gana",
+   "name": "Así se gana la partida",
+   "name_en": "This is how the game is won",
+   "desc": "Cierra el escenario cuando se cumple el objetivo. Sin esto no termina nunca.",
+   "desc_en": "Ends the scenario when the objective is met. Without this it never finishes.",
+   "trigger": {
+    "name": "Victoria",
+    "once": true,
+    "event": {
+     "id": "objectiveComplete",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "Ya está. Salid de aquí.",
+       "text_en": "That is it. Get out of here."
+      }
+     },
+     {
+      "id": "winEncounter",
+      "params": {}
+     }
+    ]
+   }
+  }
+ ]
+}

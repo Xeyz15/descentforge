@@ -1,0 +1,82 @@
+# La galería de escenarios, sin servidor.
+#
+# Cuando alguien abre (o corrige) un «issue» con la etiqueta `escenario`, esto
+# saca el paquete que escribió la página, lo valida con los validadores del
+# proyecto y, si vale, lo deja en `mapas/` y lo dice en el propio issue.
+#
+# Lo que escribe la gente NUNCA se mete en una orden de la consola: el texto del
+# issue se lee del archivo del evento desde Python (`galeria/publicar.py`).
+name: Galería de escenarios
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+  workflow_dispatch:
+    inputs:
+      retirar:
+        description: "Identificador del escenario que se retira (p. ej. e12). Vacío: solo rehacer el índice."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  issues: write
+
+# de uno en uno: dos envíos a la vez no pueden pisarse el índice
+concurrency:
+  group: galeria
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.issue.labels.*.name, 'escenario')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publicar el escenario del issue
+        if: github.event_name == 'issues'
+        run: python3 galeria/publicar.py --evento "$GITHUB_EVENT_PATH" --salida "$RUNNER_TEMP/resultado.json"
+
+      - name: Retirar un escenario o rehacer el índice
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          RETIRAR: ${{ inputs.retirar }}
+        run: |
+          if [ -n "$RETIRAR" ]; then python3 galeria/publicar.py --retirar "$RETIRAR"; else python3 galeria/publicar.py --reindexar; fi
+
+      - name: Guardar los cambios en la galería
+        env:
+          NUMERO: ${{ github.event.issue.number }}
+        run: |
+          git config user.name "Xeyz15"
+          git config user.email "thexeyz@gmail.com"
+          git add mapas
+          if git diff --cached --quiet; then
+            echo "nada que guardar"
+          else
+            git commit -q -m "Galería: escenario ${NUMERO:-retirado}"
+            git pull -q --rebase
+            git push
+          fi
+
+      - name: Contestar en el issue
+        if: github.event_name == 'issues'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMERO: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          r = json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "resultado.json"), encoding="utf-8"))
+          open(os.path.join(os.environ["RUNNER_TEMP"], "comentario.md"), "w", encoding="utf-8").write(r["comentario"])
+          open(os.environ["GITHUB_ENV"], "a").write("PUBLICADO=%s\n" % ("si" if r["ok"] else "no"))
+          PY
+          gh issue comment "$NUMERO" --repo "$REPO" --body-file "$RUNNER_TEMP/comentario.md"
+          if [ "$PUBLICADO" = "si" ]; then
+            gh issue close "$NUMERO" --repo "$REPO" --reason completed
+          fi
