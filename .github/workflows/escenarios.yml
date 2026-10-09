@@ -74,9 +74,9 @@ jobs:
           import json, os
           r = json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "resultado.json"), encoding="utf-8"))
           open(os.path.join(os.environ["RUNNER_TEMP"], "comentario.md"), "w", encoding="utf-8").write(r["comentario"])
-          open(os.environ["GITHUB_ENV"], "a").write("PUBLICADO=%s\n" % ("si" if r["ok"] else "no"))
+          open(os.path.join(os.environ["RUNNER_TEMP"], "publicado"), "w").write("si" if r["ok"] else "no")
           PY
           gh issue comment "$NUMERO" --repo "$REPO" --body-file "$RUNNER_TEMP/comentario.md"
-          if [ "$PUBLICADO" = "si" ]; then
+          if [ "$(cat "$RUNNER_TEMP/publicado")" = "si" ]; then
             gh issue close "$NUMERO" --repo "$REPO" --reason completed
           fi
