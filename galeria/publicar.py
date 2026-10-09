@@ -222,7 +222,8 @@ def abrir_paquete(cuerpo):
                       "I cannot find the scenario in the message. Go back to the scenarios page, press “Upload a "
                       "scenario” and paste here what it copies for you.")
     try:
-        bruto = base64.urlsafe_b64decode(re.sub(r"\s+", "", m.group(1)))
+        limpio = re.sub(r"[\s=]+", "", m.group(1))
+        bruto = base64.urlsafe_b64decode(limpio + "=" * (-len(limpio) % 4))
         with gzip.GzipFile(fileobj=io.BytesIO(bruto)) as g:
             datos = g.read(MAX_PAQUETE + 1)
         if len(datos) > MAX_PAQUETE:
