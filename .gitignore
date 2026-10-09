@@ -9,3 +9,5 @@ _captura-*.html
 # Notas internas del proyecto: hablan de qué no puede subir nunca (el keystore,
 # el código decompilado) y de por qué. No pintan nada en un repo público.
 LEEME.md
+
+__pycache__/
