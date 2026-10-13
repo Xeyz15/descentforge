@@ -303,6 +303,13 @@ def validate(doc):
                  + ", ".join(enemigos_a2))
 
     # ---- interactuables ----
+    # Lo que pisa una escalera o un puente también está apoyado: una puerta en
+    # lo alto de una escalera que va entre losetas es un caso normal (lo hizo
+    # un usuario) y el mod la saca con la sala de la escalera.
+    TERRENO = ("Staircase", "Bridge", "Ladder", "LadderMedium")
+    sobre_terreno = {(t.get("level", 0),) + c
+                     for t in spawns.get("interactables", [])
+                     if t.get("type") in TERRENO for c in prop_celdas(t)}
     for i, o in enumerate(spawns.get("interactables", [])):
         if o.get("type") not in PROPS:
             rep.warn(f"objeto #{i + 1}: tipo «{o.get('type')}» no está en el catálogo")
@@ -337,7 +344,7 @@ def validate(doc):
             rep.warn(f"objeto #{i + 1} «{o.get('type')}»: sin texto ni botín, "
                      "usarlo no hará nada")
 
-        usos = (o.get("uses") or "").strip().lower()
+        usos = str(o.get("uses") if o.get("uses") is not None else "").strip().lower()
         # un número de usos también vale (así lo escribe Bigorna: «1», «3»; «0» = siempre)
         if usos not in ("", "once", "always") and not usos.isdigit():
             rep.err(f"objeto #{i + 1}: «{usos}» no es un límite de usos "
@@ -356,7 +363,8 @@ def validate(doc):
                         f"que no toca el tablero por ninguna esquina")
             continue
         celdas = prop_celdas(o)
-        fuera = [c for c in celdas if floor_cells and (lvl,) + c not in floor_cells]
+        fuera = [c for c in celdas if floor_cells and (lvl,) + c not in floor_cells
+                 and (o.get("type") in TERRENO or (lvl,) + c not in sobre_terreno)]
         # **Sobresalir del suelo vale.** Estuvo prohibido y era demasiado
         # estricto: la escalera ya era la excepción declarada (comunica dos
         # alturas, así que parte de ella se apoya donde aún no hay tablero) y
@@ -471,6 +479,15 @@ def validate(doc):
                          "tenga esa caja no le llegará")
             elif p["type"] == "material" and val not in MATERIALES:
                 rep.err(f"{where}: el material «{val}» no existe")
+            elif p["type"] == "enemyslot":
+                # «grupo#n»: el n-ésimo enemigo de ese grupo en la lista (el `slot` de Bigorna)
+                g, _, n = str(val).rpartition("#")
+                del_grupo = [e for e in doc.get("spawns", {}).get("enemies", [])
+                             if (e.get("group") or "").lower() == g.lower()]
+                if not n.isdigit() or int(n) >= len(del_grupo):
+                    rep.err(f"{where}: el enemigo «{val}» no está dibujado en el mapa")
+                elif params.get("enemy") and del_grupo[int(n)].get("enemy") != params.get("enemy"):
+                    rep.warn(f"{where}: «{val}» es un {del_grupo[int(n)].get('enemy')}, no un {params.get('enemy')}")
 
     # ---- objetivos ----
     objectives = doc.get("objectives", {})
@@ -488,6 +505,33 @@ def validate(doc):
         check_params(rep, where, spec, o.get("params", {}))
         check_refs(rep, where, spec, o.get("params", {}))
 
+    # Objetivos ocultos (como Bigorna): sin clave no se pueden anunciar nunca, y
+    # una clave que ningún disparador anuncia deja el objetivo tapado para siempre.
+    anunciadas = set()
+    def _busca(x):
+        if isinstance(x, dict):
+            if x.get("id") == "announceMission":
+                k = str((x.get("params") or {}).get("mission") or "").strip().lower()
+                if k:
+                    anunciadas.add(k)
+            for v in x.values():
+                _busca(v)
+        elif isinstance(x, list):
+            for v in x:
+                _busca(v)
+    _busca(doc.get("triggers", []))
+    for lista, nombre in ((primary, "objetivo"), (objectives.get("optional") or [], "objetivo opcional")):
+        for i, o in enumerate(lista if isinstance(lista, list) else []):
+            if not isinstance(o, dict) or not o.get("hidden"):
+                continue
+            clave = str(o.get("mission") or "").strip()
+            if not clave:
+                rep.err(f"{nombre} #{i + 1} está oculto y no tiene clave de misión: "
+                        "no se podrá anunciar nunca")
+            elif clave.lower() not in anunciadas:
+                rep.warn(f"{nombre} #{i + 1} está oculto con la misión «{clave}», pero "
+                         "ningún disparador la anuncia («anunciar una misión»)")
+
     for i, f in enumerate(objectives.get("failConditions", [])):
         spec = FAIL.get(f.get("id"))
         if not spec:
@@ -501,9 +545,11 @@ def validate(doc):
     ids = set()
     for i, t in enumerate(doc.get("triggers", [])):
         name = t.get("name") or f"trigger #{i + 1}"
-        if t.get("id") in ids:
-            rep.err(f"{name}: el id «{t['id']}» está repetido")
-        ids.add(t.get("id"))
+        # sin id no hay nada que repetir (y antes esto reventaba con un KeyError)
+        if t.get("id") is not None:
+            if t.get("id") in ids:
+                rep.err(f"{name}: el id «{t['id']}» está repetido")
+            ids.add(t.get("id"))
 
         ev = EVENTS.get((t.get("event") or {}).get("id"))
         if not ev:
@@ -558,6 +604,20 @@ def validate(doc):
                              for c in cuadros):
                         rep.err(f"{name}: «playScene» tiene un cuadro vacío")
                     continue
+                # una pregunta con sus ramas (`outcomes`: una lista de acciones por
+                # respuesta, 13-oct-2026): se valida cada rama y no cuenta como
+                # parámetro del catálogo
+                if a.get("id") in ("showChoice", "askYesNo", "showChallenge", "showVirtueChoice") \
+                        and "outcomes" in par:
+                    ramas = par.get("outcomes")
+                    if not isinstance(ramas, list) or any(not isinstance(r, list) for r in ramas):
+                        rep.err(f"{name}: las respuestas de «{a.get('id')}» están mal escritas")
+                    elif hondo > 8:
+                        rep.err(f"{name}: demasiadas preguntas unas dentro de otras")
+                    else:
+                        for k, r in enumerate(ramas):
+                            acciones(r, f"respuesta {k + 1}", hondo + 1)
+                    par = {k: v for k, v in par.items() if k != "outcomes"}
                 spec = ACTIONS.get(a.get("id"))
                 if not spec:
                     rep.err(f"{name}: {rotulo} «{a.get('id')}» desconocida")
@@ -567,6 +627,28 @@ def validate(doc):
 
         for rama, rotulo in (("actions", "acción"), ("else", "si no")):
             acciones(t.get(rama), rotulo)
+        # ganar o perder acaba el disparador: lo de detrás no se hace (13-oct),
+        # en cualquier lista, también dentro de ramas y respuestas
+        def listas(lista, hondo=0):
+            if not isinstance(lista, list):
+                return
+            yield lista
+            if hondo > 8:
+                return
+            for a in lista:
+                par = (a or {}).get("params") or {}
+                if (a or {}).get("id") == "if":
+                    yield from listas(par.get("then") or par.get("actions"), hondo + 1)
+                    yield from listas(par.get("else"), hondo + 1)
+                elif (a or {}).get("id") in ("showChoice", "askYesNo", "showChallenge", "showVirtueChoice"):
+                    for r in par.get("outcomes") or []:
+                        yield from listas(r, hondo + 1)
+        for rama in ("actions", "else"):
+            for lista in listas(t.get(rama)):
+                fin = [i for i, a in enumerate(lista)
+                       if (a or {}).get("id") in ("winEncounter", "loseEncounter", "failMission")]
+                if fin and fin[0] < len(lista) - 1:
+                    rep.warn(f"{name}: {len(lista) - 1 - fin[0]} acción(es) detrás de ganar/perder no se harán")
         if t.get("else") and not t.get("conditions"):
             rep.warn(f"{name}: tiene «si no» pero ninguna condición; no correrá nunca")
 

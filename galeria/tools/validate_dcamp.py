@@ -38,9 +38,10 @@ ACTO_RECETA = validate_dmap.ACTO_RECETA
 MATERIALES = validate_dmap.MATERIALES
 CANVAS = (WORLD.get("map") or {}).get("canvas", [1600, 900])
 
-MARKERS = {"main", "side", "narrative"}
+MARKERS = {"main", "side", "narrative", "city"}   # «city»: visita a la ciudad (de Bigorna)
 KINDS = {"scenario", "dialogue"}
-DLG_TYPES = {"normal", "choice", "virtue", "challenge", "heroSelect", "enemySelect", "interact"}
+DLG_TYPES = {"normal", "choice", "virtue", "challenge", "heroSelect", "enemySelect", "interact",
+             "cutscene"}   # «cutscene»: una cinemática del juego en lugar del cuadro
 
 # acción -> campos que tiene que traer rellenos
 ACTIONS = {
@@ -54,6 +55,7 @@ ACTIONS = {
     "removeMaterials": ("material", "qty"),
     "setVar": ("var", "value"),
     "addVar": ("var", "value"),
+    "giveGold": ("n",),
 }
 
 Report = validate_dmap.Report
@@ -90,8 +92,14 @@ def validate(doc, base: Path):
             dlg_ids.add(did)
         if d.get("type") not in DLG_TYPES:
             rep.err(f"{etiqueta}: tipo «{d.get('type')}» desconocido")
-        if not (d.get("text") or "").strip():
+        if d.get("type") == "cutscene":
+            if not d.get("cutscene"):
+                rep.err(f"{etiqueta}: es una cinemática pero no dice cuál")
+        elif not (d.get("text") or "").strip():
             rep.err(f"{etiqueta}: no dice nada (texto vacío)")
+        si = d.get("onlyIf")
+        if si is not None and (not isinstance(si, dict) or not si.get("var")):
+            rep.err(f"{etiqueta}: «solo si» sin variable")
         sp = d.get("speaker")
         if sp and sp not in CHARACTERS:
             rep.err(f"{etiqueta}: «{sp}» no es un personaje del juego")
@@ -184,6 +192,14 @@ def validate(doc, base: Path):
         for it in rec.get("items", []):
             if it not in ITEMS:
                 rep.err(f"{etiqueta}: la recompensa «{it}» no existe en el catálogo")
+        oro = rec.get("gold", 0)
+        if not isinstance(oro, int) or oro < 0:
+            rep.err(f"{etiqueta}: el oro de la recompensa debe ser un entero de 0 en adelante")
+        if n.get("marker") == "city" and n.get("kind") != "dialogue":
+            rep.err(f"{etiqueta}: una visita a la ciudad tiene que ser de conversación, no un escenario")
+        el = (n.get("spawn") or {}).get("choice")
+        if el is not None and (not isinstance(el, dict) or not el.get("var")):
+            rep.err(f"{etiqueta}: «solo si se eligió» sin variable")
 
     # ---- referencias entre nodos (ya con todos los ids conocidos) ----
     for n in nodes:
@@ -200,11 +216,15 @@ def validate(doc, base: Path):
 
     # ---- acciones de diálogo ----
     for d in dialogues:
-        for oi, o in enumerate(d.get("options") or []):
-            donde = f"diálogo «{d.get('id')}», opción {oi + 1}"
-            if not (o.get("text") or "").strip():
+        if d.get("skipTo") and d.get("skipTo") not in dlg_ids:
+            rep.err(f"diálogo «{d.get('id')}»: si no sale, salta a «{d.get('skipTo')}», que no existe")
+        listas = [(f"diálogo «{d.get('id')}», al cerrarse", d.get("actions") or [], None)]
+        listas += [(f"diálogo «{d.get('id')}», opción {oi + 1}", o.get("then") or [], o)
+                   for oi, o in enumerate(d.get("options") or [])]
+        for donde, acciones, o in listas:
+            if o is not None and not (o.get("text") or "").strip():
                 rep.err(f"{donde}: sin texto")
-            for a in o.get("then") or []:
+            for a in acciones:
                 acc = a.get("action")
                 if acc not in ACTIONS:
                     rep.err(f"{donde}: acción «{acc}» desconocida")

@@ -60,6 +60,27 @@
    "engine": "SetObjective"
   },
   {
+   "id": "objectiveStart",
+   "cat": "Partida",
+   "name": "Al empezar un objetivo",
+   "params": [],
+   "engine": "SetObjective"
+  },
+  {
+   "id": "missionComplete",
+   "cat": "Partida",
+   "name": "Al cumplir una misión",
+   "params": [
+    {
+     "key": "mission",
+     "label": "Nombre de la misión",
+     "type": "text",
+     "opt": true
+    }
+   ],
+   "engine": "SetObjective"
+  },
+  {
    "id": "afterTrigger",
    "cat": "Partida",
    "name": "Después de otro trigger",
@@ -378,7 +399,8 @@
     {
      "key": "interactable",
      "label": "Objeto",
-     "type": "interactable"
+     "type": "interactable",
+     "opt": true
     },
     {
      "key": "option",
@@ -490,7 +512,7 @@
      "label": "Cantidad",
      "type": "int",
      "def": 1,
-     "min": 0
+     "min": 1
     }
    ],
    "engine": "SpawnEnemy",
@@ -526,6 +548,12 @@
      "key": "enemy",
      "label": "Enemigo",
      "type": "enemy"
+    },
+    {
+     "key": "slot",
+     "label": "Cuál (opcional: uno concreto del tablero)",
+     "type": "enemyslot",
+     "opt": true
     }
    ],
    "engine": "RemoveEnemy",
@@ -564,6 +592,12 @@
      "type": "enemy"
     },
     {
+     "key": "slot",
+     "label": "Cuál (opcional: uno concreto del tablero)",
+     "type": "enemyslot",
+     "opt": true
+    },
+    {
      "key": "amount",
      "label": "Puntos",
      "type": "int",
@@ -585,6 +619,12 @@
      "type": "enemy"
     },
     {
+     "key": "slot",
+     "label": "Cuál (opcional: uno concreto del tablero)",
+     "type": "enemyslot",
+     "opt": true
+    },
+    {
      "key": "amount",
      "label": "Puntos",
      "type": "int",
@@ -604,6 +644,12 @@
      "key": "enemy",
      "label": "Enemigo",
      "type": "enemy"
+    },
+    {
+     "key": "slot",
+     "label": "Cuál (opcional: uno concreto del tablero)",
+     "type": "enemyslot",
+     "opt": true
     },
     {
      "key": "condition",
@@ -642,6 +688,12 @@
      "key": "enemy",
      "label": "Enemigo",
      "type": "enemy"
+    },
+    {
+     "key": "slot",
+     "label": "Cuál (opcional: uno concreto del tablero)",
+     "type": "enemyslot",
+     "opt": true
     }
    ],
    "engine": "ResetEnemyConditions",
@@ -656,6 +708,12 @@
      "key": "enemy",
      "label": "Enemigo",
      "type": "enemy"
+    },
+    {
+     "key": "slot",
+     "label": "Cuál (opcional: uno concreto del tablero)",
+     "type": "enemyslot",
+     "opt": true
     },
     {
      "key": "trait",
@@ -677,6 +735,12 @@
      "type": "enemy"
     },
     {
+     "key": "slot",
+     "label": "Cuál (opcional: uno concreto del tablero)",
+     "type": "enemyslot",
+     "opt": true
+    },
+    {
      "key": "trait",
      "label": "Rasgo de daño",
      "type": "trait"
@@ -692,7 +756,7 @@
    "params": [
     {
      "key": "amount",
-     "label": "Cantidad",
+     "label": "Cantidad (0 = a la mitad, como el juego)",
      "type": "int",
      "def": 2,
      "min": 0
@@ -710,6 +774,12 @@
      "key": "enemy",
      "label": "Enemigo",
      "type": "enemy"
+    },
+    {
+     "key": "slot",
+     "label": "Cuál (opcional: uno concreto del tablero)",
+     "type": "enemyslot",
+     "opt": true
     },
     {
      "key": "hero",
@@ -730,11 +800,11 @@
      "label": "Puntos",
      "type": "int",
      "def": 2,
-     "min": 0
+     "min": 1
     }
    ],
-   "engine": "PerformAfflictionDamage",
-   "mod": "app"
+   "engine": "MessageNode",
+   "mod": "mesa"
   },
   {
    "id": "damageHero",
@@ -751,11 +821,11 @@
      "label": "Puntos",
      "type": "int",
      "def": 2,
-     "min": 0
+     "min": 1
     }
    ],
-   "engine": "PerformAfflictionDamage",
-   "mod": "app"
+   "engine": "MessageNode",
+   "mod": "mesa"
   },
   {
    "id": "healHeroes",
@@ -767,11 +837,11 @@
      "label": "Puntos",
      "type": "int",
      "def": 2,
-     "min": 0
+     "min": 1
     }
    ],
-   "engine": "SetPlayerIntField",
-   "mod": "app"
+   "engine": "MessageNode",
+   "mod": "mesa"
   },
   {
    "id": "moveHeroes",
@@ -1141,6 +1211,7 @@
       "hard",
       "extreme"
      ],
+     "opt": true,
      "def": ""
     }
    ],
@@ -1156,6 +1227,20 @@
      "key": "text",
      "label": "Texto",
      "type": "text"
+    },
+    {
+     "key": "hero",
+     "label": "Héroe",
+     "type": "hero",
+     "opt": true
+    },
+    {
+     "key": "weight",
+     "label": "Cuánto suma a la virtud",
+     "type": "int",
+     "opt": true,
+     "def": 1,
+     "min": 1
     }
    ],
    "engine": "StoryVirtueChoiceNode",
@@ -1943,6 +2028,12 @@
      "type": "enemy"
     },
     {
+     "key": "slot",
+     "label": "Cuál (opcional: uno concreto del tablero)",
+     "type": "enemyslot",
+     "opt": true
+    },
+    {
      "key": "name",
      "label": "Nombre nuevo",
      "type": "text"
@@ -1988,7 +2079,7 @@
     }
    ],
    "engine": "GetRandomPlayerIndex",
-   "mod": "app"
+   "mod": "mesa"
   },
   {
    "id": "giveRecipe",
@@ -2793,7 +2884,8 @@
       }
      }
     ]
-   }
+   },
+   "simple": true
   },
   {
    "id": "boss_phase",
@@ -2833,7 +2925,8 @@
       "params": {}
      }
     ]
-   }
+   },
+   "simple": true
   },
   {
    "id": "locked_door",
@@ -3265,6 +3358,265 @@
      {
       "id": "winEncounter",
       "params": {}
+     }
+    ]
+   },
+   "simple": true
+  },
+  {
+   "id": "puerta_llave",
+   "name": "Puerta con llave",
+   "simple": true,
+   "name_en": "Locked door",
+   "desc": "La puerta solo se abre si el grupo lleva la llave; al abrirla sale la sala de detrás. Marca la puerta como «cerrada con llave».",
+   "desc_en": "The door only opens if the party carries the key; opening it reveals the room behind. Mark the door as locked.",
+   "trigger": {
+    "name": "Puerta con llave",
+    "name_en": "Locked door",
+    "once": true,
+    "event": {
+     "id": "interacted",
+     "params": {}
+    },
+    "conditions": [
+     {
+      "id": "hasItem",
+      "params": {}
+     }
+    ],
+    "actions": [
+     {
+      "id": "openDoor",
+      "params": {}
+     },
+     {
+      "id": "revealRoom",
+      "params": {}
+     }
+    ]
+   }
+  },
+  {
+   "id": "emboscada_sala",
+   "name": "Emboscada al abrir",
+   "simple": true,
+   "name_en": "Ambush on opening",
+   "desc": "Al abrir la puerta sale la sala y, cuando ha salido, entra un grupo de enemigos.",
+   "desc_en": "Opening the door reveals the room and, once it is out, a group of enemies comes in.",
+   "trigger": {
+    "name": "Emboscada",
+    "name_en": "Ambush",
+    "once": true,
+    "event": {
+     "id": "doorOpened",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "revealRoom",
+      "params": {}
+     },
+     {
+      "id": "spawnGroup",
+      "params": {}
+     },
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "¡Estaban esperando!",
+       "text_en": "They were waiting!"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "prueba_resultado",
+   "name": "Prueba con éxito y fallo",
+   "simple": true,
+   "name_en": "Test with success and failure",
+   "desc": "Al usar el objeto, una prueba de atributo con una consecuencia para cada resultado.",
+   "desc_en": "Using the object calls for an attribute test with a consequence for each result.",
+   "trigger": {
+    "name": "Prueba",
+    "name_en": "Test",
+    "once": false,
+    "event": {
+     "id": "interacted",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showChallenge",
+      "params": {
+       "text": "Haced una prueba para moverlo.",
+       "text_en": "Make a test to move it.",
+       "difficulty": "standard",
+       "outcomes": [
+        [
+         {
+          "id": "showMessage",
+          "params": {
+           "text": "No se mueve. Podéis volver a intentarlo.",
+           "text_en": "It does not budge. You may try again."
+          }
+         }
+        ],
+        [
+         {
+          "id": "showMessage",
+          "params": {
+           "text": "Cede con un crujido.",
+           "text_en": "It gives way with a creak."
+          }
+         }
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "decision_ramas",
+   "name": "Decisión con consecuencias",
+   "simple": true,
+   "name_en": "Decision with consequences",
+   "desc": "Una elección de dos respuestas; cada una hace lo suyo.",
+   "desc_en": "A choice with two answers; each one does its own thing.",
+   "trigger": {
+    "name": "Decisión",
+    "name_en": "Decision",
+    "once": true,
+    "event": {
+     "id": "interacted",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showChoice",
+      "params": {
+       "text": "El prisionero suplica que lo liberéis.",
+       "text_en": "The prisoner begs you to set him free.",
+       "options": "Liberarlo|Dejarlo",
+       "options_en": "Free him|Leave him",
+       "outcomes": [
+        [
+         {
+          "id": "setVariable",
+          "params": {
+           "var": "liberado",
+           "value": 1
+          }
+         },
+         {
+          "id": "showMessage",
+          "params": {
+           "text": "Os da las gracias y señala un pasadizo.",
+           "text_en": "He thanks you and points to a passage."
+          }
+         }
+        ],
+        [
+         {
+          "id": "showMessage",
+          "params": {
+           "text": "Seguís adelante sin mirar atrás.",
+           "text_en": "You move on without looking back."
+          }
+         }
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "reunir_llaves",
+   "name": "Reunir las llaves",
+   "simple": true,
+   "name_en": "Gather the keys",
+   "desc": "Cada cofre abierto suma una llave. Ponle el objetivo «Encuentra N llaves» con la variable «llaves».",
+   "desc_en": "Each chest opened adds a key. Pair it with the objective “Find N keys” using the variable “llaves”.",
+   "trigger": {
+    "name": "Una llave más",
+    "name_en": "One more key",
+    "once": false,
+    "event": {
+     "id": "chestOpened",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "addVariable",
+      "params": {
+       "var": "llaves",
+       "value": 1
+      }
+     },
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "Encontráis una llave. Lleváis {#llaves} de 3.",
+       "text_en": "You find a key. You have {#llaves} of 3."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "sala_secreta",
+   "name": "Sala secreta",
+   "simple": true,
+   "name_en": "Secret room",
+   "desc": "Registrar el objeto pide una prueba; si sale, aparece una sala escondida.",
+   "desc_en": "Searching the object calls for a test; on a success a hidden room appears.",
+   "trigger": {
+    "name": "Sala secreta",
+    "name_en": "Secret room",
+    "once": false,
+    "event": {
+     "id": "interacted",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showChallenge",
+      "params": {
+       "text": "Registráis la estantería con cuidado. Haced una prueba.",
+       "text_en": "You search the bookshelf carefully. Make a test.",
+       "difficulty": "standard",
+       "outcomes": [
+        [
+         {
+          "id": "showMessage",
+          "params": {
+           "text": "Nada fuera de lo normal.",
+           "text_en": "Nothing out of the ordinary."
+          }
+         }
+        ],
+        [
+         {
+          "id": "showMessage",
+          "params": {
+           "text": "Un libro hace de palanca: se abre un pasadizo.",
+           "text_en": "One book is a lever: a passage opens."
+          }
+         },
+         {
+          "id": "revealRoom",
+          "params": {}
+         }
+        ]
+       ]
+      }
      }
     ]
    }

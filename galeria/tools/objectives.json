@@ -35,6 +35,26 @@
    "shape": "grupo"
   },
   {
+   "id": "defeat_groups",
+   "cat": "Eliminación",
+   "name": "Derrotar a varios grupos",
+   "text": "Derrota a los grupos {groups}.",
+   "check": {
+    "event": "groupDefeated"
+   },
+   "params": [
+    {
+     "key": "groups",
+     "label": "Grupos (separados por comas)",
+     "type": "text"
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "grupos"
+  },
+  {
    "id": "defeat_boss",
    "cat": "Eliminación",
    "name": "Derrotar al jefe",
@@ -182,7 +202,7 @@
    "id": "defeat_no_revive",
    "cat": "Eliminación",
    "name": "Sin resurrecciones",
-   "text": "Derrota a todos los enemigos evitando que resuciten.",
+   "text": "Derrota a todos los enemigos, también a los que vuelvan a levantarse.",
    "check": {
     "event": "allEnemiesDefeated",
     "flag": "noRevive"
@@ -240,8 +260,7 @@
    "params": [],
    "end": "victory",
    "note": "",
-   "judge": "auto",
-   "shape": "jefe"
+   "judge": "player"
   },
   {
    "id": "defeat_wave",
@@ -400,8 +419,7 @@
    ],
    "end": "victory",
    "note": "",
-   "judge": "auto",
-   "shape": "rondas"
+   "judge": "player"
   },
   {
    "id": "survive_hp",
@@ -510,8 +528,7 @@
    ],
    "end": "victory",
    "note": "",
-   "judge": "auto",
-   "shape": "rondas"
+   "judge": "player"
   },
   {
    "id": "survive_fire",
@@ -913,12 +930,64 @@
      "type": "int",
      "def": 3,
      "min": 1
+    },
+    {
+     "key": "type",
+     "label": "Solo de este tipo (opcional)",
+     "type": "select",
+     "opt": true,
+     "options": [
+      "",
+      "Chest",
+      "Shelf",
+      "Lectern",
+      "Well",
+      "Cauldron",
+      "Door",
+      "SightToken",
+      "InteractToken",
+      "Bell",
+      "BloodShrine",
+      "Fire",
+      "Statue",
+      "Wagon",
+      "Barricade",
+      "Gate"
+     ]
     }
    ],
    "end": "victory",
    "note": "",
    "judge": "auto",
    "shape": "objetos_n"
+  },
+  {
+   "id": "counter_at_least",
+   "cat": "Interacción",
+   "name": "Llegar a un contador",
+   "text": "Consigue que «{var}» llegue a {n}.",
+   "check": {
+    "event": "variableEquals",
+    "op": ">="
+   },
+   "params": [
+    {
+     "key": "var",
+     "label": "Variable",
+     "type": "text"
+    },
+    {
+     "key": "n",
+     "label": "Cantidad",
+     "type": "int",
+     "def": 3,
+     "min": 1
+    }
+   ],
+   "end": "victory",
+   "note": "",
+   "judge": "auto",
+   "shape": "contador"
   },
   {
    "id": "open_chest",
@@ -953,7 +1022,7 @@
    "end": "victory",
    "note": "",
    "judge": "auto",
-   "shape": "objetos_n"
+   "shape": "cofres"
   },
   {
    "id": "ring_bell",
@@ -996,8 +1065,7 @@
    ],
    "end": "victory",
    "note": "",
-   "judge": "auto",
-   "shape": "objetos_n"
+   "judge": "player"
   },
   {
    "id": "extinguish_fires",
@@ -1020,7 +1088,7 @@
    "end": "victory",
    "note": "",
    "judge": "auto",
-   "shape": "objetos_n"
+   "shape": "apagados"
   },
   {
    "id": "read_lectern",
@@ -1126,7 +1194,7 @@
    "end": "victory",
    "note": "",
    "judge": "auto",
-   "shape": "objetos_n"
+   "shape": "tipo_n"
   },
   {
    "id": "draw_well",
@@ -1167,8 +1235,9 @@
     },
     {
      "key": "loot",
-     "label": "Objeto/botín",
-     "type": "loot"
+     "label": "Ingrediente que hay que llevar (opcional)",
+     "type": "loot",
+     "opt": true
     }
    ],
    "end": "victory",
@@ -1371,12 +1440,42 @@
      "type": "int",
      "def": 3,
      "min": 1
+    },
+    {
+     "key": "var",
+     "label": "Variable que cuenta las llaves",
+     "type": "text",
+     "opt": true
+    },
+    {
+     "key": "type",
+     "label": "Solo de este tipo (opcional)",
+     "type": "select",
+     "opt": true,
+     "options": [
+      "",
+      "Chest",
+      "Shelf",
+      "Lectern",
+      "Well",
+      "Cauldron",
+      "Door",
+      "SightToken",
+      "InteractToken",
+      "Bell",
+      "BloodShrine",
+      "Fire",
+      "Statue",
+      "Wagon",
+      "Barricade",
+      "Gate"
+     ]
     }
    ],
    "end": "victory",
    "note": "",
    "judge": "auto",
-   "shape": "objetos_n"
+   "shape": "llaves"
   },
   {
    "id": "no_loot_run",
@@ -1444,8 +1543,7 @@
    ],
    "end": "victory",
    "note": "",
-   "judge": "auto",
-   "shape": "rondas"
+   "judge": "player"
   },
   {
    "id": "defend_position",
@@ -1471,8 +1569,7 @@
    ],
    "end": "victory",
    "note": "",
-   "judge": "auto",
-   "shape": "rondas"
+   "judge": "player"
   },
   {
    "id": "protect_object",
@@ -1631,13 +1728,13 @@
    "end": "victory",
    "note": "",
    "judge": "auto",
-   "shape": "salud"
+   "shape": "expuesto"
   },
   {
    "id": "reduce_hp",
    "cat": "Control",
    "name": "Herir al objetivo",
-   "text": "Reduce a {enemy} por debajo del {hp}% de vida.",
+   "text": "Reduce a {enemy} a un {hp}% de vida o menos.",
    "check": {
     "event": "enemyHealthBelow"
    },
@@ -1833,8 +1930,7 @@
    ],
    "end": "victory",
    "note": "",
-   "judge": "auto",
-   "shape": "rondas"
+   "judge": "player"
   },
   {
    "id": "no_weapon_class",
@@ -1949,8 +2045,7 @@
    ],
    "end": "victory",
    "note": "",
-   "judge": "auto",
-   "shape": "rondas"
+   "judge": "player"
   },
   {
    "id": "hold_until_round",
@@ -1976,8 +2071,7 @@
    ],
    "end": "victory",
    "note": "",
-   "judge": "auto",
-   "shape": "rondas"
+   "judge": "player"
   },
   {
    "id": "waves_survive",
@@ -2164,7 +2258,8 @@
   {
    "id": "all_heroes_defeated",
    "name": "Todos los héroes caen",
-   "params": []
+   "params": [],
+   "hidden": true
   },
   {
    "id": "round_limit",
@@ -2188,7 +2283,8 @@
      "label": "Héroe",
      "type": "hero"
     }
-   ]
+   ],
+   "hidden": true
   },
   {
    "id": "npc_defeated",
