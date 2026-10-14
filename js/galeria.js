@@ -519,4 +519,6 @@
 
   pintar();
   cargar();
+  // el botón «Subir un mapa» del panel del juego llega con #subir: se abre ya el formulario
+  if (location.hash === '#subir' && dlg) abrirSubida();
 })();

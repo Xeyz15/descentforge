@@ -24,6 +24,7 @@ pinta es la página, con `textContent`. Aquí no se genera HTML.
 import argparse
 import base64
 import gzip
+import hashlib
 import io
 import json
 import re
@@ -247,10 +248,11 @@ def archivos_de(d):
     limpios, vistos = [], set()
     for a in archivos:
         nombre = Path(str((a or {}).get("nombre") or "")).name
-        if not NOMBRE_OK.match(nombre) or nombre in vistos:
+        # en Windows «A.dmap» y «a.dmap» son el mismo archivo: se comparan sin mayúsculas
+        if not NOMBRE_OK.match(nombre) or nombre.lower() in vistos:
             raise Rechazo(f"El nombre de archivo «{nombre}» no vale: solo letras sin acentos, números, guiones y puntos.",
                           f"The file name “{nombre}” is not valid: only unaccented letters, digits, hyphens and dots.")
-        vistos.add(nombre)
+        vistos.add(nombre.lower())
         if not isinstance((a or {}).get("contenido"), str):
             raise Rechazo(f"«{nombre}» ha llegado vacío.", f"“{nombre}” arrived empty.")
         limpios.append({"nombre": nombre, "contenido": a["contenido"]})
@@ -318,9 +320,21 @@ def reindexar():
     fichas = []
     for f in sorted(MAPAS.glob("e*/ficha.json")):
         try:
-            fichas.append(json.loads(f.read_text(encoding="utf-8")))
+            ficha = json.loads(f.read_text(encoding="utf-8"))
         except ValueError:
             print(f"· {f} no se puede leer; se deja fuera", file=sys.stderr)
+            continue
+        # la huella y el tamaño de cada archivo, tal como está en disco (que es
+        # lo que sirve la web): el mod los comprueba antes de guardar nada de
+        # lo que baja desde dentro del juego
+        huellas = {}
+        for nombre in ficha.get("archivos") or []:
+            ruta = f.parent / nombre
+            if NOMBRE_OK.match(nombre) and ruta.is_file():
+                datos = ruta.read_bytes()
+                huellas[nombre] = {"sha256": hashlib.sha256(datos).hexdigest(), "bytes": len(datos)}
+        ficha["huellas"] = huellas
+        fichas.append(ficha)
     fichas.sort(key=lambda x: -x.get("creado", 0))
     (MAPAS / "indice.json").write_text(
         json.dumps({"actualizado": int(time.time()), "escenarios": fichas}, ensure_ascii=False, separators=(",", ":")) + "\n",
