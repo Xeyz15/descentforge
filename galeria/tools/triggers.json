@@ -1705,6 +1705,21 @@
    "mod": "app"
   },
   {
+   "id": "clearBoard",
+   "cat": "Tablero",
+   "name": "Retirar todo el tablero",
+   "params": [
+    {
+     "key": "keep",
+     "label": "Salvo estas salas (separadas por comas)",
+     "type": "text",
+     "opt": true
+    }
+   ],
+   "engine": "SetVisibilityBatch",
+   "mod": "app"
+  },
+  {
    "id": "reopenObject",
    "cat": "Tablero",
    "name": "Volver a dejar usable un objeto",
@@ -3617,6 +3632,45 @@
         ]
        ]
       }
+     }
+    ]
+   }
+  },
+  {
+   "id": "cambio_zona",
+   "name": "Cambio de zona",
+   "simple": true,
+   "name_en": "Change of area",
+   "desc": "Al cumplir el objetivo se retira todo el tablero, sale la zona nueva y los héroes pasan a ella. Las losetas de la zona nueva pueden repetir las de la primera.",
+   "desc_en": "When the objective is met the whole board is cleared, the new area comes out and the heroes move into it. The new area may reuse the tiles of the first one.",
+   "trigger": {
+    "name": "Cambio de zona",
+    "name_en": "Change of area",
+    "once": true,
+    "event": {
+     "id": "objectiveComplete",
+     "params": {}
+    },
+    "conditions": [],
+    "actions": [
+     {
+      "id": "showMessage",
+      "params": {
+       "text": "El camino sigue más allá. Recoged lo que hay en la mesa.",
+       "text_en": "The path goes on beyond. Clear the table."
+      }
+     },
+     {
+      "id": "clearBoard",
+      "params": {}
+     },
+     {
+      "id": "revealRoom",
+      "params": {}
+     },
+     {
+      "id": "moveHeroes",
+      "params": {}
      }
     ]
    }

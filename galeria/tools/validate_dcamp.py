@@ -147,6 +147,19 @@ def validate(doc, base: Path):
             rep.err(f"{etiqueta}: es de elección múltiple pero no tiene opciones")
         if len(d.get("options") or []) > 5:
             rep.err(f"{etiqueta}: {len(d['options'])} opciones; el cuadro del juego admite 5")
+        # la virtud, como el juego: un héroe y sus dos virtudes (14-oct)
+        if d.get("type") == "virtue":
+            heroe = d.get("hero")
+            if heroe and heroe not in {h["id"] for h in DATA.get("heroes", [])}:
+                rep.err(f"{etiqueta}: el héroe «{heroe}» no existe")
+            elif not heroe:
+                rep.warn(f"{etiqueta}: es de virtud pero no dice qué héroe elige; "
+                         "saldrá como una elección normal")
+            peso = d.get("weight", 1)
+            if not isinstance(peso, int) or peso < 1:
+                rep.err(f"{etiqueta}: el peso de la virtud debe ser un entero de 1 en adelante")
+            if len(d.get("options") or []) > 2:
+                rep.warn(f"{etiqueta}: una virtud tiene dos botones; sobran opciones")
 
     # ---- nodos ----
     for i, n in enumerate(nodes):
@@ -210,6 +223,17 @@ def validate(doc, base: Path):
                 rep.err(f"{etiqueta}: se exige a sí mismo, así que nunca aparecería")
             elif a not in node_ids:
                 rep.err(f"{etiqueta}: espera al nodo «{a}», que no existe")
+        ocultan = sp.get("hideAfterNodes", [])
+        if not isinstance(ocultan, list):
+            rep.err(f"{etiqueta}: «desaparece al completar» tiene que ser una lista de nodos")
+            ocultan = []
+        for a in ocultan:
+            if a == n.get("id"):
+                rep.err(f"{etiqueta}: desaparece al completarse a sí mismo; un nodo completado ya se va")
+            elif a not in node_ids:
+                rep.err(f"{etiqueta}: desaparece al completar «{a}», que no existe")
+            elif a in sp.get("afterNodes", []):
+                rep.err(f"{etiqueta}: necesita «{a}» para salir y desaparece al completarlo: no se vería nunca")
         for q in sp.get("afterQuests", []):
             if q not in QUESTS:
                 rep.err(f"{etiqueta}: espera la misión «{q}», que no es del juego")
@@ -262,11 +286,21 @@ def validate(doc, base: Path):
                     rep.err(f"start: «{cual}» no existe en el catálogo")
 
     # ---- tienda ----
+    # Como la del juego (14-oct): recetas y equipo, uno de cada, a su precio.
+    # `qty` ya no se usa (el juego agota el artículo al comprarlo) y se ignora.
+    vendibles = {r["id"] for r in DATA.get("recipes", [])} | {g["id"] for g in DATA.get("gear", [])}
     for it in (doc.get("shop") or {}).get("items", []):
-        if it.get("id") not in ITEMS:
-            rep.err(f"tienda: «{it.get('id')}» no existe en el catálogo")
-        if not isinstance(it.get("qty"), int) or it["qty"] < 1:
-            rep.err(f"tienda: «{it.get('id')}» con cantidad mal puesta")
+        cual = it.get("id")
+        if cual in vendibles:
+            continue
+        if cual not in ITEMS:
+            rep.err(f"tienda: «{cual}» no existe en el catálogo")
+        elif str(cual).startswith("LOOT_"):
+            rep.warn(f"tienda: «{cual}» es una carta de botín y la tienda no la puede "
+                     "vender; se salta en la partida. Pon una receta o equipo")
+        else:
+            rep.warn(f"tienda: «{cual}» es un consumible; el juego no los vende y vale 0, "
+                     "así que saldría gratis. Pon una receta o equipo")
 
     # ---- ¿se puede llegar a todos? ----
     # Ojo con los desbloqueos por diálogo: un `unlockNode` no está disponible

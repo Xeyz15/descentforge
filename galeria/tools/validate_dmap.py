@@ -195,6 +195,7 @@ def validate(doc):
 
     # ---- losetas: existencia y solapamiento por nivel ----
     occupied = {}          # (nivel, x, y) -> (índice, id) de la loseta
+    oculta = {}            # (nivel, x, y) -> ¿la loseta es de una sala que sale luego?
     floor_cells = set()    # celdas pisables, para validar posiciones
     clashes = {}           # (a, b) -> [celdas], para no repetir el mismo choque
     for i, p in enumerate(board.get("tiles", [])):
@@ -213,6 +214,7 @@ def validate(doc):
             if key in occupied:
                 clashes.setdefault((occupied[key], (i, p["tile"])), []).append(cell)
             occupied[key] = (i, p["tile"])
+            oculta[key] = bool(p.get("reveal"))
             floor_cells.add(key)
 
     for (a, b), cells in clashes.items():
@@ -226,24 +228,52 @@ def validate(doc):
     # Un mapa cuyas losetas no se tocan es legal loseta a loseta y aun así no se
     # puede jugar: los héroes no pueden pasar de un trozo a otro. Se comprobaba
     # cada loseta por separado y por eso se colaron mapas hechos de islas.
+    #
+    # Salvo el **cambio de zona** (decidido por el usuario el 13-oct, lo pidió
+    # wintech): la zona nueva se dibuja aparte y los héroes pasan a ella con
+    # «mover a los héroes». Un trozo suelto vale si TODAS sus losetas son de
+    # salas que salen luego y el guion mueve a los héroes en algún sitio.
+    def _mueve(lista, h=0):
+        for a in lista or []:
+            if not isinstance(a, dict):
+                continue
+            if a.get("id") in ("moveHeroes", "moveHero"):
+                return True
+            par = a.get("params") or {}
+            if h < 8 and (_mueve(par.get("then") or par.get("actions"), h + 1)
+                          or _mueve(par.get("else"), h + 1)
+                          or any(_mueve(r, h + 1) for r in par.get("outcomes") or []
+                                 if isinstance(r, list))):
+                return True
+        return False
+    mueve_heroes = any(_mueve(t.get("actions")) or _mueve(t.get("else"))
+                       for t in doc.get("triggers", []) if isinstance(t, dict))
     por_nivel = {}
     for (lvl, x, y) in floor_cells:
         por_nivel.setdefault(lvl, set()).add((x, y))
     for lvl, celdas in sorted(por_nivel.items()):
-        restantes, trozos = set(celdas), 0
+        restantes, trozos, sueltas_ok = set(celdas), 0, 0
         while restantes:
             trozos += 1
             cola = [restantes.pop()]
+            todo_oculto = True
             while cola:
                 x, y = cola.pop()
+                if not oculta.get((lvl, x, y)):
+                    todo_oculto = False
                 for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                     v = (x + dx, y + dy)
                     if v in restantes:
                         restantes.discard(v)
                         cola.append(v)
-        if trozos > 1:
+            if todo_oculto and mueve_heroes:
+                sueltas_ok += 1
+        # uno de los trozos es el tablero de verdad: los de zonas nuevas sobran
+        if trozos > 1 and trozos - sueltas_ok > 1:
             rep.err(f"la altura {lvl} está partida en {trozos} trozos que no se tocan: "
-                    "las losetas de un tablero van pegadas unas a otras")
+                    "las losetas de un tablero van pegadas unas a otras (una zona "
+                    "aparte solo vale si es de salas que salen luego y el guion "
+                    "mueve a los héroes)")
     # y un piso de arriba necesita algo debajo
     for lvl in sorted(por_nivel):
         if lvl > 0 and (lvl - 1) not in por_nivel:
@@ -428,11 +458,61 @@ def validate(doc):
     #
     # Mismo criterio que arriba: aviso y no error (el .dmap está bien escrito),
     # y de lo que no esté contado no se dice nada.
+    #
+    # Salvo las **reutilizadas** (cambio de zona, 13-oct): una loseta que el
+    # guion retira antes de que se abra la sala de otra copia suya vuelve a la
+    # caja y no cuenta dos veces. Igual que `losetaLiberada` del editor.
+    losetas = board.get("tiles", [])
+
+    def _planas(lista, h=0):
+        for a in lista or []:
+            if not isinstance(a, dict):
+                continue
+            yield a
+            par = a.get("params") or {}
+            if h < 8:
+                if a.get("id") == "if":
+                    yield from _planas(par.get("then") or par.get("actions"), h + 1)
+                    yield from _planas(par.get("else"), h + 1)
+                for r in par.get("outcomes") or []:
+                    if isinstance(r, list):
+                        yield from _planas(r, h + 1)
+
+    def _retira(a, i):
+        par, g = a.get("params") or {}, (losetas[i].get("reveal") or "").lower()
+        if a.get("id") == "removeTile":
+            return str(par.get("tile")) == str(i)
+        if a.get("id") == "removeRoom":
+            return bool(g) and str(par.get("group") or "").lower() == g
+        if a.get("id") == "clearBoard":
+            return not g or g not in [x.strip().lower() for x in str(par.get("keep") or "").split(",")]
+        return False
+
+    planas = [list(_planas(t.get("actions"))) + list(_planas(t.get("else")))
+              for t in doc.get("triggers", []) if isinstance(t, dict)]
+
+    def _liberada(i):
+        mia = losetas[i]
+        pieza = (TILES.get(mia.get("tile")) or {}).get("piece")
+        salas = {(q.get("reveal") or "").lower() for j, q in enumerate(losetas)
+                 if j != i and q.get("reveal")
+                 and (TILES.get(q.get("tile")) or {}).get("piece") == pieza
+                 and (q.get("reveal") or "").lower() != (mia.get("reveal") or "").lower()}
+        if not salas:
+            return False
+        for l in planas:
+            for k, a in enumerate(l):
+                if (a.get("id") in ("revealRoom", "revealTiles")
+                        and str((a.get("params") or {}).get("group") or "").lower() in salas
+                        and any(_retira(b, i) for b in l[:k])):
+                    return True
+        return False
+
     por_pieza = {}
-    for p in board.get("tiles", []):
+    for i, p in enumerate(losetas):
         ficha = TILES.get(p.get("tile")) or {}
         pieza = ficha.get("piece")
-        if pieza is None:
+        if pieza is None or _liberada(i):
             continue
         v = por_pieza.setdefault(pieza, {"n": 0, "caras": set(),
                                          "tope": ficha.get("units")})
