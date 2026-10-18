@@ -223,6 +223,12 @@
      "key": "enemy",
      "label": "Enemigo",
      "type": "enemy"
+    },
+    {
+     "key": "slot",
+     "label": "Cuál (opcional: uno concreto del tablero)",
+     "type": "enemyslot",
+     "opt": true
     }
    ],
    "engine": "PerformEnemyDefeatLogic"

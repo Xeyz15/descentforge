@@ -262,15 +262,13 @@ def validate(doc, base: Path):
                      "comunidad no se juegan; solo saldrá si un diálogo lo desbloquea")
 
     # ---- la apertura ----
-    # Sale en el mapa del mundo, donde solo existe el cuadro con caras.
+    # Sale en el mapa del mundo; sin nadie en escena va al cuadro narrativo sin
+    # retratos (el mod, desde el 15-oct), así que ya no es aviso.
     intro = doc.get("intro")
     if intro:
         di = por_id.get(intro)
         if di is None:
             rep.err(f"intro: el diálogo «{intro}» no existe")
-        elif not di.get("speaker") and not di.get("cast"):
-            rep.warn(f"intro: «{intro}» no tiene a nadie en escena; en el mapa del mundo solo "
-                     "se puede pintar el cuadro con caras")
 
     # ---- acciones de diálogo ----
     for d in dialogues:
