@@ -539,6 +539,150 @@
   .mfalta{color:var(--blood);font-weight:600;font-size:13.5px;margin:0 0 6px}
   .guialista .gitem.on{color:var(--text);font-weight:650}
   .sgrupo.on{border-color:var(--sel);background:color-mix(in srgb,var(--sel) 10%,var(--ink))}
+/* ================= modos de juego (modos.js) =================
+   Las mismas piezas que la guía de salas (gchip, gm, gcuenta) con el aire de
+   la propuesta del 19-oct: cartas grandes, escalera de oleadas. */
+
+  dialog.modoDlg{max-width:min(1040px,96vw)}
+  .mjintro{margin:0 0 14px;font-size:15px;color:var(--dim)}
+  .mjgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .mjcard{display:flex;flex-direction:column;padding:0;overflow:hidden;text-align:left;border-radius:12px;background:var(--panel2)}
+  .mjcard:hover{color:inherit}
+  .mjcard.pronto{opacity:.55;cursor:default}
+  .mjcard.pronto:hover{border-color:var(--edge)}
+  .mjart{position:relative;height:78px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--edge);
+         background-color:var(--board);background-image:radial-gradient(var(--grid) 1px,transparent 1px);background-size:14px 14px}
+  .mjring{width:50px;height:50px;border-radius:50%;border:2px solid var(--tile-edge);background:var(--panel);display:flex;align-items:center;justify-content:center}
+  .mjring svg,.svico svg{width:26px;height:26px;fill:none;stroke:var(--gold);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+  .mjcard:not(.pronto):hover .mjring{border-color:var(--torch)}
+  .mjpronto{position:absolute;top:8px;right:10px;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+  .mjbd{display:flex;flex-direction:column;gap:4px;padding:12px 14px 14px}
+  .mjbd b{font-family:var(--serif);font-size:19px;font-weight:600}
+  .mjbd small{font-size:13.5px;color:var(--dim);line-height:1.4}
+
+  /* la escalera de oleadas */
+  .svesc{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+  .svpel{flex:1;min-width:92px;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;
+         border:1px solid var(--edge);border-radius:10px;padding:10px 6px;background:var(--panel2)}
+  .svpel.elite{border:2px solid var(--gold)}
+  .svpel.jefe{border:2px solid var(--blood)}
+  .svpel b{font-size:14px}
+  .svpel small{font-size:12px;color:var(--dim)}
+  .svk{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:650}
+  .svpel.elite .svk{color:var(--gold)}
+  .svpel.jefe .svk{color:var(--blood)}
+  .svprem{margin-top:4px;font-size:12px;border-radius:10px;padding:1px 8px;border:1px solid var(--edge)}
+  .svprem.loot{color:var(--gold)}
+  .svprem.choice{color:var(--torch)}
+  .svprem.heal{color:var(--verd)}
+  .svqs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 22px}
+  .svq{display:flex;flex-direction:column;gap:7px;padding:10px 0;border-top:1px solid var(--edge)}
+  .svq b{font-size:15px}
+  .svq small{font-size:13px;color:var(--dim)}
+  .svq small.mal{color:var(--blood);font-weight:600}
+  .svseg{display:flex;gap:6px;flex-wrap:wrap}
+  .gchip.on{background:var(--torch);border-color:var(--torch);color:var(--ink);font-weight:650}
+  .svstep{display:flex;align-items:center;border:1px solid var(--edge);border-radius:8px;width:max-content}
+  .svstep button{border:0;width:40px;height:36px;font-size:18px;padding:0}
+  .svstep span{min-width:44px;text-align:center;font-size:18px;font-weight:700}
+
+  /* la guía del modo, encima de las capas */
+  .svbox{border:2px solid var(--torch);border-radius:12px;padding:10px 12px;margin-bottom:10px;background:var(--panel2);display:grid;gap:6px}
+  .svbox.invita{border-style:dashed}
+  .svbox.invita small{color:var(--dim);font-size:13px}
+  .svbox.invita b{font-family:var(--serif);font-size:18px}
+  .svhd{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .svhd b{font-family:var(--serif);font-size:18px}
+  .svhd small{color:var(--dim);font-size:13px;flex:1}
+  .svico{display:flex}
+  .svico svg{width:20px;height:20px;stroke:var(--torch)}
+  .svpaso{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:1px solid transparent;border-radius:8px;padding:6px 8px;font-size:14px}
+  .svpaso:hover{border-color:var(--edge);background:var(--panel);color:inherit}
+  .svpaso .gm,.svolas .gm{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;font-size:12px;border:2px solid var(--edge);color:var(--dim)}
+  .svpaso.hecho .gm{background:var(--verd);border-color:var(--verd);color:#fff}
+  .svolas{display:grid;gap:6px;padding:4px 8px}
+  .svolas .gt{font-size:14px}
+  .svchips{display:flex;gap:5px;flex-wrap:wrap}
+  .svchip{min-width:34px;height:32px;padding:0 8px;border-radius:16px;font-size:13px;font-weight:650;color:var(--dim)}
+  .svchip.elite{border:2px solid var(--gold)}
+  .svchip.jefe{border:2px solid var(--blood)}
+  .svchip.hecho{color:var(--text);background:color-mix(in srgb,var(--verd) 18%,transparent)}
+  .svchip.on{outline:2px solid var(--sel);outline-offset:1px;color:var(--text)}
+  .svfoco{border:2px solid var(--sel);border-radius:10px;padding:10px;background:var(--panel);display:grid;gap:8px;justify-items:start}
+  .svfoco p{margin:0;font-size:14px;line-height:1.45}
+  .svfoco .gcuenta{margin:0}
+  .svdest{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:6px 8px;margin-bottom:6px;
+          border:2px solid var(--sel);border-radius:8px;font-size:14px}
+  .destino:has(.svdest){flex-wrap:wrap}
+
+  /* la Cacería (modos-caceria.js) */
+  .cajefes{display:grid;gap:10px;margin-bottom:14px}
+  .cajefe{display:flex;gap:14px;align-items:center;border:2px solid var(--blood);border-radius:12px;padding:12px 14px;background:var(--panel2)}
+  .caico{width:54px;height:54px;border-radius:50%;border:2px solid var(--blood);display:flex;align-items:center;justify-content:center;flex:none;background:var(--panel)}
+  .caico svg{width:28px;height:28px;fill:none;stroke:var(--blood);stroke-width:1.6;stroke-linejoin:round}
+  .cabd{flex:1;min-width:0;display:grid;gap:6px}
+  .cabd select{max-width:340px}
+  .cabd small{font-size:13px;color:var(--dim)}
+  .cabar{display:flex;height:22px;border-radius:11px;overflow:hidden;background:var(--grid)}
+  .cabar span{display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:650;color:#fff;background:var(--blood);border-left:2px solid var(--panel2);min-width:0;white-space:nowrap;overflow:hidden}
+  .cabar span:first-child{border-left:0}
+  .cabar span:nth-child(2){background:color-mix(in srgb,var(--blood) 80%,#000)}
+  .cabar span:nth-child(3){background:color-mix(in srgb,var(--blood) 62%,#000)}
+  .capista{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--edge);border-radius:14px;padding:2px 4px 2px 10px;font-size:13.5px}
+  .svpaso .gn{margin-left:auto;font-size:12.5px;color:var(--dim);background:var(--panel);border-radius:10px;padding:0 8px}
+
+  /* el Atraco (modos-atraco.js) */
+  .atplan{display:flex;gap:10px;align-items:stretch;margin-bottom:16px}
+  .atbeat{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;border:1px solid var(--edge);border-radius:12px;padding:12px;background:var(--panel2)}
+  .atbeat .atn{width:26px;height:26px;border-radius:50%;background:var(--torch);color:var(--ink);font-weight:700;display:flex;align-items:center;justify-content:center}
+  .atbeat b{font-family:var(--serif);font-size:18px}
+  .atbeat small{font-size:13.5px;color:var(--dim)}
+  .atbeat em{margin-top:auto;font-style:normal;font-size:12.5px;color:var(--dim)}
+  .atbeat.app em{color:var(--verd)}
+  .atbeat.fin{border:2px solid var(--blood)}
+  .atbeat.fin .atn{background:var(--blood);color:#fff}
+  .atbeat.fin em{color:var(--gold)}
+  .atalarma{width:38px;flex:none;border-radius:10px;border:1px solid var(--blood);background:color-mix(in srgb,var(--blood) 18%,transparent);
+            display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;transform:rotate(180deg);
+            font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
+  .svfoco select{max-width:100%}
+
+  /* la Defensa (modos-defensa.js) */
+  .dfrondas{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+  .dfr{flex:1;min-width:78px;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;
+       border:1px solid var(--edge);border-radius:10px;padding:10px 6px;background:var(--panel2)}
+  .dfr b{font-size:22px}
+  .dfr small{font-size:12px;color:var(--dim)}
+  .dfr.llega{border-color:var(--torch)}
+  .dfr.llega .svk,.dfr.llega small{color:var(--torch)}
+  .dfr.fin{border:2px solid var(--verd)}
+  .dfr.fin .svk,.dfr.fin small{color:var(--verd)}
+
+  /* la Expedición (modos-expedicion.js) */
+  .exruta{display:grid;gap:4px;margin-bottom:14px}
+  .exflecha{text-align:center;color:var(--dim);font-size:16px;line-height:1}
+  .exsala{display:flex;align-items:center;gap:10px;border:1px solid var(--edge);border-radius:10px;padding:8px 10px;background:var(--panel2)}
+  .exsala.elite{border:2px solid var(--gold)}
+  .exsala.boss{border:2px solid var(--blood)}
+  .exico{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--tile-edge);display:flex;align-items:center;justify-content:center;flex:none;background:var(--panel)}
+  .exico svg{width:18px;height:18px;fill:none;stroke:var(--text);stroke-width:1.9;stroke-linejoin:round;stroke-linecap:round}
+  .elite .exico{border-color:var(--gold)} .elite .exico svg,.treasure .exico svg{stroke:var(--gold)}
+  .rest .exico{border-color:var(--verd)} .rest .exico svg{stroke:var(--verd)}
+  .boss .exico{border-color:var(--blood)} .boss .exico svg{stroke:var(--blood)}
+  .exbd{flex:1;min-width:0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .exbd input{flex:1;min-width:140px}
+  .exbd small{font-size:13px;color:var(--dim)}
+  .excruce{border:1px dashed var(--torch);border-radius:12px;padding:8px;display:grid;gap:6px}
+  .exhd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .exdos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .exayuda{font-size:13px;color:var(--dim)}
+  .exmapa{display:grid;gap:5px}
+  .exnodo{display:flex;align-items:center;gap:6px;width:100%;text-align:left;padding:5px 7px;border-radius:9px;font-size:13px;min-width:0}
+  .exnodo .exico{width:26px;height:26px}
+  .exnodo .exico svg{width:14px;height:14px}
+  .exnodo .exnm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .exnodo.hecho{background:color-mix(in srgb,var(--verd) 14%,transparent)}
+  .exok{color:var(--verd);font-weight:700}
 </style>
 </head>
 <body>
@@ -7532,6 +7676,10 @@ function trozosQueSobran(lv){
   }
   return n>1&&n-sueltosOk>1 ? n : 0;
 }
+/* Los enemigos que pueden estar en la mesa a la vez, para contar las figuras
+   de la caja. Sin modo de juego son todos; la Supervivencia cuenta solo la
+   oleada más grande, porque nunca hay dos en juego (modos.js). */
+function enemigosALaVez(){ return state.spawns.enemies; }
 function mapIssues(){
   const out=[];
   if(!state.board.tiles.length){ out.push(T('mIssNoTiles')); return out; }
@@ -7608,7 +7756,7 @@ function mapIssues(){
      vez—, que es como hay que diseñarlo si no se sabe qué habrá muerto ya. */
   const caja=(DATA.figuras&&DATA.figuras.PRODUCT_CORE_SET)||{};
   const porTipo={};
-  state.spawns.enemies.forEach(e=>{ const t=enemyById[e.enemy]?.type;
+  enemigosALaVez().forEach(e=>{ const t=enemyById[e.enemy]?.type;
     if(t!==undefined) porTipo[t]=(porTipo[t]||0)+1; });
   Object.entries(porTipo).forEach(([t,n])=>{
     const hay=+(caja[t]??0);
@@ -9595,6 +9743,1474 @@ openCuando=function(ti){
     if(antes.interactable!==undefined&&evById[id].params.some(p=>p.key==='interactable')) nuevo.interactable=antes.interactable;
     cambio(()=>{ t.event={id,params:nuevo}; }); renderRight(); draw();
   },()=>openCuandoTodos(ti),TS('Más formas de que pase…','More ways for it to happen…'));
+};
+/* ================= modos de juego (19-oct-2026) =================
+   El usuario: «que el creador pueda elegir qué modo de juego va a hacer antes
+   de poner losetas». Propuesta aprobada el 19-oct; se empieza por la
+   Supervivencia.
+
+   **Un modo es un asistente, no un formato nuevo.** Las respuestas se guardan
+   en `meta.mode` (el mod no lo lee: `JsonConvert` ignora lo que no conoce) y
+   con ellas se montan objetivos y disparadores normales, los mismos que se
+   pueden ver y tocar a mano. Volver a contestar rehace solo lo suyo: los
+   disparadores que empiezan por `modo_sv_` y el objetivo de contar oleadas.
+
+   **Sin modo, el editor es el de siempre.** Todo lo que se engancha aquí
+   (capas, piezas, colocar, la cuenta de la caja) mira primero si el mapa
+   tiene modo y, si no, llama a lo de antes sin tocar nada.
+
+   La Supervivencia, por dentro:
+   · cada oleada es un grupo de enemigos dibujados en el tablero («Oleada 3»),
+     o una tanda al azar de los enemigos del mapa en la zona de entrada;
+   · al empezar sale la 1; cuando caen TODOS los enemigos sale la siguiente
+     (`allEnemiesDefeated` + la variable `ola`), así nunca se juntan dos;
+   · los disparadores de fin de oleada van del último al primero: el juego los
+     mira en orden, y el de la oleada 1 pone `ola` a 2 antes de que se mire el
+     de la 2 si fuera detrás (saltaría en el mismo instante);
+   · se gana al contar todas (`counter_at_least` sobre `oleadas`);
+   · entre oleadas, por turnos, lo que se eligió: botín, una carta de
+     recompensa o riesgo (`showChoice`) o curación (se hace en la mesa);
+   · el riesgo es +1 al ataque de la oleada siguiente, al empezar la ronda
+     siguiente («cada 1 ronda»: `roundStart` pide un número de ronda):
+     `spawnGroup` mete a los enemigos en una corrutina y, aplicado en el
+     acto, no encontraría a nadie (`Enemigos.PoblarAhora`). */
+
+/* Los demás modos se apuntan aquí desde su archivo (modos-caceria.js…):
+   {nombre, preguntas(nuevo), bloque(c), ligar(el,c)}. */
+const MODOS_JUEGO={};
+/* Lo que cada modo deja «a medias» (el paso con foco: poner una oleada, el
+   objeto del robo…). Se olvida al irse a otra sala o a otro paso de la guía:
+   si no, lo siguiente que se pusiera en cualquier sitio contaba para el modo. */
+const MODOS_FOCOS=[];
+const olvidarFocosModo=()=>MODOS_FOCOS.forEach(f=>f());
+const MODO_SV='survival', SV_PREF='modo_sv_', SV_VAR='oleadas', SV_OLA='ola', SV_RIESGO='riesgo';
+const SV_PREMIOS=['loot','choice','heal'];
+let svFoco=null;        // la oleada (1…n) cuyos enemigos se están poniendo
+let svN0=0;             // cuántos enemigos había al empezar a ponerla
+let modoLibre=false;    // «Libre» en este mapa: no se vuelve a ofrecer
+
+const svCfg=()=>mode==='scenario'&&state.meta.mode?.id===MODO_SV?state.meta.mode:null;
+function svPorDefecto(){
+  return {id:MODO_SV,v:1,waves:6,eliteEvery:2,boss:true,between:[...SV_PREMIOS],
+          random:'some',randomWaves:[],randomCount:3,entrada:null,groups:[]};
+}
+const svGrupo=(c,k)=>c.groups[k-1]||TS('Oleada ','Wave ')+k;
+const svTipo=(c,k)=>c.boss&&k===c.waves?'jefe':(c.eliteEvery>0&&k>1&&(k-1)%c.eliteEvery===0?'elite':'normal');
+const svAzar=(c,k)=>svTipo(c,k)!=='jefe'&&(c.random==='all'||(c.random==='some'&&c.randomWaves.includes(k)));
+const svEnemigosDe=(c,k)=>state.spawns.enemies.map((e,i)=>({e,i})).filter(x=>x.e.group===svGrupo(c,k));
+function svPremio(c,k){
+  const l=SV_PREMIOS.filter(x=>c.between.includes(x));
+  return l.length?l[(k-1)%l.length]:null;
+}
+const svNombreTipo=t=>t==='jefe'?TS('Jefe','Boss'):t==='elite'?TS('Élite','Elite'):'';
+
+/* Un `meta.mode` traído de fuera se deja en su forma, como todo lo que se abre. */
+function svSanear(m){
+  const ent=(v,a,b,d)=>{ const n=Math.round(+v); return Number.isFinite(n)?Math.min(b,Math.max(a,n)):d; };
+  const c=svPorDefecto();
+  c.waves=ent(m.waves,3,8,6);
+  c.eliteEvery=[0,2,3].includes(+m.eliteEvery)?+m.eliteEvery:2;
+  c.boss=m.boss!==false;
+  c.between=Array.isArray(m.between)?SV_PREMIOS.filter(x=>m.between.includes(x)):[...SV_PREMIOS];
+  c.random=['none','some','all'].includes(m.random)?m.random:'some';
+  c.randomWaves=Array.isArray(m.randomWaves)?[...new Set(m.randomWaves.map(k=>ent(k,1,8,0)).filter(k=>k>0))]:[];
+  c.randomCount=ent(m.randomCount,1,8,3);
+  c.entrada=Array.isArray(m.entrada)&&m.entrada.length===4&&m.entrada.every(v=>Number.isFinite(+v))?m.entrada.map(v=>Math.round(+v)):null;
+  c.groups=Array.isArray(m.groups)?m.groups.slice(0,8).map(g=>String(g??'').slice(0,60)):[];
+  return c;
+}
+
+/* ---- lo que se monta con las respuestas ---- */
+function svTextoOla(c,k){
+  return svTipo(c,k)==='jefe'?TS(`¡El jefe! Última oleada (${k} de ${c.waves}).`,`The boss! Last wave (${k} of ${c.waves}).`)
+                             :TS(`Oleada ${k} de ${c.waves}.`,`Wave ${k} of ${c.waves}.`);
+}
+function svSacar(c,k){
+  if(!svAzar(c,k)) return [{id:'spawnGroup',params:{group:svGrupo(c,k)}}];
+  const p={count:c.randomCount}; if(c.entrada) p.area=[...c.entrada];
+  return [{id:'spawnRandom',params:p}];
+}
+function svPremioAcciones(c,k,pregunta){
+  const t=svPremio(c,k);
+  if(t==='loot') return [{id:'giveRandomLoot',params:{points:3}}];
+  if(t==='heal') return [svCurar()];
+  if(t==='choice') return [{id:'showChoice',params:{
+    text:pregunta||TS('La oleada se retira. Tenéis un momento antes de la siguiente. ¿Qué hacéis?','The wave falls back. You have a moment before the next one. What do you do?'),
+    options:TS('Respiro|El cofre del caído|Trato en la sombra','Breather|The fallen one\'s chest|Shadow deal'),
+    outcomes:[[svCurar()],
+              [{id:'giveRandomLoot',params:{points:3}}],
+              [{id:'giveRandomLoot',params:{points:6}},{id:'setVariable',params:{var:SV_RIESGO,value:k+1}}]]}}];
+  return [];
+}
+/* La curación va como texto que espera a que se cierre, no como «Curar a los
+   héroes»: las acciones de mesa se juntan en un cuadro al final de la tanda
+   (`AccionesMapa.Contar`) y salía DESPUÉS de «Oleada 4 de 6», con la oleada
+   ya en la mesa (probado en el juego el 19-oct). El texto es el mismo. */
+const svCurar=()=>({id:'showMessage',params:{text:TS('En la mesa:\n\nLos héroes se curan: 2','On the table:\n\nThe heroes heal: 2')}});
+const svTrg=(id,nombre,event,conditions,actions)=>({id:SV_PREF+id,name:nombre,once:true,event,conditions,actions});
+function svGenerar(c){
+  const n=c.waves;
+  for(let k=c.groups.length+1;k<=n;k++) c.groups.push(TS('Oleada ','Wave ')+k);
+  const sobran=new Set(c.groups.slice(n)); c.groups=c.groups.slice(0,n);
+  c.randomWaves=c.randomWaves.filter(k=>k<=n);
+  if(sobran.size) state.spawns.enemies=state.spawns.enemies.filter(e=>!sobran.has(e.group));
+
+  const nom=TS('Supervivencia','Survival');
+  const T_=[svTrg('inicio',`${nom}: ${TS('empieza','start')}`,{id:'mapStart',params:{}},[],[
+    {id:'initVariable',params:{var:SV_VAR,value:0}},
+    {id:'initVariable',params:{var:SV_OLA,value:1}},
+    {id:'initVariable',params:{var:SV_RIESGO,value:0}},
+    {id:'showMessage',params:{text:svTextoOla(c,1)}}, ...svSacar(c,1)])];
+  for(let k=n;k>=1;k--){
+    const a=[{id:'addVariable',params:{var:SV_VAR,value:1}}];
+    if(k<n) a.push(...svPremioAcciones(c,k),{id:'setVariable',params:{var:SV_OLA,value:k+1}},
+                   {id:'showMessage',params:{text:svTextoOla(c,k+1)}},...svSacar(c,k+1));
+    T_.push(svTrg('ola'+k,`${nom}: ${TS('cae la oleada','wave cleared')} ${k}`,{id:'allEnemiesDefeated',params:{}},
+                  [{id:'varEquals',params:{var:SV_OLA,value:k}}],a));
+  }
+  for(let k=1;k<n;k++) if(svPremio(c,k)==='choice')
+    T_.push(svTrg('riesgo'+(k+1),`${nom}: ${TS('trato en la sombra','shadow deal')} ${k+1}`,{id:'everyNRounds',params:{n:1}},
+                  [{id:'varEquals',params:{var:SV_RIESGO,value:k+1}}],
+                  [{id:'enemyBonus',params:{attack:1,defense:0}},{id:'setVariable',params:{var:SV_RIESGO,value:0}}]));
+  state.triggers=[...state.triggers.filter(t=>!String(t.id||'').startsWith(SV_PREF)),...T_];
+
+  const obj={id:'counter_at_least',params:{var:SV_VAR,n},text:TS(`Superad las ${n} oleadas.`,`Clear all ${n} waves.`)};
+  const i=state.objectives.primary.findIndex(o=>o.id==='counter_at_least'&&o.params?.var===SV_VAR);
+  if(i>=0) state.objectives.primary[i]=obj; else state.objectives.primary.push(obj);
+}
+
+/* ---- elegir el modo ---- */
+const SV_ICO={
+  sv:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+  caza:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l4 4 5-7 5 7 4-4-2 11H5z"/></svg>',
+  atraco:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14.5 8.5l2 2"/></svg>',
+  defensa:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21h16M6 21V9h12v12M6 9V5h3v2h2V5h2v2h2V5h3v4"/><path d="M10 21v-4h4v4"/></svg>',
+  exped:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="12" cy="20" r="2"/><path d="M11 5.7L7 10.3M13 5.7l4 4.6M7 13.7l4 4.6M17 13.7l-4 4.6"/></svg>',
+  libre:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg>',
+};
+function dlgAncho(){ const d=document.getElementById('dlg'); d.classList.add('modoDlg');
+  d.addEventListener('close',()=>d.classList.remove('modoDlg'),{once:true}); }
+function abrirElegirModo(){
+  const carta=(id,ico,nombre,frase,pronto)=>`<button class="mjcard ${pronto?'pronto':''}" ${pronto?'disabled':`data-mj="${id}"`}>
+    <span class="mjart"><span class="mjring">${ico}</span>${pronto?`<span class="mjpronto">${TS('Pronto','Soon')}</span>`:''}</span>
+    <span class="mjbd"><b>${nombre}</b><small>${frase}</small></span></button>`;
+  openDlg(TS('¿Qué vas a crear?','What will you make?'),
+    `<p class="mjintro">${TS('Elige un modo. Te haremos unas pocas preguntas y el guion se monta solo; luego pones las losetas como siempre.','Pick a mode. We ask a few questions and the script builds itself; then you place tiles as usual.')}</p>
+     <div class="mjgrid">
+      ${carta('sv',SV_ICO.sv,TS('Supervivencia','Survival'),TS('Aguantad oleadas cada vez más duras. Al final, el jefe.','Hold out against ever harder waves. Then the boss.'))}
+      ${carta('caza',SV_ICO.caza,TS('Cacería','Hunt'),TS('Una bestia con escolta que cambia según le baja la vida.','A guarded beast that changes as it weakens.'),!MODOS_JUEGO.hunt)}
+      ${carta('atraco',SV_ICO.atraco,TS('Atraco','Heist'),TS('Entrad, coged el botín y salid antes de que os encierren.','Get in, grab the loot, get out before you are trapped.'),!MODOS_JUEGO.heist)}
+      ${carta('defensa',SV_ICO.defensa,TS('Defensa','Defense'),TS('Proteged la posición unas rondas.','Hold the position for some rounds.'),!MODOS_JUEGO.defense)}
+      ${carta('exped',SV_ICO.exped,TS('Expedición','Expedition'),TS('Salas en cadena: en cada cruce, elegís ruta.','Rooms in a chain: pick a path at each fork.'),!MODOS_JUEGO.expedition)}
+      ${carta('libre',SV_ICO.libre,TS('Libre','Free'),TS('Como hasta ahora: tú pones todo.','As before: you set up everything.'))}
+     </div>`,
+    `<button id="mjCancel">${TS('Cancelar','Cancel')}</button>`);
+  dlgAncho();
+  document.getElementById('mjCancel').onclick=()=>dlg.close();
+  document.querySelectorAll('[data-mj]').forEach(b=>b.onclick=()=>{
+    if(b.dataset.mj==='libre'){ modoLibre=true; dlg.close(); renderSalas(); return; }
+    const otro={caza:'hunt',atraco:'heist',defensa:'defense',exped:'expedition'}[b.dataset.mj];
+    if(otro) return MODOS_JUEGO[otro].preguntas(true);
+    svPreguntas(svPorDefecto(),true); });
+}
+
+/* ---- las preguntas de la Supervivencia ---- */
+function svEscalera(c){
+  return `<div class="svesc">${Array.from({length:c.waves},(_,j)=>{ const k=j+1, t=svTipo(c,k), p=k<c.waves?svPremio(c,k):null;
+    return `<div class="svpel ${t}"><span class="svk">${k}${t!=='normal'?' · '+svNombreTipo(t):''}</span>
+      <b>${esc(svGrupo(c,k))}</b><small>${svAzar(c,k)?TS('al azar','random'):TS('dibujada','drawn')}</small>
+      ${p?`<span class="svprem ${p}">${p==='loot'?TS('Botín','Loot'):p==='heal'?TS('Curación','Healing'):TS('Recompensa o riesgo','Reward or risk')}</span>`:''}</div>`; }).join('')}</div>`;
+}
+function svPreguntas(c0,nuevo){
+  const q=svSanear(c0);
+  const seg=(k,v,txt)=>`<button class="gchip ${q[k]===v?'on':''}" data-svq="${k}" data-v="${v}">${txt}</button>`;
+  const pinta=()=>{
+    const ya=svCfg(), sobran=ya?ya.groups.slice(q.waves).reduce((n,g)=>n+state.spawns.enemies.filter(e=>e.group===g).length,0):0;
+    document.getElementById('dlgBody').innerHTML=`
+      <p class="mjintro">${TS('Así quedará la partida. Cambia las respuestas y la escalera se rehace.','This is how the game will go. Change the answers and the ladder updates.')}</p>
+      ${svEscalera(q)}
+      <div class="svqs">
+        <div class="svq"><b>${TS('¿Cuántas oleadas?','How many waves?')}</b>
+          <span class="svstep"><button data-svmas="-1" aria-label="${TS('Menos','Fewer')}">−</button><span id="svN">${q.waves}</span><button data-svmas="1" aria-label="${TS('Más','More')}">+</button></span>
+          <small>${TS('Entre 3 y 8. Más de 8 cansa.','From 3 to 8. More than 8 gets tiring.')}</small>
+          ${sobran?`<small class="mal">${TS(`Al montar se quitan los ${sobran} enemigos de las oleadas que sobran.`,`The ${sobran} enemies of the removed waves will be deleted.`)}</small>`:''}</div>
+        <div class="svq"><b>${TS('¿Un élite cada…?','An elite every…?')}</b><span class="svseg">
+          ${seg('eliteEvery',0,TS('Nunca','Never'))}${seg('eliteEvery',2,TS('2 oleadas','2 waves'))}${seg('eliteEvery',3,TS('3 oleadas','3 waves'))}</span></div>
+        <div class="svq"><b>${TS('¿Jefe en la última?','Boss in the last one?')}</b><span class="svseg">
+          ${seg('boss',true,TS('Sí','Yes'))}${seg('boss',false,TS('No','No'))}</span></div>
+        <div class="svq"><b>${TS('Al limpiar una oleada…','When a wave is cleared…')}</b><span class="svseg">
+          ${SV_PREMIOS.map(p=>`<button class="gchip ${q.between.includes(p)?'on':''}" data-svpremio="${p}">${p==='loot'?TS('Botín','Loot'):p==='choice'?TS('Recompensa o riesgo','Reward or risk'):TS('Curación','Healing')}</button>`).join('')}</span>
+          <small>${TS('Se reparten por turnos, como en la escalera. La curación se hace en la mesa: la app lo dice.','They take turns, as on the ladder. Healing is done on the table: the app says so.')}</small></div>
+        <div class="svq"><b>${TS('¿Enemigos al azar?','Random enemies?')}</b><span class="svseg">
+          ${seg('random','none',TS('Nunca','Never'))}${seg('random','some',TS('En algunas','In some'))}${seg('random','all',TS('En todas','In all'))}</span>
+          <small>${TS('Salen de los enemigos que ya usa el mapa, en la zona de entrada que marques.','They come from the enemies the map already uses, in the entry zone you mark.')}</small></div>
+      </div>`;
+    document.querySelectorAll('[data-svmas]').forEach(b=>b.onclick=()=>{ q.waves=Math.min(8,Math.max(3,q.waves+(+b.dataset.svmas))); pinta(); });
+    document.querySelectorAll('[data-svq]').forEach(b=>b.onclick=()=>{ const k=b.dataset.svq, v=b.dataset.v;
+      q[k]=k==='eliteEvery'?+v:k==='boss'?v==='true':v; pinta(); });
+    document.querySelectorAll('[data-svpremio]').forEach(b=>b.onclick=()=>{ const p=b.dataset.svpremio;
+      q.between=q.between.includes(p)?q.between.filter(x=>x!==p):SV_PREMIOS.filter(x=>x===p||q.between.includes(x)); pinta(); });
+  };
+  openDlg(TS('Supervivencia','Survival'),'',
+    `${nuevo?`<button id="svAtras">${TS('Atrás','Back')}</button>`:`<button id="svCancel">${TS('Cancelar','Cancel')}</button>`}
+     <button class="primary" id="svMontar">${nuevo?TS('Montar la arena','Build the arena'):TS('Guardar cambios','Save changes')}</button>`);
+  dlgAncho(); pinta();
+  const at=document.getElementById('svAtras'); if(at) at.onclick=abrirElegirModo;
+  const ca=document.getElementById('svCancel'); if(ca) ca.onclick=()=>dlg.close();
+  document.getElementById('svMontar').onclick=()=>{
+    cambio(()=>{ state.meta.mode=q; svGenerar(q); });
+    dlg.close(); svFoco=null;
+    if(nuevo){ elegirSala(''); irPaso('','losetas');
+      flash(TS('Arena lista. Pon sus losetas: la guía de la izquierda te dice lo que falta.','Arena ready. Place its tiles: the guide on the left tells you what is missing.')); }
+    else { renderRight(); draw(); flash(TS('Supervivencia actualizada.','Survival updated.')); }
+  };
+}
+
+/* ---- la guía del modo, encima de las capas ---- */
+function svBloque(c){
+  const ini=salaPorClave(''), arena=!!ini?.losetas.length, heroes=(ini?.salidas.length||0)>=2;
+  const hayAzar=Array.from({length:c.waves},(_,j)=>svAzar(c,j+1)).some(Boolean);
+  const paso=(id,hecho,texto,extra='')=>`<button class="svpaso ${hecho?'hecho':''}" data-svpaso="${id}"><span class="gm">${hecho?'✓':''}</span><span class="gt">${texto}</span>${extra}</button>`;
+  const chips=Array.from({length:c.waves},(_,j)=>{ const k=j+1, t=svTipo(c,k), n=svEnemigosDe(c,k).length, az=svAzar(c,k);
+    const hecho=az?!!c.entrada:n>0;
+    return `<button class="svchip ${t} ${hecho?'hecho':''} ${svFoco===k?'on':''}" data-svola="${k}" title="${esc(svGrupo(c,k))}">${t==='jefe'?TS('Jefe','Boss'):k}${az?' ?':''}</button>`; }).join('');
+  let foco='';
+  if(svFoco&&svFoco<=c.waves){ const k=svFoco, t=svTipo(c,k), az=svAzar(c,k), n=svEnemigosDe(c,k).length;
+    foco=`<div class="svfoco">
+      <span class="svk">${TS('Oleada','Wave')} ${k}${t!=='normal'?' · '+svNombreTipo(t):''}</span>
+      ${c.random==='some'&&t!=='jefe'?`<span class="svseg"><button class="gchip ${az?'':'on'}" data-svaz="0">${TS('Dibujada','Drawn')}</button><button class="gchip ${az?'on':''}" data-svaz="1">${TS('Al azar','Random')}</button></span>`:''}
+      ${az?`<p>${TS(`Salen ${c.randomCount} enemigos al azar de los que usa el mapa, en la zona de entrada.`,`${c.randomCount} random enemies from those the map uses come out in the entry zone.`)}</p>
+            <span class="svstep"><button data-svcuantos="-1" aria-label="${TS('Menos','Fewer')}">−</button><span>${c.randomCount}</span><button data-svcuantos="1" aria-label="${TS('Más','More')}">+</button></span>`
+          :`<p>${t==='jefe'?TS('Pon al jefe en el tablero (y su escolta, si quieres).','Place the boss on the board (and its escort, if you like).')
+                :t==='elite'?TS('Pon sus enemigos en el tablero. Uno de ellos, de nivel alto.','Place its enemies on the board. One of them at a high level.')
+                :TS('Pon sus enemigos en el tablero, cerca de por donde entran.','Place its enemies on the board, near where they come in.')}</p>
+            <p class="gcuenta">${n} ${n===1?TS('enemigo','enemy'):TS('enemigos','enemies')}</p>
+            <button class="primary sm" data-svponer="${k}">${TS('Poner enemigos','Place enemies')}</button>`}
+      <button class="sm" id="svFocoFin">${TS('Listo','Done')}</button></div>`; }
+  return `<div class="svbox">
+    <div class="svhd"><span class="svico">${SV_ICO.sv}</span><b>${TS('Supervivencia','Survival')}</b><small>${c.waves} ${TS('oleadas','waves')}</small>
+      <button class="sm" id="svCambiar">${TS('Cambiar respuestas','Change answers')}</button></div>
+    ${paso('arena',arena,TS('La arena','The arena'))}
+    ${paso('heroes',heroes,TS('Dónde empiezan los héroes','Where the heroes start'))}
+    ${hayAzar?paso('entrada',!!c.entrada,TS('Por dónde entran (zona)','Where they come in (zone)')):''}
+    <div class="svolas"><span class="gt">${TS('Enemigos de cada oleada','Enemies of each wave')}</span><div class="svchips">${chips}</div></div>
+    ${foco}
+  </div>`;
+}
+function svInvita(){
+  return `<div class="svbox invita"><b>${TS('¿Qué vas a crear?','What will you make?')}</b>
+    <small>${TS('Elige un modo de juego y el guion se monta solo.','Pick a game mode and the script builds itself.')}</small>
+    <button class="primary" id="mjElegir">${TS('Elegir modo de juego','Choose a game mode')}</button>
+    <button class="sm" id="mjLibre">${TS('Empezar en libre','Start free-form')}</button></div>`;
+}
+function svEnfocar(k){
+  svFoco=k; svN0=state.spawns.enemies.length;
+  draw(); renderSalas();
+}
+function svPonerOla(k){
+  svFoco=k; svN0=state.spawns.enemies.length;
+  abrirPiezas('enemies'); tool='enemy'; renderTools?.(); renderPalette(); draw();
+  flash(TS(`Pon los enemigos de la oleada ${k}. Las demás oleadas se esconden mientras tanto.`,`Place the enemies of wave ${k}. The other waves are hidden meanwhile.`));
+}
+function svLigar(el){
+  const c=svCfg();
+  const q=s=>el.querySelector(s);
+  if(!c){
+    const e=q('#mjElegir'); if(e) e.onclick=abrirElegirModo;
+    const l=q('#mjLibre'); if(l) l.onclick=()=>{ modoLibre=true; renderSalas(); };
+    return;
+  }
+  q('#svCambiar').onclick=()=>svPreguntas(c,false);
+  el.querySelectorAll('[data-svpaso]').forEach(b=>b.onclick=()=>{ const id=b.dataset.svpaso;
+    if(id==='arena'){ elegirSala(''); irPaso('','losetas'); }
+    else if(id==='heroes'){ elegirSala(''); irPaso('','heroes'); }
+    else if(id==='entrada') startPick('area',v=>{ cambio(()=>{ c.entrada=v; svGenerar(c); }); renderRight(); draw(); }); });
+  el.querySelectorAll('[data-svola]').forEach(b=>b.onclick=()=>svEnfocar(+b.dataset.svola));
+  el.querySelectorAll('[data-svaz]').forEach(b=>b.onclick=()=>{ const k=svFoco, az=b.dataset.svaz==='1';
+    cambio(()=>{ c.randomWaves=az?[...new Set([...c.randomWaves,k])]:c.randomWaves.filter(x=>x!==k); svGenerar(c); }); renderSalas(); });
+  el.querySelectorAll('[data-svcuantos]').forEach(b=>b.onclick=()=>{
+    cambio(()=>{ c.randomCount=Math.min(8,Math.max(1,c.randomCount+(+b.dataset.svcuantos))); svGenerar(c); }); renderSalas(); });
+  el.querySelectorAll('[data-svponer]').forEach(b=>b.onclick=()=>svPonerOla(+b.dataset.svponer));
+  const fin=q('#svFocoFin'); if(fin) fin.onclick=()=>{ svFoco=null; draw(); renderSalas(); };
+  // lo que falta de una oleada lleva a esa oleada
+  el.querySelectorAll('[data-fsala^="§sv"]').forEach(b=>b.onclick=()=>{ ponerLtab('capas'); svEnfocar(+b.dataset.fsala.slice(3)); });
+}
+
+/* ---- enganches: todos dejan el editor como estaba si el mapa no tiene modo ---- */
+MODOS_FOCOS.push(()=>{ svFoco=null; });
+const elegirSalaSinModo=elegirSala;
+elegirSala=function(...a){ olvidarFocosModo(); return elegirSalaSinModo(...a); };
+const irPasoSinModo=irPaso;
+irPaso=function(...a){ olvidarFocosModo(); return irPasoSinModo(...a); };
+const renderSalasSinModo=renderSalas;
+renderSalas=function(){
+  renderSalasSinModo();
+  if(mode!=='scenario') return;
+  const el=document.getElementById('salasArbol'); if(!el) return;
+  const c=svCfg();
+  const otro=state.meta.mode&&!c?MODOS_JUEGO[state.meta.mode.id]:null;
+  if(otro){ el.insertAdjacentHTML('afterbegin',otro.bloque(state.meta.mode)); otro.ligar(el,state.meta.mode); return; }
+  if(state.meta.mode&&!c) return;              // un modo que este editor aún no conoce: se respeta y no se toca
+  const vacio=!state.board.tiles.length&&!state.triggers.length&&!state.spawns.enemies.length&&!state.spawns.interactables.length;
+  if(!c&&(!vacio||modoLibre||TUT.leccion)) return;
+  el.insertAdjacentHTML('afterbegin',c?svBloque(c):svInvita());
+  svLigar(el);
+};
+
+/* Encima de las piezas: a qué oleada van los enemigos que se pongan. */
+const renderDestinoSinModo=renderDestino;
+renderDestino=function(){
+  renderDestinoSinModo();
+  const c=svCfg(), el=document.getElementById('destinoPiezas');
+  if(!c||!svFoco||!el) return;
+  el.insertAdjacentHTML('afterbegin',`<div class="svdest"><span>${TS('Los enemigos van a','Enemies go to')} <b>${esc(svGrupo(c,svFoco))}</b></span>
+    <button class="sm" id="svDestListo">${TS('Listo','Done')}</button></div>`);
+  el.querySelector('#svDestListo').onclick=()=>{ svFoco=null; ponerLtab('capas'); draw(); renderSalas(); };
+};
+
+/* Lo que se pone mientras hay una oleada elegida es de esa oleada. */
+const renderRightSinModo=renderRight;
+renderRight=function(){
+  const c=svCfg();
+  if(c&&svFoco&&state.spawns.enemies.length>svN0){
+    for(let i=svN0;i<state.spawns.enemies.length;i++) state.spawns.enemies[i].group=svGrupo(c,svFoco);
+    svN0=state.spawns.enemies.length;
+  }
+  return renderRightSinModo();
+};
+
+/* Mientras se pone una oleada, las otras ni se ven ni estorban: nunca están
+   en la mesa a la vez, así que pueden compartir casilla. Se apartan a un piso
+   que no existe mientras se pregunta, y se devuelven al acabar. */
+function svApartarOtras(fn){
+  const c=svCfg(); if(!c||!svFoco) return fn();
+  const mia=svGrupo(c,svFoco), olas=new Set(c.groups), tocados=[];
+  state.spawns.enemies.forEach(e=>{ if(olas.has(e.group)&&e.group!==mia){ tocados.push([e,e.level]); e.level=-999; } });
+  try{ return fn(); }
+  finally{ tocados.forEach(([e,l])=>{ if(l===undefined) delete e.level; else e.level=l; }); }
+}
+/* Solo al poner ENEMIGOS: una salida de héroe o un objeto no pueden caer encima
+   de un enemigo de otra oleada (ese sí estará en la mesa en algún momento). */
+const quiénOcupaSinModo=quiénOcupa;
+quiénOcupa=function(...a){ return tool==='enemy'?svApartarOtras(()=>quiénOcupaSinModo(...a)):quiénOcupaSinModo(...a); };
+const quéHayEnSinModo=quéHayEn;
+quéHayEn=function(...a){ return svApartarOtras(()=>quéHayEnSinModo(...a)); };
+const capasOcultasSinModo=capasOcultasAhora;
+capasOcultasAhora=function(){
+  const r=capasOcultasSinModo(), c=svCfg();
+  if(!c||!svFoco) return r;
+  const o=r||{tile:new Set(),prop:new Set(),enemy:new Set(),hero:new Set()};
+  const mia=svGrupo(c,svFoco), olas=new Set(c.groups);
+  state.spawns.enemies.forEach((e,i)=>{ if(olas.has(e.group)&&e.group!==mia) o.enemy.add(i); });
+  return o;
+};
+
+/* Lo que le falta: cada oleada dibujada necesita enemigos, y las de azar, la zona. */
+const faltasSinModo=faltasDelMapa;
+faltasDelMapa=function(){
+  const f=faltasSinModo(), c=svCfg();
+  if(!c||!state.board.tiles.length) return f;
+  let sinZona=false;
+  for(let k=1;k<=c.waves;k++){
+    if(svAzar(c,k)){ if(!c.entrada) sinZona=true; }
+    else if(!svEnemigosDe(c,k).length) f.push({k:'§sv'+k,t:TS(`${svGrupo(c,k)}: ponle enemigos.`,`${svGrupo(c,k)}: give it enemies.`)});
+  }
+  if(sinZona) f.push({k:null,t:TS('Marca por dónde entran las oleadas al azar (en la guía del modo).','Mark where the random waves come in (in the mode guide).')});
+  /* Una oleada acaba con «caen todos los enemigos», y el mod lo retiene
+     mientras haya enemigos esperando a que salga su sala (`HayEsperando`):
+     uno dibujado en una sala que sale luego frenaría todas las oleadas. */
+  const olas=new Set(c.groups);
+  salasDelMapa().filter(s=>s.k).forEach(s=>{ if(s.enemigos.some(i=>!olas.has(state.spawns.enemies[i]?.group)))
+    f.push({k:s.k,t:TS(`${s.nombre}: sus enemigos esperan a que salga la sala y frenan el fin de cada oleada. Ponlos en una oleada o quítalos.`,
+                       `${s.nombre}: its enemies wait for the room to appear and stall the end of every wave. Put them in a wave or remove them.`)}); });
+  return f;
+};
+
+/* Las figuras de la caja: nunca hay dos oleadas a la vez en la mesa, así que
+   cuentan los enemigos sueltos más la oleada que más pide de cada tipo. */
+const enemigosALaVezSinModo=enemigosALaVez;
+enemigosALaVez=function(){
+  const c=svCfg(); if(!c) return enemigosALaVezSinModo();
+  const olas=new Set(c.groups), sueltos=state.spawns.enemies.filter(e=>!olas.has(e.group));
+  const tipo=e=>enemyById[e.enemy]?.type, mayor={};
+  c.groups.forEach(g=>{ const de=state.spawns.enemies.filter(e=>e.group===g), cuenta={};
+    de.forEach(e=>{ const t=tipo(e); (cuenta[t]=cuenta[t]||[]).push(e); });
+    Object.entries(cuenta).forEach(([t,l])=>{ if(!mayor[t]||l.length>mayor[t].length) mayor[t]=l; }); });
+  return [...sueltos,...Object.values(mayor).flat()];
+};
+
+/* Al abrir otro mapa: el modo es del mapa, lo de esta pantalla se olvida. */
+const reiniciarGuiaSinModo=reiniciarGuia;
+reiniciarGuia=function(){ svFoco=null; modoLibre=false; return reiniciarGuiaSinModo(); };
+const sanearEscenarioSinModo=sanearEscenario;
+sanearEscenario=function(s){
+  if(s.meta?.mode&&typeof s.meta.mode==='object'&&s.meta.mode.id===MODO_SV) s.meta.mode=svSanear(s.meta.mode);
+  else if(s.meta&&'mode' in s.meta&&(typeof s.meta.mode!=='object'||Array.isArray(s.meta.mode)||s.meta.mode===null)) delete s.meta.mode;
+  return sanearEscenarioSinModo(s);
+};
+/* ================= modo Cacería y Boss Rush (19-oct-2026) =================
+   Decidido por el usuario el 19-oct: un jefe con fases (o 2-4 seguidos, el
+   Boss Rush), cada fase con una de 4 cartas (refuerzos dibujados, +1 al
+   ataque, se cura, solo un texto) y, si se quiere, pistas que hay que
+   encontrar para que aparezca la guarida. Mismo enfoque que la Supervivencia
+   (modos.js): `meta.mode` guarda las respuestas y se montan disparadores y
+   objetivos normales, los que empiezan por `modo_ca_`.
+
+   Por dentro:
+   · cada jefe es un grupo dibujado («Jefe 2») con su escolta; el primero está
+     en el tablero desde el principio (o sale con su sala), los demás entran
+     con «Generar un grupo» al caer el anterior;
+   · las fases son «la vida baja del N %» (66/33, o 50 con dos fases). Ese
+     evento mira el TIPO de enemigo (`Guion.Sondeo`): por eso la escolta no
+     puede ser del tipo de la presa ni dos jefes del mismo tipo;
+   · las pistas son objetos que se ponen en el paso de pistas: cada uno lleva
+     su disparador «al usarlo, suma 1 a `pistas`» (`modo_ca_p…`). Esos no se
+     rehacen al cambiar respuestas, porque llevan el número del objeto y el
+     editor ya lo renumera al borrar otros (`renumerarObjetos`);
+   · al llegar a las pistas pedidas, sale la sala «Guarida».
+   · un jefe: se gana con «Derrotar al jefe»; varios: contando `jefes`. */
+
+const MODO_CA='hunt', CA_PREF='modo_ca_', CA_PISTA=CA_PREF+'p', CA_JEFES='jefes', CA_PISTAS='pistas';
+const CA_FX=['reinf','stronger','heal','text'];
+let caFoco=null;      // {tipo:'jefe'|'refuerzos'|'pista', k}
+MODOS_FOCOS.push(()=>{ caFoco=null; });
+let caN0=0;           // piezas que había al empezar a poner las de `caFoco`
+
+const caCfg=()=>mode==='scenario'&&state.meta.mode?.id===MODO_CA?state.meta.mode:null;
+function caPorDefecto(){
+  return {id:MODO_CA,v:1,bosses:[''],phases:3,escort:true,fx:['reinf','stronger'],clues:0,
+          lair:TS('Guarida','Lair'),groups:[],reinf:[]};
+}
+const caN=c=>c.bosses.length;
+const caGrupo=(c,k)=>c.groups[k-1]||(caN(c)===1?TS('La presa','The prey'):TS('Jefe ','Boss ')+k);
+const caNombreRef=(n,k)=>n===1?TS('Refuerzos','Reinforcements'):TS('Refuerzos ','Reinforcements ')+k;
+const caGrupoRef=(c,k)=>c.reinf[k-1]||caNombreRef(caN(c),k);
+const caNombre=id=>L(enemyById[id],'name')||id||TS('la presa','the prey');
+const caUmbrales=c=>c.phases===3?[66,33]:c.phases===2?[50]:[];
+const caFx=(c,p)=>c.fx[p-2]||'text';     // p = 2 o 3
+const caHayRefuerzos=c=>caUmbrales(c).some((_,j)=>caFx(c,j+2)==='reinf');
+const caPistas=()=>state.triggers.filter(t=>String(t.id||'').startsWith(CA_PISTA));
+const caEnGrupo=g=>state.spawns.enemies.map((e,i)=>({e,i})).filter(x=>x.e.group===g);
+const caNombreFx=f=>f==='reinf'?TS('Refuerzos','Reinforcements'):f==='stronger'?TS('Más fuerte','Stronger'):f==='heal'?TS('Se cura','Heals'):TS('Solo un texto','Just a text');
+
+function caSanear(m){
+  const c=caPorDefecto(), ent=(v,a,b,d)=>{ const n=Math.round(+v); return Number.isFinite(n)?Math.min(b,Math.max(a,n)):d; };
+  const ids=new Set(DATA.enemies.map(e=>e.id));
+  c.bosses=(Array.isArray(m.bosses)?m.bosses:['']).slice(0,4).map(b=>ids.has(b)?b:'');
+  if(!c.bosses.length) c.bosses=[''];
+  c.phases=ent(m.phases,1,3,3);
+  c.escort=m.escort!==false;
+  c.fx=[0,1].map(j=>CA_FX.includes(m.fx?.[j])?m.fx[j]:c.fx[j]);
+  c.clues=ent(m.clues,0,4,0);
+  c.lair=String(m.lair??c.lair).slice(0,60)||c.lair;
+  const txt=l=>Array.isArray(l)?l.slice(0,4).map(g=>String(g??'').slice(0,60)):[];
+  c.groups=txt(m.groups); c.reinf=txt(m.reinf);
+  return c;
+}
+
+/* ---- lo que se monta ---- */
+function caFase(c,k,p){
+  const id=c.bosses[k-1], nom=caNombre(id), f=caFx(c,p);
+  const texto=f==='reinf'?TS(`¡${nom} llama a los suyos!`,`${nom} calls for help!`)
+             :f==='stronger'?TS(`${nom} se enfurece: +1 al ataque.`,`${nom} grows furious: +1 attack.`)
+             :f==='heal'?TS(`${nom} se repone y recupera 5 de vida.`,`${nom} recovers 5 health.`)
+             :p===3?TS(`${nom} está herido de muerte.`,`${nom} is mortally wounded.`):TS(`${nom} se tambalea.`,`${nom} staggers.`);
+  const a=[{id:'showMessage',params:{text:texto}}];
+  if(f==='reinf') a.push({id:'spawnGroup',params:{group:caGrupoRef(c,k)}});
+  if(f==='stronger') a.push({id:'enemyBonus',params:{enemy:id,attack:1,defense:0}});
+  if(f==='heal') a.push({id:'healEnemy',params:{enemy:id,amount:5}});
+  return a;
+}
+const caTrg=(id,nombre,event,conditions,actions)=>({id:CA_PREF+id,name:nombre,once:true,event,conditions,actions});
+function caGenerar(c,viejo){
+  const n=caN(c), nom=n>1?'Boss Rush':TS('Cacería','Hunt');
+  for(let k=c.groups.length+1;k<=n;k++) c.groups.push(n===1?TS('La presa','The prey'):TS('Jefe ','Boss ')+k);
+  for(let k=c.reinf.length+1;k<=n;k++) c.reinf.push(caNombreRef(n,k));
+  c.groups=c.groups.slice(0,n); c.reinf=c.reinf.slice(0,n);
+  /* Los grupos que ya no son de nadie se van con sus enemigos (como las
+     oleadas que sobran): si se quedaran, saldrían todos al empezar. */
+  const vivos=new Set([...c.groups,...(caHayRefuerzos(c)?c.reinf:[])]);
+  const antes=viejo?.id===MODO_CA?[...(viejo.groups||[]),...(viejo.reinf||[])]:[];
+  const sobran=new Set(antes.filter(g=>!vivos.has(g)));
+  if(sobran.size) state.spawns.enemies=state.spawns.enemies.filter(e=>!sobran.has(e.group));
+
+  const T_=[caTrg('inicio',`${nom}: ${TS('empieza','start')}`,{id:'mapStart',params:{}},[],[
+    {id:'initVariable',params:{var:CA_JEFES,value:0}},
+    {id:'initVariable',params:{var:SV_RIESGO,value:0}},
+    {id:'initVariable',params:{var:CA_PISTAS,value:0}},
+    ...(c.clues?[{id:'showMessage',params:{text:TS(`Buscad ${c.clues} pistas para dar con la guarida.`,`Find ${c.clues} clues to locate the lair.`)}}]:[])])];
+  if(c.clues) T_.push(caTrg('guarida',`${nom}: ${TS('la guarida','the lair')}`,{id:'variableEquals',params:{var:CA_PISTAS,value:c.clues}},[],[
+    {id:'showMessage',params:{text:TS('¡Las pistas llevan a la guarida!','The clues lead to the lair!')}},
+    {id:'revealRoom',params:{group:c.lair}}]));
+  for(let k=1;k<=n;k++){
+    const id=c.bosses[k-1];
+    caUmbrales(c).forEach((pct,j)=>T_.push(caTrg(`fase${k}_${j+2}`,`${nom}: ${caNombre(id)}, ${TS('fase','phase')} ${j+2}`,
+      {id:'enemyHealthBelow',params:{enemy:id,pct}},[],caFase(c,k,j+2))));
+    const a=[{id:'addVariable',params:{var:CA_JEFES,value:1}}];
+    if(k<n) a.push(...svPremioAcciones({between:['choice']},k,TS('El jefe ha caído. Tenéis un momento antes del siguiente. ¿Qué hacéis?','The boss has fallen. You have a moment before the next one. What do you do?')),
+                   {id:'showMessage',params:{text:TS(`¡Llega ${caNombre(c.bosses[k])}!`,`${caNombre(c.bosses[k])} arrives!`)}},
+                   {id:'spawnGroup',params:{group:caGrupo(c,k+1)}});
+    T_.push(caTrg('cae'+k,`${nom}: ${TS('cae','falls')} ${caNombre(id)}`,{id:'enemyDefeated',params:{enemy:id}},[],a));
+    if(k<n) T_.push(caTrg('riesgo'+(k+1),`${nom}: ${TS('trato en la sombra','shadow deal')} ${k+1}`,{id:'everyNRounds',params:{n:1}},
+      [{id:'varEquals',params:{var:SV_RIESGO,value:k+1}}],
+      [{id:'enemyBonus',params:{attack:1,defense:0}},{id:'setVariable',params:{var:SV_RIESGO,value:0}}]));
+  }
+  const pistas=c.clues?caPistas():[];
+  state.triggers=[...state.triggers.filter(t=>!String(t.id||'').startsWith(CA_PREF)),...T_,...pistas];
+
+  // el objetivo: el del modo de antes se cambia por el nuevo, en su sitio
+  const esViejo=o=>(o.id==='counter_at_least'&&o.params?.var===CA_JEFES)
+                 ||(o.id==='defeat_boss'&&viejo?.id===MODO_CA&&(viejo.bosses||[]).includes(o.params?.enemy));
+  const obj=n===1?{id:'defeat_boss',params:{enemy:c.bosses[0]},text:TS(`Derrotad a ${caNombre(c.bosses[0])}.`,`Defeat ${caNombre(c.bosses[0])}.`)}
+                 :{id:'counter_at_least',params:{var:CA_JEFES,n},text:TS(`Derrotad a los ${n} jefes.`,`Defeat all ${n} bosses.`)};
+  const i=state.objectives.primary.findIndex(esViejo), resto=state.objectives.primary.filter(o=>!esViejo(o));
+  if(i>=0) resto.splice(Math.min(i,resto.length),0,obj); else resto.push(obj);
+  state.objectives.primary=resto;
+}
+
+/* ---- las preguntas ---- */
+function caSelPresa(c,k){
+  const op=a=>DATA.enemies.filter(e=>(e.act||1)===a).map(e=>`<option value="${esc(e.id)}" ${c.bosses[k]===e.id?'selected':''}>${esc(L(e,'name'))}</option>`).join('');
+  return `<select data-capresa="${k}"><option value="">${TS('— Elige un enemigo —','— Pick an enemy —')}</option>
+    <optgroup label="${esc(T('actEnemies','I'))}">${op(1)}</optgroup><optgroup label="${esc(T('actEnemies','II'))}">${op(2)}</optgroup></select>`;
+}
+function caPreguntas(nuevo){
+  const viejo=caCfg(), q=caSanear(viejo||caPorDefecto());
+  const seg=(k,v,txt)=>`<button class="gchip ${q[k]===v?'on':''}" data-caq="${k}" data-v="${v}">${txt}</button>`;
+  const pinta=()=>{
+    const n=caN(q), umb=caUmbrales(q);
+    document.getElementById('dlgBody').innerHTML=`
+      <div class="cajefes">${q.bosses.map((id,j)=>`
+        <div class="cajefe"><span class="caico">${SV_ICO.caza}</span>
+          <div class="cabd"><span class="svk">${n>1?TS('Jefe','Boss')+' '+(j+1):TS('La presa','The prey')}</span>${caSelPresa(q,j)}
+            <div class="cabar">${[100,...umb].map((v,p)=>`<span style="flex:${(p===0?100:[100,...umb][p])-([...umb,0][p])}">${TS('Fase','Phase')} ${p+1}</span>`).join('')}</div>
+            <small>${umb.length?umb.map((v,p)=>`${TS('Fase','Phase')} ${p+2} · ${TS('menos de','under')} ${v} %: ${caNombreFx(caFx(q,p+2))}`).join(' · '):TS('Una sola fase.','A single phase.')}</small></div></div>`).join('')}</div>
+      <div class="svqs">
+        <div class="svq"><b>${TS('¿Varios jefes seguidos?','Several bosses in a row?')}</b><span class="svseg">
+          <button class="gchip ${n===1?'on':''}" data-carush="1">${TS('Uno','One')}</button>${[2,3,4].map(v=>`<button class="gchip ${n===v?'on':''}" data-carush="${v}">Boss Rush · ${v}</button>`).join('')}</span>
+          <small>${TS('Boss Rush: al caer uno sale el siguiente, y entre medias una carta de recompensa o riesgo.','Boss Rush: when one falls the next comes in, with a reward-or-risk card in between.')}</small></div>
+        <div class="svq"><b>${TS('¿Con escolta?','With an escort?')}</b><span class="svseg">${seg('escort',true,TS('Sí','Yes'))}${seg('escort',false,TS('No','No'))}</span></div>
+        <div class="svq"><b>${TS('¿Cuántas fases?','How many phases?')}</b><span class="svseg">${[1,2,3].map(v=>seg('phases',v,String(v))).join('')}</span>
+          <small>${TS('Cada fase empieza sola cuando su vida baja de la marca.','Each phase starts by itself when its health drops below the mark.')}</small></div>
+        ${umb.map((v,p)=>`<div class="svq"><b>${TS('Al empezar la fase','When phase')} ${p+2} ${TS('','starts')} (${TS('menos de','under')} ${v} %)</b><span class="svseg">${
+          CA_FX.map(f=>`<button class="gchip ${caFx(q,p+2)===f?'on':''}" data-cafx="${p}" data-v="${f}">${caNombreFx(f)}</button>`).join('')}</span></div>`).join('')}
+        <div class="svq"><b>${TS('¿Pistas para encontrar la guarida?','Clues to find the lair?')}</b>
+          <span class="svstep"><button data-capistas="-1" aria-label="${TS('Menos','Fewer')}">−</button><span id="caPistasN">${q.clues}</span><button data-capistas="1" aria-label="${TS('Más','More')}">+</button></span>
+          <small>${q.clues?TS(`Al usar ${q.clues} objetos-pista aparece la sala «${esc(q.lair)}», con la presa dentro.`,`Using ${q.clues} clue objects reveals the «${esc(q.lair)}» room, with the prey inside.`)
+                         :TS('Sin pistas: la presa está en el mapa desde el principio (o en la sala que tú digas).','No clues: the prey is on the map from the start (or in a room of your choosing).')}</small></div>
+      </div>`;
+    document.querySelectorAll('[data-capresa]').forEach(s=>s.onchange=()=>{ q.bosses[+s.dataset.capresa]=s.value; pinta(); });
+    document.querySelectorAll('[data-carush]').forEach(b=>b.onclick=()=>{ const v=+b.dataset.carush;
+      q.bosses=Array.from({length:v},(_,j)=>q.bosses[j]||''); pinta(); });
+    document.querySelectorAll('[data-caq]').forEach(b=>b.onclick=()=>{ const k=b.dataset.caq, v=b.dataset.v;
+      q[k]=k==='escort'?v==='true':+v; pinta(); });
+    document.querySelectorAll('[data-cafx]').forEach(b=>b.onclick=()=>{ q.fx[+b.dataset.cafx]=b.dataset.v; pinta(); });
+    document.querySelectorAll('[data-capistas]').forEach(b=>b.onclick=()=>{ q.clues=Math.min(4,Math.max(0,q.clues+(+b.dataset.capistas))); pinta(); });
+  };
+  openDlg(TS('Cacería','Hunt'),'',
+    `${nuevo?`<button id="caAtras">${TS('Atrás','Back')}</button>`:`<button id="caCancel">${TS('Cancelar','Cancel')}</button>`}
+     <button class="primary" id="caMontar">${nuevo?TS('Montar la guarida','Build the lair'):TS('Guardar cambios','Save changes')}</button>`);
+  dlgAncho(); pinta();
+  const at=document.getElementById('caAtras'); if(at) at.onclick=abrirElegirModo;
+  const ca=document.getElementById('caCancel'); if(ca) ca.onclick=()=>dlg.close();
+  document.getElementById('caMontar').onclick=()=>{
+    if(q.bosses.some(b=>!b)) return flash(TS('Falta: elige la presa de cada jefe.','Missing: pick the enemy for each boss.'));
+    if(new Set(q.bosses).size<q.bosses.length) return flash(TS('Dos jefes no pueden ser del mismo enemigo: las fases no sabrían de cuál es la vida.','Two bosses cannot be the same enemy: the phases would not know whose health it is.'));
+    const antes=caCfg()?JSON.parse(JSON.stringify(caCfg())):null;
+    cambio(()=>{ state.meta.mode=q; caGenerar(q,antes); });
+    dlg.close(); caFoco=null;
+    if(nuevo){ elegirSala(''); irPaso('','losetas');
+      flash(TS('Cacería lista. Pon las losetas: la guía de la izquierda te dice lo que falta.','Hunt ready. Place the tiles: the guide on the left tells you what is missing.')); }
+    else { renderRight(); draw(); flash(TS('Cacería actualizada.','Hunt updated.')); }
+  };
+}
+
+/* ---- la guía del modo, en Capas ---- */
+function caFaltasDe(c){
+  const f=[], n=caN(c);
+  for(let k=1;k<=n;k++){
+    const id=c.bosses[k-1], g=caEnGrupo(caGrupo(c,k));
+    if(!g.some(x=>x.e.enemy===id)) f.push({k:'§ca:jefe:'+k,t:TS(`${caGrupo(c,k)}: pon a ${caNombre(id)} en el tablero.`,`${caGrupo(c,k)}: place ${caNombre(id)} on the board.`)});
+    else if(c.escort&&!g.some(x=>x.e.enemy!==id)) f.push({k:'§ca:jefe:'+k,t:TS(`${caGrupo(c,k)}: ponle escolta.`,`${caGrupo(c,k)}: give it an escort.`)});
+    if(g.filter(x=>x.e.enemy===id).length>1) f.push({k:'§ca:jefe:'+k,t:TS(`${caGrupo(c,k)}: la escolta no puede ser del mismo enemigo que el jefe.`,`${caGrupo(c,k)}: the escort cannot be the same enemy as the boss.`)});
+    if(caHayRefuerzos(c)&&!caEnGrupo(caGrupoRef(c,k)).length) f.push({k:'§ca:refuerzos:'+k,t:TS(`${caGrupoRef(c,k)}: pon los enemigos que llegan en la fase.`,`${caGrupoRef(c,k)}: place the enemies that arrive in the phase.`)});
+  }
+  if(c.clues){
+    const p=caPistas();
+    if(p.length<c.clues) f.push({k:'§ca:pista:0',t:TS(`Pistas: pon ${c.clues-p.length} más.`,`Clues: place ${c.clues-p.length} more.`)});
+    if(p.some(t=>t.event?.params?.interactable===''||t.event?.params?.interactable===undefined))
+      f.push({k:'§ca:pista:0',t:TS('Una pista se ha quedado sin objeto: quítala en el paso de pistas.','A clue lost its object: remove it in the clues step.')});
+    const s=salaPorClave(claveSala(c.lair));
+    if(!s||!s.losetas.length) f.push({k:'§ca:guarida:0',t:TS(`${c.lair}: pon sus losetas.`,`${c.lair}: place its tiles.`)});
+  }
+  return f;
+}
+function caBloque(c){
+  const n=caN(c), ini=salaPorClave(''), arena=!!ini?.losetas.length, heroes=(ini?.salidas.length||0)>=2;
+  const faltas=caFaltasDe(c), falta=k=>faltas.some(f=>f.k.startsWith(k));
+  const paso=(id,hecho,texto,extra='')=>`<button class="svpaso ${hecho?'hecho':''}" data-capaso="${id}"><span class="gm">${hecho?'✓':''}</span><span class="gt">${texto}</span>${extra}</button>`;
+  const chip=(tipo,k,txt,cls='')=>`<button class="svchip ${cls} ${falta(`§ca:${tipo}:${k}`)?'':'hecho'} ${caFoco?.tipo===tipo&&caFoco.k===k?'on':''}" data-cafoco="${tipo}:${k}">${txt}</button>`;
+  const lair=salaPorClave(claveSala(c.lair));
+  let foco='';
+  if(caFoco){ const {tipo,k}=caFoco;
+    if(tipo==='pista'){
+      const l=caPistas();
+      foco=`<div class="svfoco"><span class="svk">${TS('Pistas','Clues')} · ${l.length}/${c.clues}</span>
+        <p>${TS('Pon objetos (atril, estantería, cofre…): cada uno que se use cuenta como una pista.','Place objects (lectern, shelf, chest…): each one used counts as a clue.')}</p>
+        ${l.map(t=>{ const i=t.event?.params?.interactable, o=state.spawns.interactables[+i];
+          return `<span class="capista">${o?esc(o.name||L(propDef(o.type),'name')):TS('(sin objeto)','(no object)')}<button class="sm" data-caquitapista="${esc(t.id)}" aria-label="${TS('Quitar','Remove')}">✕</button></span>`; }).join('')}
+        <button class="primary sm" id="caPonPistas">${TS('Poner pistas','Place clues')}</button>
+        <button class="sm" id="caFocoFin">${TS('Listo','Done')}</button></div>`;
+    } else {
+      const g=tipo==='jefe'?caGrupo(c,k):caGrupoRef(c,k), id=c.bosses[k-1], cuantos=caEnGrupo(g).length;
+      foco=`<div class="svfoco"><span class="svk">${esc(g)}</span>
+        <p>${tipo==='jefe'?(c.escort?TS(`Pon a ${esc(caNombre(id))} y su escolta (de otros enemigos).`,`Place ${esc(caNombre(id))} and its escort (other enemies).`):TS(`Pon a ${esc(caNombre(id))}.`,`Place ${esc(caNombre(id))}.`))
+            :TS('Pon los enemigos que llegan cuando empieza la fase. No salen al principio.','Place the enemies that arrive when the phase starts. They do not appear at the start.')}
+          ${tipo==='jefe'&&k>1?TS(' Sale al caer el jefe anterior.',' It arrives when the previous boss falls.'):''}</p>
+        <p class="gcuenta">${cuantos} ${cuantos===1?TS('enemigo','enemy'):TS('enemigos','enemies')}</p>
+        <button class="primary sm" id="caPonEne">${TS('Poner enemigos','Place enemies')}</button>
+        <button class="sm" id="caFocoFin">${TS('Listo','Done')}</button></div>`;
+    } }
+  return `<div class="svbox">
+    <div class="svhd"><span class="svico">${SV_ICO.caza}</span><b>${n>1?'Boss Rush':TS('Cacería','Hunt')}</b><small>${n>1?`${n} ${TS('jefes','bosses')}`:esc(caNombre(c.bosses[0]))} · ${c.phases} ${c.phases===1?TS('fase','phase'):TS('fases','phases')}</small>
+      <button class="sm" id="caCambiar">${TS('Cambiar respuestas','Change answers')}</button></div>
+    ${paso('arena',arena,TS('La arena','The arena'))}
+    ${paso('heroes',heroes,TS('Dónde empiezan los héroes','Where the heroes start'))}
+    ${c.clues?paso('pistas',!falta('§ca:pista'),TS('Las pistas','The clues'),`<span class="gn">${caPistas().length}/${c.clues}</span>`):''}
+    ${c.clues?paso('guarida',!!lair?.losetas.length,esc(c.lair)):''}
+    <div class="svolas"><span class="gt">${n>1?TS('Los jefes y su escolta','The bosses and their escort'):TS('La presa y su escolta','The prey and its escort')}</span>
+      <div class="svchips">${c.bosses.map((id,j)=>chip('jefe',j+1,n>1?String(j+1):TS('Presa','Prey'),'jefe')).join('')}</div></div>
+    ${caHayRefuerzos(c)?`<div class="svolas"><span class="gt">${TS('Refuerzos de las fases','Phase reinforcements')}</span>
+      <div class="svchips">${c.bosses.map((id,j)=>chip('refuerzos',j+1,n>1?String(j+1):TS('Refuerzos','Reinf.'))).join('')}</div></div>`:''}
+    ${foco}
+  </div>`;
+}
+function caPonerEnemigos(){
+  const c=caCfg(); if(!c||!caFoco) return;
+  caN0=state.spawns.enemies.length;
+  abrirPiezas('enemies'); tool='enemy';
+  if(caFoco.tipo==='jefe'&&!caEnGrupo(caGrupo(c,caFoco.k)).some(x=>x.e.enemy===c.bosses[caFoco.k-1])) selEnemy=c.bosses[caFoco.k-1];
+  renderTools?.(); renderPalette(); draw();
+}
+function caLigar(el,c){
+  const q=s=>el.querySelector(s);
+  q('#caCambiar').onclick=()=>caPreguntas(false);
+  el.querySelectorAll('[data-capaso]').forEach(b=>b.onclick=()=>{ const id=b.dataset.capaso;
+    if(id==='arena'){ elegirSala(''); irPaso('','losetas'); }
+    else if(id==='heroes'){ elegirSala(''); irPaso('','heroes'); }
+    else if(id==='pistas'){ caFoco={tipo:'pista',k:0}; renderSalas(); }
+    else if(id==='guarida') caIrGuarida(c); });
+  el.querySelectorAll('[data-cafoco]').forEach(b=>b.onclick=()=>{ const [tipo,k]=b.dataset.cafoco.split(':'); caFoco={tipo,k:+k}; renderSalas(); });
+  const pe=q('#caPonEne'); if(pe) pe.onclick=caPonerEnemigos;
+  const pp=q('#caPonPistas'); if(pp) pp.onclick=()=>{ caN0=state.spawns.interactables.length; abrirPiezas('props'); if(tool==='hero') tool='select'; renderPalette();
+    flash(TS('Pon los objetos que serán pistas.','Place the objects that will be clues.')); };
+  el.querySelectorAll('[data-caquitapista]').forEach(b=>b.onclick=()=>{ cambio(()=>{ state.triggers=state.triggers.filter(t=>t.id!==b.dataset.caquitapista); }); renderSalas(); });
+  const fin=q('#caFocoFin'); if(fin) fin.onclick=()=>{ caFoco=null; renderSalas(); };
+  el.querySelectorAll('[data-fsala^="§ca:"]').forEach(b=>b.onclick=()=>{ const [,tipo,k]=b.dataset.fsala.split(':');
+    if(tipo==='guarida') return caIrGuarida(c);
+    caFoco={tipo,k:+k}; ponerLtab('capas'); renderSalas(); });
+}
+/* La guarida es una sala normal con nombre fijo: si no existe, se crea como
+   «+ Nueva sala» y la guía de salas sigue con sus losetas. Ya sabe cuándo
+   aparece: la saca el disparador de las pistas. */
+function caIrGuarida(c){
+  const k=claveSala(c.lair);
+  if(salaPorClave(k)){ elegirSala(k); return; }
+  salaPendiente={k,nombre:c.lair,trgs:[]};
+  sel={k:'room',g:k}; rtab='sel'; syncTabs();
+  irPaso(k,'losetas');
+  flash(TS(`Pon las losetas de «${c.lair}». Lo que dibujes en ella sale cuando se encuentran las pistas.`,`Place the tiles of «${c.lair}». What you draw in it comes out when the clues are found.`));
+}
+
+MODOS_JUEGO.hunt={preguntas:caPreguntas,bloque:caBloque,ligar:caLigar};
+
+/* ---- enganches (todos miran antes si el mapa es una Cacería) ---- */
+const renderRightSinCaza=renderRight;
+renderRight=function(){
+  const c=caCfg();
+  if(c&&caFoco&&caFoco.tipo!=='pista'&&state.spawns.enemies.length>caN0){
+    const g=caFoco.tipo==='jefe'?caGrupo(c,caFoco.k):caGrupoRef(c,caFoco.k);
+    for(let i=caN0;i<state.spawns.enemies.length;i++) state.spawns.enemies[i].group=g;
+    caN0=state.spawns.enemies.length;
+  }
+  if(c&&caFoco?.tipo==='pista'&&state.spawns.interactables.length>caN0){
+    for(let i=caN0;i<state.spawns.interactables.length;i++)
+      state.triggers.push({id:CA_PISTA+Date.now().toString(36)+i,name:TS('Cacería: pista','Hunt: clue'),once:true,
+        event:{id:'interacted',params:{interactable:i}},conditions:[],
+        actions:[{id:'addVariable',params:{var:CA_PISTAS,value:1}},{id:'showMessage',params:{text:TS('Encontráis una pista.','You find a clue.')}}]});
+    caN0=state.spawns.interactables.length;
+  }
+  return renderRightSinCaza();
+};
+const renderDestinoSinCaza=renderDestino;
+renderDestino=function(){
+  renderDestinoSinCaza();
+  const c=caCfg(), el=document.getElementById('destinoPiezas');
+  if(!c||!caFoco||!el) return;
+  const g=caFoco.tipo==='pista'?TS('las pistas','the clues'):caFoco.tipo==='jefe'?caGrupo(c,caFoco.k):caGrupoRef(c,caFoco.k);
+  el.insertAdjacentHTML('afterbegin',`<div class="svdest"><span>${caFoco.tipo==='pista'?TS('Los objetos son','Objects are'):TS('Los enemigos van a','Enemies go to')} <b>${esc(g)}</b></span>
+    <button class="sm" id="caDestListo">${TS('Listo','Done')}</button></div>`);
+  el.querySelector('#caDestListo').onclick=()=>{ caFoco=null; ponerLtab('capas'); renderSalas(); };
+};
+const faltasSinCaza=faltasDelMapa;
+faltasDelMapa=function(){
+  const f=faltasSinCaza(), c=caCfg();
+  if(!c||!state.board.tiles.length) return f;
+  return [...f,...caFaltasDe(c)];
+};
+const reiniciarGuiaSinCaza=reiniciarGuia;
+reiniciarGuia=function(){ caFoco=null; return reiniciarGuiaSinCaza(); };
+const sanearEscenarioSinCaza=sanearEscenario;
+sanearEscenario=function(s){
+  if(s.meta?.mode&&typeof s.meta.mode==='object'&&s.meta.mode.id===MODO_CA) s.meta.mode=caSanear(s.meta.mode);
+  return sanearEscenarioSinCaza(s);
+};
+/* ================= modo Atraco (19-oct-2026) =================
+   La propuesta aprobada el 19-oct: entrar, coger el botín y salir antes de
+   que la alarma os encierre. Mismo enfoque que los otros modos (modos.js):
+   `meta.mode` guarda las respuestas y se montan objetivos y disparadores
+   normales, los que empiezan por `modo_at_`.
+
+   Por dentro:
+   · objetivos en cadena: «usar el objeto del robo» (lo ve la app) y luego
+     «todos a la salida» (lo declaran los jugadores: la app no ve dónde están
+     los héroes, decisión del 13-oct);
+   · la alarma es la variable `alarma`: la pone a 1 coger el botín o, si se
+     eligió «si os ven», un sí a la pregunta que se hace en la mesa cada ronda.
+     Al ponerse salta `modo_at_alarma`: el aviso, la cuenta atrás
+     (`startRoundTimer` una sola vez a las N rondas, que cuenta desde la ronda
+     en curso: `Guion.EmpezarCuenta`) y las complicaciones elegidas;
+   · se pierde con `roundTimer` → `loseEncounter`;
+   · el objeto del robo y la puerta se leen de los propios disparadores, no de
+     `meta.mode`: el editor renumera los objetos del guion al borrar otros
+     (`renumerarObjetos`) y lo de `meta` se quedaría con el número viejo. */
+
+const MODO_AT='heist', AT_PREF='modo_at_', AT_ALARMA='alarma', AT_RELOJ='huida';
+const AT_LIOS=['door','guards','exit'];
+let atFoco=null;      // 'objeto' | 'puerta' | 'guardia'
+MODOS_FOCOS.push(()=>{ atFoco=null; });
+let atN0=0;
+
+const atCfg=()=>mode==='scenario'&&state.meta.mode?.id===MODO_AT?state.meta.mode:null;
+function atPorDefecto(){
+  return {id:MODO_AT,v:1,loot:'chest',alarm:'take',trouble:['door','guards'],rounds:4,
+          salida:null,guardGroup:TS('La guardia','The guard'),exitRoom:TS('Salida','Exit')};
+}
+const atTrg=id=>state.triggers.find(t=>t.id===AT_PREF+id);
+const atObjeto=()=>{ const v=atTrg('coger')?.event?.params?.interactable; return v===undefined||v===''?null:+v; };
+const atPuerta=()=>{ const a=(atTrg('alarma')?.actions||[]).find(a=>a.id==='lockDoor'); const v=a?.params?.interactable; return v===undefined||v===''?null:+v; };
+const atNomObj=i=>{ const o=state.spawns.interactables[i]; return o?(o.name||L(propDef(o.type),'name'))+` (${o.pos[0]},${o.pos[1]})`:''; };
+const atQue=c=>c.loot==='prisoner'?TS('al prisionero','the prisoner'):c.loot==='relic'?TS('la reliquia','the relic'):TS('el botín','the loot');
+const atNomLio=l=>l==='door'?TS('Se cierra una puerta','A door shuts'):l==='guards'?TS('Llega la guardia','The guard arrives'):TS('Se abre otra salida','Another exit opens');
+
+function atSanear(m){
+  const c=atPorDefecto(), ent=(v,a,b,d)=>{ const n=Math.round(+v); return Number.isFinite(n)?Math.min(b,Math.max(a,n)):d; };
+  c.loot=['chest','prisoner','relic'].includes(m.loot)?m.loot:'chest';
+  c.alarm=['take','seen'].includes(m.alarm)?m.alarm:'take';
+  c.trouble=Array.isArray(m.trouble)?AT_LIOS.filter(x=>m.trouble.includes(x)):[...c.trouble];
+  c.rounds=ent(m.rounds,1,12,4);
+  c.salida=Array.isArray(m.salida)&&m.salida.length===4&&m.salida.every(v=>Number.isFinite(+v))?m.salida.map(v=>Math.round(+v)):null;
+  c.guardGroup=String(m.guardGroup??c.guardGroup).slice(0,60)||c.guardGroup;
+  c.exitRoom=String(m.exitRoom??c.exitRoom).slice(0,60)||c.exitRoom;
+  return c;
+}
+
+/* ---- lo que se monta ---- */
+function atGenerar(c,viejo,{objeto=atObjeto(),puerta=atPuerta()}={}){
+  const nom=TS('Atraco','Heist'), q=atQue(c), obj=objeto??'';
+  const alarma=[{id:'showMessage',params:{text:TS(`¡ALARMA! Tenéis ${c.rounds} rondas para salir con ${q}.`,`ALARM! You have ${c.rounds} rounds to get out with ${q}.`)}},
+                {id:'startRoundTimer',params:{timer:AT_RELOJ,every:c.rounds,times:1}}];
+  if(c.trouble.includes('door')&&puerta!==null) alarma.push({id:'closeDoor',params:{interactable:puerta}},{id:'lockDoor',params:{interactable:puerta}});
+  if(c.trouble.includes('guards')) alarma.push({id:'spawnGroup',params:{group:c.guardGroup}});
+  if(c.trouble.includes('exit')) alarma.push({id:'revealRoom',params:{group:c.exitRoom}});
+  const T_=[
+    {id:AT_PREF+'inicio',name:`${nom}: ${TS('empieza','start')}`,once:true,event:{id:'mapStart',params:{}},conditions:[],actions:[
+      {id:'initVariable',params:{var:AT_ALARMA,value:0}},
+      ...(c.alarm==='seen'?[{id:'showMessage',params:{text:TS('Moveos sin ruido: si os ve algún enemigo, sonará la alarma.','Move quietly: if any enemy sees you, the alarm will sound.')}}]:[])]},
+    {id:AT_PREF+'coger',name:`${nom}: ${TS('lo cogen','they grab it')}`,once:true,event:{id:'interacted',params:{interactable:obj}},conditions:[],
+     actions:c.alarm==='take'?[{id:'setVariable',params:{var:AT_ALARMA,value:1}}]
+                             :[{id:'showMessage',params:{text:TS(`Tenéis ${q}. Ahora, a la salida.`,`You have ${q}. Now, to the exit.`)}}]},
+    {id:AT_PREF+'alarma',name:`${nom}: ${TS('la alarma','the alarm')}`,once:true,event:{id:'variableEquals',params:{var:AT_ALARMA,value:1}},conditions:[],actions:alarma},
+    {id:AT_PREF+'tarde',name:`${nom}: ${TS('se acaba el tiempo','time is up')}`,once:true,event:{id:'roundTimer',params:{timer:AT_RELOJ}},conditions:[],actions:[
+      {id:'showMessage',params:{text:TS('Se cierran todas las salidas. Os han atrapado.','Every way out shuts. You have been caught.')}},{id:'loseEncounter',params:{}}]}];
+  if(c.alarm==='seen') T_.splice(1,0,{id:AT_PREF+'visto',name:`${nom}: ${TS('¿os han visto?','were you seen?')}`,once:false,
+    event:{id:'everyNRounds',params:{n:1}},conditions:[{id:'varEquals',params:{var:AT_ALARMA,value:0}}],
+    actions:[{id:'askYesNo',params:{text:TS('¿Os ha visto algún enemigo esta ronda?','Did any enemy see you this round?'),var:'visto',
+      outcomes:[[{id:'setVariable',params:{var:AT_ALARMA,value:1}}],[]]}}]});
+  state.triggers=[...state.triggers.filter(t=>!String(t.id||'').startsWith(AT_PREF)),...T_];
+
+  // los dos objetivos del atraco, en el sitio de los de antes
+  const o1={id:'use_object',params:{interactable:obj},text:c.loot==='prisoner'?TS('Liberad al prisionero.','Free the prisoner.'):c.loot==='relic'?TS('Coged la reliquia.','Take the relic.'):TS('Coged el botín.','Grab the loot.')};
+  const o2={id:'reach_area_all',params:{area:c.salida?[...c.salida]:''},text:TS(`Salid todos con ${q}.`,`Everyone out with ${q}.`)};
+  const viejoObj=viejo?.id===MODO_AT?viejo.__objeto:undefined;
+  const esNuestro=o=>(o.id==='use_object'&&viejo?.id===MODO_AT&&String(o.params?.interactable??'')===String(viejoObj??''))
+                   ||(o.id==='reach_area_all'&&viejo?.id===MODO_AT&&JSON.stringify(o.params?.area??'')===JSON.stringify(viejo.salida??''));
+  const i=state.objectives.primary.findIndex(esNuestro), resto=state.objectives.primary.filter(o=>!esNuestro(o));
+  if(i>=0) resto.splice(Math.min(i,resto.length),0,o1,o2); else resto.push(o1,o2);
+  state.objectives.primary=resto;
+}
+/* Rehacer con lo que haya ahora (al elegir el objeto, la puerta o la salida). */
+function atRehacer(c,cambios={}){
+  const viejo={...JSON.parse(JSON.stringify(c)),__objeto:atObjeto()};
+  cambio(()=>{ Object.assign(c,cambios.cfg||{}); atGenerar(c,viejo,cambios); });
+}
+
+/* ---- las preguntas ---- */
+function atPreguntas(nuevo){
+  const ya=atCfg(), q=atSanear(ya||atPorDefecto());
+  const seg=(k,v,txt)=>`<button class="gchip ${q[k]===v?'on':''}" data-atq="${k}" data-v="${v}">${txt}</button>`;
+  const pinta=()=>{
+    const beat=(n,t,p,quien,cls='')=>`<div class="atbeat ${cls}"><span class="atn">${n}</span><b>${t}</b><small>${p}</small><em>${quien}</em></div>`;
+    document.getElementById('dlgBody').innerHTML=`
+      <p class="mjintro">${TS('El plan. En cuanto suena la alarma, empieza la cuenta atrás.','The plan. Once the alarm sounds, the countdown starts.')}</p>
+      <div class="atplan">
+        ${beat(1,TS('Entrar','Get in'),TS('Cruzad sin despertar a la guardia.','Cross without waking the guard.'),'')}
+        ${beat(2,TS('El golpe','The job'),TS(`Coged ${atQue(q)}.`,`Take ${atQue(q)}.`),TS('Lo ve la app','The app sees it'),'app')}
+        <div class="atalarma">${TS('¡Alarma!','Alarm!')}</div>
+        ${beat(3,TS('La huida','The escape'),TS(`Todos a la salida en ${q.rounds} rondas.`,`Everyone out within ${q.rounds} rounds.`),TS('Lo decís vosotros','You declare it'),'fin')}
+      </div>
+      <div class="svqs">
+        <div class="svq"><b>${TS('¿Qué se llevan?','What do they take?')}</b><span class="svseg">
+          ${seg('loot','chest',TS('Un botín','Some loot'))}${seg('loot','prisoner',TS('Un prisionero','A prisoner'))}${seg('loot','relic',TS('Una reliquia','A relic'))}</span>
+          <small>${TS('Es un objeto que pones tú (cofre, estatua, ficha…): al usarlo lo tienen.','It is an object you place (chest, statue, token…): using it means they have it.')}</small></div>
+        <div class="svq"><b>${TS('¿Cuándo suena la alarma?','When does the alarm sound?')}</b><span class="svseg">
+          ${seg('alarm','take',TS('Al cogerlo','When they take it'))}${seg('alarm','seen',TS('Si os ven','If you are seen'))}</span>
+          <small>${q.alarm==='seen'?TS('Cada ronda la app pregunta a la mesa si os ha visto algún enemigo: la app no ve el tablero.','Each round the app asks the table whether an enemy saw you: the app cannot see the board.')
+                                   :TS('Suena en cuanto lo cogen.','It sounds as soon as they take it.')}</small></div>
+        <div class="svq"><b>${TS('¿Qué se complica?','What goes wrong?')}</b><span class="svseg">
+          ${AT_LIOS.map(l=>`<button class="gchip ${q.trouble.includes(l)?'on':''}" data-atlio="${l}">${atNomLio(l)}</button>`).join('')}</span>
+          <small>${TS('Pasa todo a la vez, al sonar la alarma.','It all happens at once, when the alarm sounds.')}</small></div>
+        <div class="svq"><b>${TS('Tiempo para huir','Time to escape')}</b>
+          <span class="svstep"><button data-atmas="-1" aria-label="${TS('Menos','Fewer')}">−</button><span id="atN">${q.rounds}</span><button data-atmas="1" aria-label="${TS('Más','More')}">+</button></span>
+          <small>${TS('Rondas desde la alarma. Si se acaban, se pierde.','Rounds from the alarm. If they run out, you lose.')}</small></div>
+      </div>`;
+    document.querySelectorAll('[data-atq]').forEach(b=>b.onclick=()=>{ q[b.dataset.atq]=b.dataset.v; pinta(); });
+    document.querySelectorAll('[data-atlio]').forEach(b=>b.onclick=()=>{ const l=b.dataset.atlio;
+      q.trouble=q.trouble.includes(l)?q.trouble.filter(x=>x!==l):AT_LIOS.filter(x=>x===l||q.trouble.includes(x)); pinta(); });
+    document.querySelectorAll('[data-atmas]').forEach(b=>b.onclick=()=>{ q.rounds=Math.min(12,Math.max(1,q.rounds+(+b.dataset.atmas))); pinta(); });
+  };
+  openDlg(TS('Atraco','Heist'),'',
+    `${nuevo?`<button id="atAtras">${TS('Atrás','Back')}</button>`:`<button id="atCancel">${TS('Cancelar','Cancel')}</button>`}
+     <button class="primary" id="atMontar">${nuevo?TS('Montar el golpe','Plan the job'):TS('Guardar cambios','Save changes')}</button>`);
+  dlgAncho(); pinta();
+  const at=document.getElementById('atAtras'); if(at) at.onclick=abrirElegirModo;
+  const ca=document.getElementById('atCancel'); if(ca) ca.onclick=()=>dlg.close();
+  document.getElementById('atMontar').onclick=()=>{
+    const antes=atCfg()?{...JSON.parse(JSON.stringify(atCfg())),__objeto:atObjeto()}:null;
+    /* La guardia que ya no se quiere se va con sus enemigos: si no, saldría
+       al empezar, como cualquier grupo que nadie genera. */
+    cambio(()=>{ if(antes?.trouble.includes('guards')&&!q.trouble.includes('guards'))
+                   state.spawns.enemies=state.spawns.enemies.filter(e=>e.group!==antes.guardGroup);
+                 state.meta.mode=q; atGenerar(q,antes); });
+    dlg.close(); atFoco=null;
+    if(nuevo){ elegirSala(''); irPaso('','losetas');
+      flash(TS('Golpe montado. Pon las losetas: la guía de la izquierda te dice lo que falta.','Job planned. Place the tiles: the guide on the left tells you what is missing.')); }
+    else { renderRight(); draw(); flash(TS('Atraco actualizado.','Heist updated.')); }
+  };
+}
+
+/* ---- la guía del modo, en Capas ---- */
+function atFaltasDe(c){
+  const f=[];
+  if(atObjeto()===null) f.push({k:'§at:objeto',t:TS(`Atraco: falta el objeto con ${atQue(c)}.`,`Heist: the object with ${atQue(c)} is missing.`)});
+  if(!c.salida) f.push({k:'§at:salida',t:TS('Atraco: marca la zona de salida.','Heist: mark the exit zone.')});
+  if(c.trouble.includes('door')&&atPuerta()===null) f.push({k:'§at:puerta',t:TS('Atraco: elige la puerta que se cierra.','Heist: pick the door that shuts.')});
+  if(c.trouble.includes('guards')&&!state.spawns.enemies.some(e=>e.group===c.guardGroup)) f.push({k:'§at:guardia',t:TS(`${c.guardGroup}: pon los enemigos que llegan con la alarma.`,`${c.guardGroup}: place the enemies that come with the alarm.`)});
+  if(c.trouble.includes('exit')){ const s=salaPorClave(claveSala(c.exitRoom)); if(!s||!s.losetas.length) f.push({k:'§at:sala',t:TS(`${c.exitRoom}: pon sus losetas.`,`${c.exitRoom}: place its tiles.`)}); }
+  return f;
+}
+function atSelObj(id,actual,filtro){
+  const l=state.spawns.interactables.map((o,i)=>({o,i})).filter(x=>filtro(x.o));
+  return `<select id="${id}"><option value="">${TS('— Elige —','— Pick —')}</option>${l.map(({i})=>`<option value="${i}" ${actual===i?'selected':''}>${esc(atNomObj(i))}</option>`).join('')}</select>`;
+}
+function atBloque(c){
+  const ini=salaPorClave(''), arena=!!ini?.losetas.length, heroes=(ini?.salidas.length||0)>=2;
+  const faltas=atFaltasDe(c), falta=k=>faltas.some(f=>f.k===k);
+  const paso=(id,hecho,texto)=>`<button class="svpaso ${hecho?'hecho':''} ${atFoco===id?'on':''}" data-atpaso="${id}"><span class="gm">${hecho?'✓':''}</span><span class="gt">${texto}</span></button>`;
+  let foco='';
+  if(atFoco==='objeto') foco=`<div class="svfoco"><span class="svk">${TS('El objeto del robo','The object to steal')}</span>
+      <p>${TS(`Elige el objeto que tiene ${atQue(c)}, o pon uno nuevo (cofre, estatua, ficha…).`,`Pick the object holding ${atQue(c)}, or place a new one (chest, statue, token…).`)}</p>
+      ${atSelObj('atSelObjeto',atObjeto(),()=>true)}
+      <button class="primary sm" id="atPonObj">${TS('Poner uno nuevo','Place a new one')}</button><button class="sm" id="atFocoFin">${TS('Listo','Done')}</button></div>`;
+  if(atFoco==='puerta') foco=`<div class="svfoco"><span class="svk">${TS('La puerta que se cierra','The door that shuts')}</span>
+      <p>${TS('Al sonar la alarma vuelve a su sitio y queda cerrada con llave: hay que buscar otro camino.','When the alarm sounds it goes back and stays locked: they need another way.')}</p>
+      ${atSelObj('atSelPuerta',atPuerta(),o=>esPuerta(o.type))}
+      <button class="primary sm" id="atPonPuerta">${TS('Poner una puerta','Place a door')}</button><button class="sm" id="atFocoFin">${TS('Listo','Done')}</button></div>`;
+  if(atFoco==='guardia'){ const n=state.spawns.enemies.filter(e=>e.group===c.guardGroup).length;
+    foco=`<div class="svfoco"><span class="svk">${esc(c.guardGroup)}</span>
+      <p>${TS('Pon los enemigos que entran al sonar la alarma. No salen al principio.','Place the enemies that come in when the alarm sounds. They do not appear at the start.')}</p>
+      <p class="gcuenta">${n} ${n===1?TS('enemigo','enemy'):TS('enemigos','enemies')}</p>
+      <button class="primary sm" id="atPonEne">${TS('Poner enemigos','Place enemies')}</button><button class="sm" id="atFocoFin">${TS('Listo','Done')}</button></div>`; }
+  return `<div class="svbox">
+    <div class="svhd"><span class="svico">${SV_ICO.atraco}</span><b>${TS('Atraco','Heist')}</b><small>${c.rounds} ${TS('rondas para huir','rounds to escape')}</small>
+      <button class="sm" id="atCambiar">${TS('Cambiar respuestas','Change answers')}</button></div>
+    ${paso('arena',arena,TS('La arena','The arena'))}
+    ${paso('heroes',heroes,TS('Dónde empiezan los héroes','Where the heroes start'))}
+    ${paso('objeto',!falta('§at:objeto'),TS('El objeto del robo','The object to steal'))}
+    ${paso('salida',!falta('§at:salida'),TS('La zona de salida','The exit zone'))}
+    ${c.trouble.includes('door')?paso('puerta',!falta('§at:puerta'),TS('La puerta que se cierra','The door that shuts')):''}
+    ${c.trouble.includes('guards')?paso('guardia',!falta('§at:guardia'),esc(c.guardGroup)):''}
+    ${c.trouble.includes('exit')?paso('sala',!falta('§at:sala'),esc(c.exitRoom)):''}
+    ${foco}
+  </div>`;
+}
+function atIrSala(c){
+  const k=claveSala(c.exitRoom);
+  if(salaPorClave(k)){ elegirSala(k); return; }
+  salaPendiente={k,nombre:c.exitRoom,trgs:[]};
+  sel={k:'room',g:k}; rtab='sel'; syncTabs();
+  irPaso(k,'losetas');
+  flash(TS(`Pon las losetas de «${c.exitRoom}»: aparece al sonar la alarma.`,`Place the tiles of «${c.exitRoom}»: it appears when the alarm sounds.`));
+}
+function atIr(c,id){
+  if(id==='arena'){ elegirSala(''); irPaso('','losetas'); return; }
+  if(id==='heroes'){ elegirSala(''); irPaso('','heroes'); return; }
+  if(id==='salida') return startPick('area',v=>{ atRehacer(c,{cfg:{salida:v}}); renderRight(); draw(); });
+  if(id==='sala') return atIrSala(c);
+  atFoco=id; ponerLtab('capas'); renderSalas();
+}
+function atLigar(el,c){
+  const q=s=>el.querySelector(s);
+  q('#atCambiar').onclick=()=>atPreguntas(false);
+  el.querySelectorAll('[data-atpaso]').forEach(b=>b.onclick=()=>atIr(c,b.dataset.atpaso));
+  const so=q('#atSelObjeto'); if(so) so.onchange=()=>{ atRehacer(c,{objeto:so.value===''?null:+so.value}); renderRight(); };
+  const sp=q('#atSelPuerta'); if(sp) sp.onchange=()=>{ atRehacer(c,{puerta:sp.value===''?null:+sp.value}); renderRight(); };
+  const po=q('#atPonObj'); if(po) po.onclick=()=>{ atN0=state.spawns.interactables.length; abrirPiezas('props'); if(tool==='hero') tool='select'; renderPalette(); };
+  const pp=q('#atPonPuerta'); if(pp) pp.onclick=()=>{ atN0=state.spawns.interactables.length; selProp='Door'; abrirPiezas('props'); tool='prop'; renderTools?.(); renderPalette(); };
+  const pe=q('#atPonEne'); if(pe) pe.onclick=()=>{ atN0=state.spawns.enemies.length; abrirPiezas('enemies'); tool='enemy'; renderTools?.(); renderPalette(); };
+  const fin=q('#atFocoFin'); if(fin) fin.onclick=()=>{ atFoco=null; renderSalas(); };
+  el.querySelectorAll('[data-fsala^="§at:"]').forEach(b=>b.onclick=()=>atIr(c,b.dataset.fsala.slice(4)));
+}
+
+MODOS_JUEGO.heist={preguntas:atPreguntas,bloque:atBloque,ligar:atLigar};
+
+/* ---- enganches (todos miran antes si el mapa es un Atraco) ---- */
+const renderRightSinAtraco=renderRight;
+renderRight=function(){
+  const c=atCfg();
+  if(c&&atFoco==='guardia'&&state.spawns.enemies.length>atN0){
+    for(let i=atN0;i<state.spawns.enemies.length;i++) state.spawns.enemies[i].group=c.guardGroup;
+    atN0=state.spawns.enemies.length;
+  }
+  /* El primer objeto (o puerta) que se pone en su paso es el elegido. No
+     entra en deshacer aparte: va con el «poner» que lo ha traído. */
+  if(c&&(atFoco==='objeto'||atFoco==='puerta')&&state.spawns.interactables.length>atN0){
+    const i=state.spawns.interactables.length-1, o=state.spawns.interactables[i];
+    if(atFoco==='objeto'||esPuerta(o.type)){
+      const viejo={...JSON.parse(JSON.stringify(c)),__objeto:atObjeto()};
+      atGenerar(c,viejo,atFoco==='objeto'?{objeto:i}:{puerta:i});
+      flash(atFoco==='objeto'?TS('Ese es el objeto del robo.','That is the object to steal.'):TS('Esa es la puerta que se cierra.','That is the door that shuts.'));
+      atFoco=null; ponerLtab('capas');
+    }
+    atN0=state.spawns.interactables.length;
+  }
+  return renderRightSinAtraco();
+};
+const renderDestinoSinAtraco=renderDestino;
+renderDestino=function(){
+  renderDestinoSinAtraco();
+  const c=atCfg(), el=document.getElementById('destinoPiezas');
+  if(!c||!atFoco||!el) return;
+  const que=atFoco==='guardia'?TS('Los enemigos van a','Enemies go to')+` <b>${esc(c.guardGroup)}</b>`
+           :atFoco==='puerta'?TS('La próxima puerta será <b>la que se cierra</b>','The next door will be <b>the one that shuts</b>')
+           :TS('El próximo objeto será <b>el del robo</b>','The next object will be <b>the one to steal</b>');
+  el.insertAdjacentHTML('afterbegin',`<div class="svdest"><span>${que}</span><button class="sm" id="atDestListo">${TS('Listo','Done')}</button></div>`);
+  el.querySelector('#atDestListo').onclick=()=>{ atFoco=null; ponerLtab('capas'); renderSalas(); };
+};
+const faltasSinAtraco=faltasDelMapa;
+faltasDelMapa=function(){
+  const f=faltasSinAtraco(), c=atCfg();
+  if(!c||!state.board.tiles.length) return f;
+  return [...f,...atFaltasDe(c)];
+};
+const reiniciarGuiaSinAtraco=reiniciarGuia;
+reiniciarGuia=function(){ atFoco=null; return reiniciarGuiaSinAtraco(); };
+const sanearEscenarioSinAtraco=sanearEscenario;
+sanearEscenario=function(s){
+  if(s.meta?.mode&&typeof s.meta.mode==='object'&&s.meta.mode.id===MODO_AT) s.meta.mode=atSanear(s.meta.mode);
+  return sanearEscenarioSinAtraco(s);
+};
+/* ================= modo Defensa (19-oct-2026) =================
+   La propuesta aprobada el 19-oct: aguantar unas rondas sin que nadie cruce
+   la línea (una zona) o sin que destruyan algo (un objeto). Mismo enfoque que
+   los otros modos (modos.js): `meta.mode` guarda las respuestas y se montan
+   objetivos y disparadores normales, los que empiezan por `modo_df_`.
+
+   Por dentro:
+   · se gana con «Sobrevivir N rondas», que la app comprueba sola;
+   · se pierde si un enemigo entra en la zona o destruyen el objeto: eso lo
+     declaran los jugadores (la app no ve el tablero; decisión del 13-oct);
+   · los refuerzos llegan «al empezar la ronda R» (cada 2 o 3 rondas, antes de
+     la última): un grupo dibujado por llegada, o una tanda al azar de los
+     enemigos del mapa en la zona de entrada, como en la Supervivencia;
+   · el mecanismo es un objeto: al usarlo pone `cortado` a 1 y las llegadas
+     que faltan ya no salen (condición `varEquals cortado 0`);
+   · el objeto defendido y el mecanismo se leen del guion (la derrota y el
+     disparador), que el editor renumera al borrar otros objetos. */
+
+const MODO_DF='defense', DF_PREF='modo_df_', DF_CORTADO='cortado';
+let dfFoco=null;      // 'objeto' | 'meca' | {k} (una llegada)
+MODOS_FOCOS.push(()=>{ dfFoco=null; });
+let dfN0=0;
+
+const dfCfg=()=>mode==='scenario'&&state.meta.mode?.id===MODO_DF?state.meta.mode:null;
+function dfPorDefecto(){
+  return {id:MODO_DF,v:1,what:'zone',rounds:6,every:2,mechanism:true,random:'none',randomCount:3,
+          zona:null,entrada:null,groups:[]};
+}
+const dfLlegadas=c=>{ const l=[]; if(c.every>0) for(let r=c.every;r<c.rounds;r+=c.every) l.push(r); return l; };
+const dfGrupo=(c,k)=>c.groups[k-1]||TS('Refuerzos ','Reinforcements ')+k;
+const dfDerrota=()=>state.objectives.failConditions.find(f=>f.id==='object_destroyed');
+const dfObjeto=()=>{ const v=dfDerrota()?.params?.interactable; return v===undefined||v===''?null:+v; };
+const dfMeca=()=>{ const v=state.triggers.find(t=>t.id===DF_PREF+'meca')?.event?.params?.interactable; return v===undefined||v===''?null:+v; };
+const dfNomObj=i=>{ const o=state.spawns.interactables[i]; return o?(o.name||L(propDef(o.type),'name'))+` (${o.pos[0]},${o.pos[1]})`:''; };
+
+function dfSanear(m){
+  const c=dfPorDefecto(), ent=(v,a,b,d)=>{ const n=Math.round(+v); return Number.isFinite(n)?Math.min(b,Math.max(a,n)):d; };
+  const zona=v=>Array.isArray(v)&&v.length===4&&v.every(x=>Number.isFinite(+x))?v.map(x=>Math.round(+x)):null;
+  c.what=['zone','object'].includes(m.what)?m.what:'zone';
+  c.rounds=ent(m.rounds,3,12,6);
+  c.every=[0,2,3].includes(+m.every)?+m.every:2;
+  c.mechanism=m.mechanism!==false;
+  c.random=['none','all'].includes(m.random)?m.random:'none';
+  c.randomCount=ent(m.randomCount,1,8,3);
+  c.zona=zona(m.zona); c.entrada=zona(m.entrada);
+  c.groups=Array.isArray(m.groups)?m.groups.slice(0,6).map(g=>String(g??'').slice(0,60)):[];
+  return c;
+}
+
+/* ---- lo que se monta ---- */
+function dfGenerar(c,viejo,{objeto=dfObjeto(),meca=dfMeca()}={}){
+  const nom=TS('Defensa','Defense'), lleg=dfLlegadas(c);
+  for(let k=c.groups.length+1;k<=lleg.length;k++) c.groups.push(TS('Refuerzos ','Reinforcements ')+k);
+  const sobran=new Set(c.random==='all'?c.groups:c.groups.slice(lleg.length));
+  c.groups=c.groups.slice(0,lleg.length);
+  if(sobran.size) state.spawns.enemies=state.spawns.enemies.filter(e=>!sobran.has(e.group));
+  const T_=[{id:DF_PREF+'inicio',name:`${nom}: ${TS('empieza','start')}`,once:true,event:{id:'mapStart',params:{}},conditions:[],actions:[
+    {id:'initVariable',params:{var:DF_CORTADO,value:0}},
+    {id:'showMessage',params:{text:c.what==='zone'?TS(`Aguantad ${c.rounds} rondas. Si un enemigo entra en la zona marcada, todo está perdido.`,`Hold for ${c.rounds} rounds. If an enemy enters the marked zone, all is lost.`)
+                                                 :TS(`Aguantad ${c.rounds} rondas. Si lo destruyen, todo está perdido.`,`Hold for ${c.rounds} rounds. If it is destroyed, all is lost.`)}},
+    ...(c.what==='zone'&&c.zona?[{id:'highlightArea',params:{area:[...c.zona]}}]:[])]}];
+  lleg.forEach((r,j)=>{ const k=j+1;
+    const sale=c.random==='all'?[{id:'spawnRandom',params:{count:c.randomCount,...(c.entrada?{area:[...c.entrada]}:{})}}]
+                               :[{id:'spawnGroup',params:{group:dfGrupo(c,k)}}];
+    T_.push({id:DF_PREF+'llega'+k,name:`${nom}: ${TS('refuerzos de la ronda','reinforcements of round')} ${r}`,once:true,
+      event:{id:'roundStart',params:{round:r}},conditions:c.mechanism?[{id:'varEquals',params:{var:DF_CORTADO,value:0}}]:[],
+      actions:[{id:'showMessage',params:{text:TS('¡Llegan refuerzos enemigos!','Enemy reinforcements arrive!')}},...sale]}); });
+  if(c.mechanism) T_.push({id:DF_PREF+'meca',name:`${nom}: ${TS('el mecanismo','the mechanism')}`,once:true,
+    event:{id:'interacted',params:{interactable:meca??''}},conditions:[],actions:[
+      {id:'setVariable',params:{var:DF_CORTADO,value:1}},
+      {id:'showMessage',params:{text:TS('El mecanismo cede con un chasquido: ya no llegarán más refuerzos.','The mechanism gives with a snap: no more reinforcements will arrive.')}}]});
+  state.triggers=[...state.triggers.filter(t=>!String(t.id||'').startsWith(DF_PREF)),...T_];
+
+  // el objetivo y la derrota, en el sitio de los de antes
+  /* «Sobrevivir N rondas» del mod gana al EMPEZAR la ronda N, o sea tras N−1
+     completas (medido en el juego el 19-oct, rdf2). El usuario eligió que el
+     editor pida una más por debajo, sin tocar el mod: «aguantad 6» = 7. */
+  const obj={id:'survive_rounds',params:{rounds:c.rounds+1},text:TS(`Aguantad ${c.rounds} rondas.`,`Hold for ${c.rounds} rounds.`)};
+  const esViejo=o=>o.id==='survive_rounds'&&viejo?.id===MODO_DF&&(o.params?.rounds===viejo.rounds+1||o.params?.rounds===viejo.rounds);
+  const i=state.objectives.primary.findIndex(esViejo), resto=state.objectives.primary.filter(o=>!esViejo(o));
+  if(i>=0) resto.splice(Math.min(i,resto.length),0,obj); else resto.push(obj);
+  state.objectives.primary=resto;
+  const fc=state.objectives.failConditions.filter(f=>!(viejo?.id===MODO_DF&&(f.id==='enemy_reaches_area'||f.id==='object_destroyed')));
+  fc.push(c.what==='zone'?{id:'enemy_reaches_area',params:{area:c.zona?[...c.zona]:''}}
+                         :{id:'object_destroyed',params:{interactable:objeto??''}});
+  state.objectives.failConditions=fc;
+}
+function dfRehacer(c,cambios={}){
+  const viejo=JSON.parse(JSON.stringify(c));
+  cambio(()=>{ Object.assign(c,cambios.cfg||{}); dfGenerar(c,viejo,cambios); });
+}
+
+/* ---- las preguntas ---- */
+function dfPreguntas(nuevo){
+  const ya=dfCfg(), q=dfSanear(ya||dfPorDefecto());
+  const seg=(k,v,txt)=>`<button class="gchip ${q[k]===v?'on':''}" data-dfq="${k}" data-v="${v}">${txt}</button>`;
+  const pinta=()=>{
+    const lleg=dfLlegadas(q);
+    document.getElementById('dlgBody').innerHTML=`
+      <p class="mjintro">${TS(`Aguantad ${q.rounds} rondas. Cada casilla es una ronda; debajo, lo que llega en ella.`,`Hold for ${q.rounds} rounds. Each box is a round; below, what arrives in it.`)}</p>
+      <div class="dfrondas">${Array.from({length:q.rounds},(_,j)=>{ const r=j+1, llega=lleg.includes(r), fin=r===q.rounds;
+        return `<div class="dfr ${llega?'llega':''} ${fin?'fin':''}"><span class="svk">${fin?TS('Fin','End'):TS('Ronda','Round')}</span><b>${r}</b>
+          <small>${fin?TS('Si seguís en pie, ganáis','If you still stand, you win'):llega?(q.random==='all'?TS('+ refuerzos al azar','+ random reinforcements'):TS('+ refuerzos','+ reinforcements')):r===1?TS('Los primeros','The first ones'):'—'}</small></div>`; }).join('')}</div>
+      <div class="svqs">
+        <div class="svq"><b>${TS('¿Qué defendéis?','What do you defend?')}</b><span class="svseg">
+          ${seg('what','zone',TS('Una zona','A zone'))}${seg('what','object',TS('Un objeto','An object'))}</span>
+          <small>${q.what==='zone'?TS('Si un enemigo entra en la zona, se pierde. Lo decís vosotros: la app pregunta.','If an enemy enters the zone, you lose. You declare it: the app asks.')
+                               :TS('Si lo destruyen, se pierde. Lo decís vosotros: la app pregunta.','If it is destroyed, you lose. You declare it: the app asks.')}</small></div>
+        <div class="svq"><b>${TS('¿Cuántas rondas?','How many rounds?')}</b>
+          <span class="svstep"><button data-dfmas="-1" aria-label="${TS('Menos','Fewer')}">−</button><span id="dfN">${q.rounds}</span><button data-dfmas="1" aria-label="${TS('Más','More')}">+</button></span>
+          <small>${TS('Se gana al aguantarlas: lo cuenta la app.','You win by holding them: the app counts.')}</small></div>
+        <div class="svq"><b>${TS('Refuerzos cada…','Reinforcements every…')}</b><span class="svseg">
+          ${seg('every',2,TS('2 rondas','2 rounds'))}${seg('every',3,TS('3 rondas','3 rounds'))}${seg('every',0,TS('Nunca','Never'))}</span></div>
+        <div class="svq"><b>${TS('¿Un mecanismo que ayuda?','A helpful mechanism?')}</b><span class="svseg">
+          ${seg('mechanism',true,TS('Sí','Yes'))}${seg('mechanism',false,TS('No','No'))}</span>
+          <small>${TS('Un objeto que corta los refuerzos. Obliga a dejar la posición un momento: esa es la decisión.','An object that stops the reinforcements. It forces leaving the position for a moment: that is the choice.')}</small></div>
+        ${q.every?`<div class="svq"><b>${TS('¿Refuerzos al azar?','Random reinforcements?')}</b><span class="svseg">
+          ${seg('random','none',TS('No, los dibujo','No, I draw them'))}${seg('random','all',TS('Sí, al azar','Yes, random'))}</span>
+          <small>${TS('Al azar: salen de los enemigos que ya usa el mapa, en la zona de entrada que marques.','Random: they come from the enemies the map uses, in the entry zone you mark.')}</small></div>`:''}
+      </div>`;
+    document.querySelectorAll('[data-dfq]').forEach(b=>b.onclick=()=>{ const k=b.dataset.dfq, v=b.dataset.v;
+      q[k]=k==='every'?+v:k==='mechanism'?v==='true':v; pinta(); });
+    document.querySelectorAll('[data-dfmas]').forEach(b=>b.onclick=()=>{ q.rounds=Math.min(12,Math.max(3,q.rounds+(+b.dataset.dfmas))); pinta(); });
+  };
+  openDlg(TS('Defensa','Defense'),'',
+    `${nuevo?`<button id="dfAtras">${TS('Atrás','Back')}</button>`:`<button id="dfCancel">${TS('Cancelar','Cancel')}</button>`}
+     <button class="primary" id="dfMontar">${nuevo?TS('Montar la posición','Build the position'):TS('Guardar cambios','Save changes')}</button>`);
+  dlgAncho(); pinta();
+  const at=document.getElementById('dfAtras'); if(at) at.onclick=abrirElegirModo;
+  const ca=document.getElementById('dfCancel'); if(ca) ca.onclick=()=>dlg.close();
+  document.getElementById('dfMontar').onclick=()=>{
+    const antes=dfCfg()?JSON.parse(JSON.stringify(dfCfg())):null;
+    cambio(()=>{ state.meta.mode=q; dfGenerar(q,antes); });
+    dlg.close(); dfFoco=null;
+    if(nuevo){ elegirSala(''); irPaso('','losetas');
+      flash(TS('Posición lista. Pon las losetas: la guía de la izquierda te dice lo que falta.','Position ready. Place the tiles: the guide on the left tells you what is missing.')); }
+    else { renderRight(); draw(); flash(TS('Defensa actualizada.','Defense updated.')); }
+  };
+}
+
+/* ---- la guía del modo, en Capas ---- */
+function dfFaltasDe(c){
+  const f=[];
+  if(c.what==='zone'&&!c.zona) f.push({k:'§df:zona',t:TS('Defensa: marca la zona que hay que defender.','Defense: mark the zone to defend.')});
+  if(c.what==='object'&&dfObjeto()===null) f.push({k:'§df:objeto',t:TS('Defensa: elige el objeto que hay que defender.','Defense: pick the object to defend.')});
+  if(c.mechanism&&dfMeca()===null) f.push({k:'§df:meca',t:TS('Defensa: elige el objeto del mecanismo.','Defense: pick the mechanism object.')});
+  if(dfLlegadas(c).length){
+    if(c.random==='all'){ if(!c.entrada) f.push({k:'§df:entrada',t:TS('Defensa: marca por dónde entran los refuerzos.','Defense: mark where reinforcements come in.')}); }
+    else dfLlegadas(c).forEach((r,j)=>{ if(!state.spawns.enemies.some(e=>e.group===dfGrupo(c,j+1)))
+      f.push({k:'§df:llega:'+(j+1),t:TS(`${dfGrupo(c,j+1)} (ronda ${r}): pon sus enemigos.`,`${dfGrupo(c,j+1)} (round ${r}): place its enemies.`)}); });
+  }
+  return f;
+}
+function dfSelObj(id,actual){
+  return `<select id="${id}"><option value="">${TS('— Elige —','— Pick —')}</option>${state.spawns.interactables.map((o,i)=>
+    `<option value="${i}" ${actual===i?'selected':''}>${esc(dfNomObj(i))}</option>`).join('')}</select>`;
+}
+function dfBloque(c){
+  const ini=salaPorClave(''), arena=!!ini?.losetas.length, heroes=(ini?.salidas.length||0)>=2;
+  const faltas=dfFaltasDe(c), falta=k=>faltas.some(f=>f.k.startsWith(k)), lleg=dfLlegadas(c);
+  const paso=(id,hecho,texto)=>`<button class="svpaso ${hecho?'hecho':''}" data-dfpaso="${id}"><span class="gm">${hecho?'✓':''}</span><span class="gt">${texto}</span></button>`;
+  let foco='';
+  if(dfFoco==='objeto'||dfFoco==='meca'){ const es=dfFoco==='objeto';
+    foco=`<div class="svfoco"><span class="svk">${es?TS('Lo que defendéis','What you defend'):TS('El mecanismo','The mechanism')}</span>
+      <p>${es?TS('Elige el objeto que no deben destruir, o pon uno nuevo.','Pick the object they must not destroy, or place a new one.')
+             :TS('Elige el objeto que corta los refuerzos al usarlo (palanca, campana, atril…), o pon uno nuevo.','Pick the object that stops reinforcements when used (lever, bell, lectern…), or place a new one.')}</p>
+      ${dfSelObj('dfSel',es?dfObjeto():dfMeca())}
+      <button class="primary sm" id="dfPonObj">${TS('Poner uno nuevo','Place a new one')}</button><button class="sm" id="dfFocoFin">${TS('Listo','Done')}</button></div>`; }
+  else if(dfFoco?.k){ const k=dfFoco.k, g=dfGrupo(c,k), n=state.spawns.enemies.filter(e=>e.group===g).length;
+    foco=`<div class="svfoco"><span class="svk">${esc(g)} · ${TS('ronda','round')} ${lleg[k-1]}</span>
+      <p>${TS('Pon los enemigos que llegan al empezar esa ronda. No salen al principio.','Place the enemies that arrive when that round starts. They do not appear at the start.')}</p>
+      <p class="gcuenta">${n} ${n===1?TS('enemigo','enemy'):TS('enemigos','enemies')}</p>
+      <button class="primary sm" id="dfPonEne">${TS('Poner enemigos','Place enemies')}</button><button class="sm" id="dfFocoFin">${TS('Listo','Done')}</button></div>`; }
+  const chips=c.random==='all'?'':lleg.map((r,j)=>`<button class="svchip ${falta('§df:llega:'+(j+1))?'':'hecho'} ${dfFoco?.k===j+1?'on':''}" data-dfllega="${j+1}" title="${esc(dfGrupo(c,j+1))}">R${r}</button>`).join('');
+  return `<div class="svbox">
+    <div class="svhd"><span class="svico">${SV_ICO.defensa}</span><b>${TS('Defensa','Defense')}</b><small>${c.rounds} ${TS('rondas','rounds')}</small>
+      <button class="sm" id="dfCambiar">${TS('Cambiar respuestas','Change answers')}</button></div>
+    ${paso('arena',arena,TS('La arena','The arena'))}
+    ${paso('heroes',heroes,TS('Dónde empiezan los héroes','Where the heroes start'))}
+    ${c.what==='zone'?paso('zona',!falta('§df:zona'),TS('La zona que defendéis','The zone you defend')):paso('objeto',!falta('§df:objeto'),TS('El objeto que defendéis','The object you defend'))}
+    ${paso('primeros',(ini?.enemigos.length||0)>0,TS('Los primeros enemigos','The first enemies'))}
+    ${lleg.length&&c.random==='all'?paso('entrada',!!c.entrada,TS('Por dónde entran los refuerzos (zona)','Where reinforcements come in (zone)')):''}
+    ${c.mechanism?paso('meca',!falta('§df:meca'),TS('El mecanismo','The mechanism')):''}
+    ${chips?`<div class="svolas"><span class="gt">${TS('Refuerzos de cada ronda','Reinforcements per round')}</span><div class="svchips">${chips}</div></div>`:''}
+    ${foco}
+  </div>`;
+}
+function dfIr(c,id){
+  if(id==='arena'){ elegirSala(''); irPaso('','losetas'); return; }
+  if(id==='heroes'){ elegirSala(''); irPaso('','heroes'); return; }
+  if(id==='primeros'){ elegirSala(''); irPaso('','enemigos'); return; }
+  if(id==='zona') return startPick('area',v=>{ dfRehacer(c,{cfg:{zona:v}}); renderRight(); draw(); });
+  if(id==='entrada') return startPick('area',v=>{ dfRehacer(c,{cfg:{entrada:v}}); renderRight(); draw(); });
+  if(id.startsWith('llega:')) dfFoco={k:+id.slice(6)}; else dfFoco=id;
+  ponerLtab('capas'); renderSalas();
+}
+function dfLigar(el,c){
+  const q=s=>el.querySelector(s);
+  q('#dfCambiar').onclick=()=>dfPreguntas(false);
+  el.querySelectorAll('[data-dfpaso]').forEach(b=>b.onclick=()=>dfIr(c,b.dataset.dfpaso));
+  el.querySelectorAll('[data-dfllega]').forEach(b=>b.onclick=()=>dfIr(c,'llega:'+b.dataset.dfllega));
+  const s=q('#dfSel'); if(s) s.onchange=()=>{ const v=s.value===''?null:+s.value;
+    dfRehacer(c,dfFoco==='objeto'?{objeto:v}:{meca:v}); renderRight(); };
+  const po=q('#dfPonObj'); if(po) po.onclick=()=>{ dfN0=state.spawns.interactables.length; abrirPiezas('props'); if(tool==='hero') tool='select'; renderPalette(); };
+  const pe=q('#dfPonEne'); if(pe) pe.onclick=()=>{ dfN0=state.spawns.enemies.length; abrirPiezas('enemies'); tool='enemy'; renderTools?.(); renderPalette(); };
+  const fin=q('#dfFocoFin'); if(fin) fin.onclick=()=>{ dfFoco=null; renderSalas(); };
+  el.querySelectorAll('[data-fsala^="§df:"]').forEach(b=>b.onclick=()=>dfIr(c,b.dataset.fsala.slice(4)));
+}
+
+MODOS_JUEGO.defense={preguntas:dfPreguntas,bloque:dfBloque,ligar:dfLigar};
+
+/* ---- enganches (todos miran antes si el mapa es una Defensa) ---- */
+const renderRightSinDefensa=renderRight;
+renderRight=function(){
+  const c=dfCfg();
+  if(c&&dfFoco?.k&&state.spawns.enemies.length>dfN0){
+    for(let i=dfN0;i<state.spawns.enemies.length;i++) state.spawns.enemies[i].group=dfGrupo(c,dfFoco.k);
+    dfN0=state.spawns.enemies.length;
+  }
+  if(c&&(dfFoco==='objeto'||dfFoco==='meca')&&state.spawns.interactables.length>dfN0){
+    const i=state.spawns.interactables.length-1, es=dfFoco==='objeto';
+    dfGenerar(c,JSON.parse(JSON.stringify(c)),es?{objeto:i}:{meca:i});
+    flash(es?TS('Ese es el objeto que defendéis.','That is the object you defend.'):TS('Ese es el mecanismo.','That is the mechanism.'));
+    dfFoco=null; ponerLtab('capas'); dfN0=state.spawns.interactables.length;
+  }
+  return renderRightSinDefensa();
+};
+const renderDestinoSinDefensa=renderDestino;
+renderDestino=function(){
+  renderDestinoSinDefensa();
+  const c=dfCfg(), el=document.getElementById('destinoPiezas');
+  if(!c||!dfFoco||!el) return;
+  const que=dfFoco.k?TS('Los enemigos van a','Enemies go to')+` <b>${esc(dfGrupo(c,dfFoco.k))}</b>`
+           :dfFoco==='objeto'?TS('El próximo objeto será <b>el que defendéis</b>','The next object will be <b>the one you defend</b>')
+           :TS('El próximo objeto será <b>el mecanismo</b>','The next object will be <b>the mechanism</b>');
+  el.insertAdjacentHTML('afterbegin',`<div class="svdest"><span>${que}</span><button class="sm" id="dfDestListo">${TS('Listo','Done')}</button></div>`);
+  el.querySelector('#dfDestListo').onclick=()=>{ dfFoco=null; ponerLtab('capas'); renderSalas(); };
+};
+const faltasSinDefensa=faltasDelMapa;
+faltasDelMapa=function(){
+  const f=faltasSinDefensa(), c=dfCfg();
+  if(!c||!state.board.tiles.length) return f;
+  return [...f,...dfFaltasDe(c)];
+};
+const reiniciarGuiaSinDefensa=reiniciarGuia;
+reiniciarGuia=function(){ dfFoco=null; return reiniciarGuiaSinDefensa(); };
+const sanearEscenarioSinDefensa=sanearEscenario;
+sanearEscenario=function(s){
+  if(s.meta?.mode&&typeof s.meta.mode==='object'&&s.meta.mode.id===MODO_DF) s.meta.mode=dfSanear(s.meta.mode);
+  return sanearEscenarioSinDefensa(s);
+};
+/* ================= modo Expedición (19-oct-2026) =================
+   Decidido por el usuario el 19-oct: todo en UN mapa; salas en cadena con
+   cruces donde se elige ruta (la pregunta de la app, o al azar si el creador
+   lo quiere); se pasa a la siguiente al limpiar la sala; las salas anteriores
+   se QUEDAN en la mesa; cinco tipos de sala (Combate, Élite, Descanso,
+   Tesoro y Jefe al final) y una plantilla fija editable de 1 a 3 cruces.
+
+   Cada sala del mapa de rutas es una sala normal del editor (la Entrada es
+   «Inicio»), así que sus losetas, objetos y enemigos se ponen con la guía de
+   salas de siempre. Lo que monta el modo, en disparadores `modo_ex_`:
+   · cada sala es un grupo de enemigos con su nombre (el editor se lo pone a
+     los que se dibujan en ella); al limpiarla (`groupDefeated`) se da su
+     premio y se entra en lo siguiente: una sala
+     (sale con `revealRoom`) o un cruce (`showChoice` con una rama por ruta, o
+     `if` + `chance 50` si es al azar);
+   · Descanso y Tesoro no tienen enemigos: al entrar dan lo suyo y siguen;
+   · NO vale «caen todos los enemigos»: el mod lo retiene mientras haya
+     enemigos esperando a que salga su sala (`Guion.Sondeo`, `HayEsperando`),
+     y en una expedición siempre los hay. Probado en el juego el 19-oct (rex1):
+     la Entrada se limpió y no pasó nada. «Cae todo el grupo» solo espera a los
+     de su grupo;
+   · se gana al limpiar el Jefe (`counter_at_least expedicion 1`). */
+
+const MODO_EX='expedition', EX_PREF='modo_ex_', EX_SALA='sala', EX_FIN='expedicion';
+const EX_TIPOS=['combat','elite','rest','treasure'];
+
+const exCfg=()=>mode==='scenario'&&state.meta.mode?.id===MODO_EX?state.meta.mode:null;
+const exNomTipo=t=>({combat:TS('Combate','Combat'),elite:TS('Élite','Elite'),rest:TS('Descanso','Rest'),treasure:TS('Tesoro','Treasure'),boss:TS('Jefe','Boss')})[t]||t;
+const exConEnemigos=t=>t==='combat'||t==='elite'||t==='boss';
+const EX_ICO={
+  combat:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19L19 5M15 5h4v4M5 5l14 14"/></svg>',
+  elite:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="10" r="6"/><path d="M9 20h6M10 10h.01M14 10h.01"/></svg>',
+  rest:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 10c0 5.5-7 10-7 10z"/></svg>',
+  treasure:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="9" width="18" height="11" rx="1"/><path d="M3 13h18"/></svg>',
+  boss:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l4 4 5-7 5 7 4-4-2 11H5z"/></svg>',
+};
+
+/* La plantilla: Entrada → cruce → Cámara → cruce → … → Jefe. Cada sala lleva
+   su hueco (`slot`) para que al cambiar el número de cruces se conserven las
+   que siguen existiendo, con su nombre y su tipo. */
+const EX_HUECOS={
+  e:[TS('Entrada','Entrance'),'combat'], j:[TS('Guarida del jefe','Boss lair'),'boss'],
+  f1a:[TS('Ruta peligrosa','Dangerous path'),'elite'], f1b:[TS('Ruta segura','Safe path'),'rest'],
+  m1:[TS('Cámara de los guardianes','Guardians\' chamber'),'combat'],
+  f2a:[TS('Armería','Armoury'),'treasure'], f2b:[TS('Santuario','Sanctuary'),'rest'],
+  m2:[TS('Cripta','Crypt'),'combat'],
+  f3a:[TS('Paso estrecho','Narrow pass'),'combat'], f3b:[TS('Galería','Gallery'),'treasure'],
+};
+function exPlantilla(f,antes){
+  const viejas=Object.fromEntries((antes||[]).flatMap(s=>s.rooms).map(r=>[r.slot,r]));
+  const sala=h=>viejas[h]?{...viejas[h]}:{slot:h,name:EX_HUECOS[h][0],type:EX_HUECOS[h][1]};
+  const forkViejo=i=>(antes||[]).find(s=>s.fork&&s.rooms[0].slot==='f'+i+'a');
+  const l=[{fork:false,rooms:[sala('e')]}];
+  for(let i=1;i<=f;i++){
+    l.push({fork:true,random:!!forkViejo(i)?.random,rooms:[sala(`f${i}a`),sala(`f${i}b`)]});
+    if(i<f) l.push({fork:false,rooms:[sala('m'+i)]});
+  }
+  l.push({fork:false,rooms:[sala('j')]});
+  return l;
+}
+function exPorDefecto(){ return {id:MODO_EX,v:1,steps:exPlantilla(2)}; }
+const exForks=c=>c.steps.filter(s=>s.fork).length;
+const exSalas=c=>c.steps.flatMap(s=>s.rooms);
+const exClave=r=>r.slot==='e'?'':claveSala(r.name);
+
+function exSanear(m){
+  const f=Math.min(3,Math.max(1,(Array.isArray(m.steps)?m.steps.filter(s=>s?.fork).length:2)||2));
+  const antes=(Array.isArray(m.steps)?m.steps:[]).map(s=>({fork:!!s?.fork,random:s?.random===true,
+    rooms:(Array.isArray(s?.rooms)?s.rooms:[]).slice(0,2).filter(r=>r&&EX_HUECOS[r.slot]).map(r=>({slot:r.slot,
+      name:String(r.name??EX_HUECOS[r.slot][0]).replace(/\|/g,'/').slice(0,60)||EX_HUECOS[r.slot][0],
+      type:r.slot==='j'?'boss':EX_TIPOS.includes(r.type)?r.type:EX_HUECOS[r.slot][1]}))}));
+  return {id:MODO_EX,v:1,steps:exPlantilla(f,antes)};
+}
+
+/* ---- lo que se monta ---- */
+/* Los enemigos dibujados en cada sala son de su grupo. Solo se cambian los
+   que no tienen grupo propio (el «g1» de serie o el de otra sala de la ruta):
+   una emboscada u otro grupo puesto a mano se respetan. */
+function exSincronizar(c){
+  const salas=exSalas(c), nombres=new Set(salas.map(r=>r.name));
+  // un grupo que el guion o un objetivo del autor ya nombra no se toca
+  const usados=JSON.stringify([state.triggers.filter(t=>!String(t.id||'').startsWith(EX_PREF)),state.objectives]);
+  const libre=g=>!g||(g==='g1'&&!usados.includes('"g1"'))||nombres.has(g);
+  salas.forEach(r=>{ if(!exConEnemigos(r.type)) return; const s=salaPorClave(exClave(r)); if(!s) return;
+    s.enemigos.forEach(i=>{ const e=state.spawns.enemies[i]; if(e&&libre(e.group)) e.group=r.name; }); });
+}
+function exGenerar(c){
+  exSincronizar(c);
+  const salas=exSalas(c), id=r=>salas.indexOf(r);
+  const premio=t=>t==='combat'?[{id:'giveRandomLoot',params:{points:2}}]:t==='elite'?[{id:'giveRandomLoot',params:{points:5}}]:[];
+  // entrar en el paso i: una sala, o elegir entre dos
+  const entrar=(r,revelar)=>{
+    const a=[{id:'setVariable',params:{var:EX_SALA,value:id(r)}}];
+    if(revelar) a.push({id:'revealRoom',params:{group:r.name}});
+    if(r.type==='rest') a.push({id:'showMessage',params:{text:TS(`${r.name}. Un respiro.\n\nEn la mesa: los héroes se curan: 3`,`${r.name}. A breather.\n\nOn the table: the heroes heal: 3`)}});
+    if(r.type==='treasure') a.push({id:'showMessage',params:{text:TS(`${r.name}. Aquí hay algo de valor.`,`${r.name}. There is something valuable here.`)}},{id:'giveRandomLoot',params:{points:4}});
+    if(r.type==='rest'||r.type==='treasure') a.push(...avanzar(c.steps.findIndex(s=>s.rooms.includes(r))+1));
+    return a;
+  };
+  const avanzar=i=>{
+    const s=c.steps[i]; if(!s) return [];
+    if(!s.fork) return entrar(s.rooms[0],true);
+    const [A,B]=s.rooms;
+    if(s.random) return [{id:'showMessage',params:{text:TS('El camino se bifurca… y la suerte elige por vosotros.','The path forks… and luck chooses for you.')}},
+      {id:'if',params:{conditions:[{id:'chance',params:{pct:50}}],then:entrar(A,true),else:entrar(B,true)}}];
+    return [{id:'showChoice',params:{text:TS('El camino se bifurca. ¿Por dónde seguís?','The path forks. Which way?'),
+      options:`${A.name} (${exNomTipo(A.type)})|${B.name} (${exNomTipo(B.type)})`,outcomes:[entrar(A,true),entrar(B,true)]}}];
+  };
+  const nom=TS('Expedición','Expedition');
+  const T_=[{id:EX_PREF+'inicio',name:`${nom}: ${TS('empieza','start')}`,once:true,event:{id:'mapStart',params:{}},conditions:[],actions:[
+    {id:'initVariable',params:{var:EX_SALA,value:0}},{id:'initVariable',params:{var:EX_FIN,value:0}},
+    {id:'showMessage',params:{text:TS('Empieza la expedición. Limpiad cada sala para seguir adelante.','The expedition begins. Clear each room to move on.')}},
+    ...entrar(salas[0],false)]}];
+  // del último al primero (ver arriba)
+  [...salas].reverse().forEach(r=>{ if(!exConEnemigos(r.type)) return;
+    const paso=c.steps.findIndex(s=>s.rooms.includes(r));
+    const a=r.type==='boss'?[{id:'addVariable',params:{var:EX_FIN,value:1}}]:[...premio(r.type),...avanzar(paso+1)];
+    T_.push({id:EX_PREF+'limpia'+id(r),name:`${nom}: ${TS('limpian','cleared')} ${r.name}`,once:true,
+      event:{id:'groupDefeated',params:{group:r.name}},conditions:[],actions:a}); });
+  state.triggers=[...state.triggers.filter(t=>!String(t.id||'').startsWith(EX_PREF)),...T_];
+  const obj={id:'counter_at_least',params:{var:EX_FIN,n:1},text:TS('Llegad al final de la expedición y acabad con el jefe.','Reach the end of the expedition and defeat the boss.')};
+  const i=state.objectives.primary.findIndex(o=>o.id==='counter_at_least'&&o.params?.var===EX_FIN);
+  if(i>=0) state.objectives.primary[i]=obj; else state.objectives.primary.push(obj);
+}
+
+/* ---- las preguntas: el mapa de rutas ---- */
+function exPreguntas(nuevo){
+  const ya=exCfg(), q=exSanear(ya||exPorDefecto());
+  const nombresAntes=Object.fromEntries(exSalas(q).map(r=>[r.slot,r.name]));
+  const pinta=()=>{
+    const fila=(r)=>`<div class="exsala ${r.type}"><span class="exico">${EX_ICO[r.type]}</span>
+      <div class="exbd"><input data-exnom="${r.slot}" value="${esc(r.name)}" ${r.slot==='e'?'disabled':''} aria-label="${TS('Nombre de la sala','Room name')}">
+        ${r.slot==='j'?`<small>${TS('Jefe · siempre la última','Boss · always the last one')}</small>`
+          :`<select data-extipo="${r.slot}">${EX_TIPOS.map(t=>`<option value="${t}" ${r.type===t?'selected':''}>${exNomTipo(t)}</option>`).join('')}</select>`}</div></div>`;
+    document.getElementById('dlgBody').innerHTML=`
+      <p class="mjintro">${TS('Se sube de arriba abajo. En cada cruce los jugadores eligen ruta (o la suerte). Se pasa a la siguiente sala al limpiar la anterior.','Read top to bottom. At each fork the players pick a path (or luck does). The next room opens when the previous one is cleared.')}</p>
+      <div class="exruta">${q.steps.map((s,j)=>s.fork?`
+        <div class="excruce"><div class="exhd"><span class="svk">${TS('Cruce','Fork')}</span><span class="svseg">
+          <button class="gchip ${s.random?'':'on'}" data-exazar="${j}" data-v="0">${TS('Lo eligen ellos','They choose')}</button>
+          <button class="gchip ${s.random?'on':''}" data-exazar="${j}" data-v="1">${TS('Al azar','Random')}</button></span></div>
+          <div class="exdos">${s.rooms.map(fila).join('')}</div></div>`:fila(s.rooms[0])).join('<div class="exflecha" aria-hidden="true">↓</div>')}</div>
+      <div class="svqs"><div class="svq"><b>${TS('¿Cuántos cruces?','How many forks?')}</b>
+        <span class="svstep"><button data-exmas="-1" aria-label="${TS('Menos','Fewer')}">−</button><span id="exN">${exForks(q)}</span><button data-exmas="1" aria-label="${TS('Más','More')}">+</button></span>
+        <small>${TS('De 1 a 3. Las salas se quedan en la mesa: la caja limita cuántas caben.','From 1 to 3. Rooms stay on the table: the box limits how many fit.')}</small></div>
+        <div class="svq"><b>${TS('Lo que da cada sala','What each room gives')}</b>
+        <small>${TS('Combate: botín pequeño. Élite: botín grande (pon un enemigo de nivel alto). Descanso: curación en la mesa. Tesoro: botín sin pelear. Jefe: se gana.','Combat: small loot. Elite: big loot (place a high-level enemy). Rest: healing on the table. Treasure: loot without a fight. Boss: you win.')}</small></div></div>`;
+    document.querySelectorAll('[data-exnom]').forEach(i=>i.oninput=()=>{ exSalas(q).find(r=>r.slot===i.dataset.exnom).name=i.value; });
+    document.querySelectorAll('[data-extipo]').forEach(s=>s.onchange=()=>{ exSalas(q).find(r=>r.slot===s.dataset.extipo).type=s.value; pinta(); });
+    document.querySelectorAll('[data-exazar]').forEach(b=>b.onclick=()=>{ q.steps[+b.dataset.exazar].random=b.dataset.v==='1'; pinta(); });
+    document.querySelectorAll('[data-exmas]').forEach(b=>b.onclick=()=>{ const f=Math.min(3,Math.max(1,exForks(q)+(+b.dataset.exmas)));
+      q.steps=exPlantilla(f,q.steps); pinta(); });
+  };
+  openDlg(TS('Expedición','Expedition'),'',
+    `${nuevo?`<button id="exAtras">${TS('Atrás','Back')}</button>`:`<button id="exCancel">${TS('Cancelar','Cancel')}</button>`}
+     <button class="primary" id="exMontar">${nuevo?TS('Montar la expedición','Build the expedition'):TS('Guardar cambios','Save changes')}</button>`);
+  dlgAncho(); pinta();
+  const at=document.getElementById('exAtras'); if(at) at.onclick=abrirElegirModo;
+  const ca=document.getElementById('exCancel'); if(ca) ca.onclick=()=>dlg.close();
+  document.getElementById('exMontar').onclick=()=>{
+    const salas=exSalas(q);
+    // «|» separa las opciones de la pregunta del cruce
+    salas.forEach(r=>{ r.name=r.name.replace(/\|/g,'/').trim(); });
+    const claves=salas.filter(r=>r.slot!=='e').map(r=>claveSala(r.name));
+    if(salas.some(r=>r.slot!=='e'&&(!r.name||claveSala(r.name)===''))) return flash(TS('Falta: el nombre de cada sala.','Missing: each room needs a name.'));
+    if(new Set(claves).size<claves.length) return flash(TS('Dos salas no pueden llamarse igual.','Two rooms cannot share a name.'));
+    if(claves.includes(claveSala(TS('Inicio','Start')))) return flash(TS('«Inicio» ya es la Entrada: usa otro nombre.','«Start» is already the Entrance: use another name.'));
+    // una sala ya dibujada que cambia de nombre se lleva sus losetas y su guion
+    // (`renombrarSala` hace su propio cambio: va antes, no dentro del de montar)
+    salas.forEach(r=>{ const antes=nombresAntes[r.slot]; if(r.slot!=='e'&&antes&&antes!==r.name&&salaPorClave(claveSala(antes))) renombrarSala(claveSala(antes),r.name); });
+    cambio(()=>{ state.meta.mode=q; exGenerar(q); });
+    dlg.close();
+    if(nuevo){ elegirSala(''); irPaso('','losetas');
+      flash(TS('Expedición lista. Empieza por la Entrada (Inicio); luego cada sala desde la guía de la izquierda.','Expedition ready. Start with the Entrance (Start); then each room from the guide on the left.')); }
+    else { renderRight(); draw(); flash(TS('Expedición actualizada.','Expedition updated.')); }
+  };
+}
+
+/* ---- la guía del modo, en Capas: el mapa de rutas, pulsable ---- */
+function exFaltasDe(c){
+  const f=[];
+  exSalas(c).forEach(r=>{ const s=salaPorClave(exClave(r));
+    if(r.slot!=='e'&&(!s||!s.losetas.length)) f.push({k:'§ex:'+r.slot,t:TS(`${r.name}: pon sus losetas.`,`${r.name}: place its tiles.`)});
+    else if(exConEnemigos(r.type)&&!(s?.enemigos.length)) f.push({k:'§ex:'+r.slot,t:TS(`${r.name}: ponle enemigos (es de ${exNomTipo(r.type).toLowerCase()}).`,`${r.name}: give it enemies (it is a ${exNomTipo(r.type).toLowerCase()} room).`)}); });
+  return f;
+}
+function exBloque(c){
+  const faltas=exFaltasDe(c);
+  const boton=r=>{ const hecho=!faltas.some(f=>f.k==='§ex:'+r.slot);
+    return `<button class="exnodo ${r.type} ${hecho?'hecho':''}" data-exir="${r.slot}" title="${esc(exNomTipo(r.type))}">
+      <span class="exico">${EX_ICO[r.type]}</span><span class="exnm">${esc(r.slot==='e'?TS('Entrada (Inicio)','Entrance (Start)'):r.name)}</span>${hecho?'<span class="exok">✓</span>':''}</button>`; };
+  return `<div class="svbox">
+    <div class="svhd"><span class="svico">${SV_ICO.exped}</span><b>${TS('Expedición','Expedition')}</b><small>${exSalas(c).length} ${TS('salas','rooms')} · ${exForks(c)} ${exForks(c)===1?TS('cruce','fork'):TS('cruces','forks')}</small>
+      <button class="sm" id="exCambiar">${TS('Cambiar respuestas','Change answers')}</button></div>
+    <small class="exayuda">${TS('Pulsa una sala para poner sus losetas, objetos y enemigos con la guía de siempre.','Click a room to place its tiles, objects and enemies with the usual guide.')}</small>
+    <div class="exmapa">${c.steps.map(s=>s.fork?`<div class="exdos">${s.rooms.map(boton).join('')}</div>`:boton(s.rooms[0])).join('')}</div>
+  </div>`;
+}
+/* Ir a una sala del mapa: si ya existe, se elige; si no, se crea como
+   «+ Nueva sala» con su nombre y la guía sigue con sus losetas. Ya sabe
+   cuándo aparece: la saca el guion de la expedición. */
+function exIr(c,slot){
+  const r=exSalas(c).find(x=>x.slot===slot); if(!r) return;
+  const k=exClave(r);
+  if(salaPorClave(k)){ elegirSala(k); return; }
+  salaPendiente={k,nombre:r.name,trgs:[]};
+  sel={k:'room',g:k}; rtab='sel'; syncTabs();
+  irPaso(k,'losetas');
+  flash(TS(`Pon las losetas de «${r.name}», pegadas a la sala de antes.`,`Place the tiles of «${r.name}», next to the previous room.`));
+}
+function exLigar(el,c){
+  el.querySelector('#exCambiar').onclick=()=>exPreguntas(false);
+  el.querySelectorAll('[data-exir]').forEach(b=>b.onclick=()=>exIr(c,b.dataset.exir));
+  el.querySelectorAll('[data-fsala^="§ex:"]').forEach(b=>b.onclick=()=>exIr(c,b.dataset.fsala.slice(4)));
+}
+
+MODOS_JUEGO.expedition={preguntas:exPreguntas,bloque:exBloque,ligar:exLigar};
+
+/* ---- enganches ---- */
+const renderRightSinExpedicion=renderRight;
+renderRight=function(){ const c=exCfg(); if(c) exSincronizar(c); return renderRightSinExpedicion(); };
+const faltasSinExpedicion=faltasDelMapa;
+faltasDelMapa=function(){
+  const f=faltasSinExpedicion(), c=exCfg();
+  if(!c||!state.board.tiles.length) return f;
+  return [...f,...exFaltasDe(c)];
+};
+const sanearEscenarioSinExpedicion=sanearEscenario;
+sanearEscenario=function(s){
+  if(s.meta?.mode&&typeof s.meta.mode==='object'&&s.meta.mode.id===MODO_EX) s.meta.mode=exSanear(s.meta.mode);
+  return sanearEscenarioSinExpedicion(s);
 };
 /* ================= modo ================= */
 function setMode(m){
