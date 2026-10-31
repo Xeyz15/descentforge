@@ -2023,7 +2023,7 @@ setTema(guardado.leer('descentforge.tema'));
 /* ================= estado ================= */
 const GRID=44, BASE=22;
 const TOOLS=[{id:'select',k:'toolSelect'},{id:'tile',k:'toolTile'},{id:'enemy',k:'toolEnemy'},
-             {id:'prop',k:'toolProp'},{id:'hero',k:'toolHero'},{id:'block',k:'toolBlock'},
+             {id:'prop',k:'toolProp'},{id:'hero',k:'toolHero'},
              {id:'erase',k:'toolErase'}];
 let tool='tile', selTile=DATA.tiles[0]?.id, selEnemy=DATA.enemies[0]?.id,
     selProp='Chest', rot=0, level=0, zoom=1, panX=40, panY=40, sel=null, ptab='tiles', rtab='sel';
@@ -5273,7 +5273,7 @@ function abrirReuso(p){
    orden, y que un botón no se dibuje no cambia con qué tecla se llega a él.
    Lo que sí se quita es el numerito impreso en «Seleccionar» y «Borrar»: son
    los dos que se usan a todas horas y el número solo ensuciaba el botón. */
-const TOOLS_LIENZO=['select','erase','block'];
+const TOOLS_LIENZO=['select','erase'];
 
 /* ---- buscador de la paleta ----
    Son 128 enemigos y 31 objetos: bajar la lista a mano para poner un bandido es
@@ -5955,7 +5955,10 @@ function renderSelPieza(el){
       _pr.replaceWith(_sel);
     }
     const pr=el.querySelector('#p_roomhint');
-    if(pr){ pr.onchange=e=>{ const v=e.target.value; if(v) o.appearsWithGroup=v; else delete o.appearsWithGroup; }; }
+    if(pr){ pr.onchange=e=>{ const v=e.target.value; if(v) o.appearsWithGroup=v; else delete o.appearsWithGroup;
+      if(typeof renderRight==='function') renderRight();
+      if(typeof draw==='function') draw();
+    }; }
 
       el.querySelector('#p_del').onclick=()=>{ cambio(()=>state.spawns.interactables.splice(sel.i,1)); sel=null; draw(); renderRight();};
     const lb=el.querySelector('#p_loot'); if(lb) lb.onclick=()=>openLoot(o);
@@ -9121,7 +9124,7 @@ function renderSalas(){
       bd=`<div class="capabd">
         ${g(TS('Losetas','Tiles'),s.losetas.map(i=>{ const p=state.board.tiles[i];
           return filaHija('tile',i,ICO.loseta,`${p.tile}${p.level?' · '+TS('piso','lvl')+' '+p.level:''}`,'',true); }).join(''))}
-        ${g(TS('Objetos','Objects'),s.objetos.map(i=>{ const o=state.spawns.interactables[i], im=arte('props',(o.type||'').toLowerCase());
+        ${g(TS('Objetos','Objects'), (s.objetos.concat((state.spawns.interactables||[]).map(function(o,i){ return (claveSala(o.appearsWithGroup||'')===String(s.k) && s.objetos.indexOf(i)<0) ? i : null; }).filter(function(v){return v!==null;}))).map(function(i){ const o=state.spawns.interactables[i], im=arte('props',(o.type||'').toLowerCase());
           return filaHija('prop',i,im?`<img src="${im}" alt="">`:'◆',o.name||L(propDef(o.type),'name'),rayos(disparadoresDelObjeto(i).length)); }).join(''))}
         ${g(TS('Enemigos','Enemies'),s.enemigos.map(i=>{ const e=state.spawns.enemies[i], f=arte('portraits',ASSETS.enemyFamily[e.enemy]||'');
           return filaHija('enemy',i,f?`<img class="cara" src="${f}" alt="">`:'☠',(L(enemyById[e.enemy],'name')||e.enemy)+(e.group?' · '+e.group:''),rayos(disparadoresDelEnemigo(i).length)); }).join(''))}
