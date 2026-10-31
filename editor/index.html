@@ -8071,8 +8071,17 @@ function mapIssues(){
   /* Las columnas van en el cruce y no ocupan casilla, así que la cuenta de
      arriba no las mira nunca. Lo suyo es tocar el tablero por alguna de las
      cuatro esquinas del cruce; un mapa traído de fuera puede traerlas al aire. */
-  const colFalso=state.spawns.interactables.filter(o=>esVertice(o.type)
-    && celdasDelVertice(o.pos[0],o.pos[1]).every(c=>fuera(c,o.level||0))).length;
+  /* Las columnas que ocupan varios niveles apoyan los niveles de debajo:
+     en la mesa se ponen encima de la loseta de arriba, así que el check mira
+     los pisos desde el propio hasta arriba (niveles = el desfase del pilar). */
+  const colFalso=state.spawns.interactables.filter(o=>esVertice(o.type)&&
+    (function(){
+      const n=(PILLAR_LEVEL_OFFSET[propDef(o.type||'').id]||0)||1;
+      const lv0=(o.level||0);
+      const lvs=[];
+      for(let L=lv0; L<=lv0+n; L++) lvs.push(L);
+      return celdasDelVertice(o.pos[0],o.pos[1]).every(c=>lvs.every(l=>fuera(c,l)));
+    })()).length;
   if(colFalso) out.push(T('mIssPillarOff',colFalso));
 
   // niveles de enemigo que ese enemigo no admite
