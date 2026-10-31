@@ -2390,6 +2390,29 @@ const MIN_HEROES=2, MAX_HEROES=4;
 const propId=t=>typeof t==='string'?t:t.id;
 const PROPS=Object.fromEntries(DATA.interactables.map(t=>
   typeof t==='string'?[t,{id:t,name:t,w:1,h:1}]:[t.id,t]));
+function roomHintOf(o){
+  try{
+    if(!o || !Array.isArray(o.pos)) return '(none)';
+    const lv=o.level||0;
+    const cells=(typeof esVertice==='function' && esVertice(o.type)) ? celdasDelVertice(o.pos[0],o.pos[1]) : (typeof propCells==='function' ? propCells(o) : []);
+    if(!cells||!cells.length) return '(no cells)';
+    const groups=new Set();
+    (state.board.tiles||[]).forEach(function(p){
+      if((p.level||0)!==lv) return;
+      const cs=tileCells(p); if(!cs) return;
+      cs.forEach(function(c){
+        for(let k=0;k<cells.length;k++){
+          const cc=cells[k];
+          if(c && cc && c.length>=2 && cc.length>=2 && c[0]===cc[0] && c[1]===cc[1]) groups.add((p.reveal||'').trim() || '(no reveal group)');
+        }
+      });
+    });
+    const arr=[...groups];
+    if(!arr.length) return '(no tile)';
+    if(arr.length===1) return arr[0];
+    return arr.join(', ');
+  }catch(e){ return '(none)'; }
+}
 const propDef=id=>PROPS[id]||{id,name:id,w:1,h:1};
 /* Qué pasa al usar un objeto, ya resuelto el «no lo he dicho».
 
@@ -5880,6 +5903,11 @@ function renderSelPieza(el){
         <input id="p_lv" type="number" min="0" max="${MAXLV}" value="${esc(o.level||0)}"></div>
       <div class="field"><label>Bottom level</label>
         <span id="p_bottom">${(PILLAR_LEVEL_OFFSET[propDef(o.type).id]||0)?Math.max(0,(o.level||0)-(PILLAR_LEVEL_OFFSET[propDef(o.type).id]||0)):(o.level||0)}</span></div>
+      <div class="field"><label>Revealed with group</label>
+        <span id="p_suggestedgroup">${esc(roomHintOf(o))}</span></div>
+      <div class="field"><label>Appears with group</label>
+        <span id="p_roomhint">${esc(roomHintOf(o))}</span></div>
+
       ${givesLoot?`<h3>${T('loot')} <button class="sm" id="p_loot">${T('edit')}</button></h3>
         <div class="objtext">${suyo?T('pLootGame'):lootSummary(o.loot)}</div>`:''}
       <button class="sm" id="p_del">${T('delProp')}</button>`;
@@ -5910,8 +5938,26 @@ function renderSelPieza(el){
         const pb=el.querySelector('#p_bottom'); if(pb) pb.textContent=String((PILLAR_LEVEL_OFFSET[propDef(o.type).id]||0)? Math.max(0,o.level-(PILLAR_LEVEL_OFFSET[propDef(o.type).id]||0)) : o.level);
       };
     }
-    el.querySelector('#p_del').onclick=()=>{
-      cambio(()=>state.spawns.interactables.splice(sel.i,1)); sel=null; draw(); renderRight();};
+    const _pr=el.querySelector('#p_roomhint');
+    if(_pr){
+      const suggested=roomHintOf(o);
+      if(!o.appearsWithGroup && suggested && suggested!=='(none)' && !suggested.startsWith('(')) o.appearsWithGroup=suggested;
+      const _sel=document.createElement('select');
+      _sel.id='p_roomhint';
+      const _none=document.createElement('option');
+      _none.value=''; _none.textContent='(none/start)'; _none.selected=!o.appearsWithGroup;
+      _sel.appendChild(_none);
+      [...new Set((state.board.tiles||[]).map(t=>String(t.reveal||'').trim()).filter(Boolean))].forEach(function(g){
+        const _opt=document.createElement('option');
+        _opt.value=g; _opt.textContent=g; if(String(o.appearsWithGroup||'')===g) _opt.selected=true;
+        _sel.appendChild(_opt);
+      });
+      _pr.replaceWith(_sel);
+    }
+    const pr=el.querySelector('#p_roomhint');
+    if(pr){ pr.onchange=e=>{ const v=e.target.value; if(v) o.appearsWithGroup=v; else delete o.appearsWithGroup; }; }
+
+      el.querySelector('#p_del').onclick=()=>{ cambio(()=>state.spawns.interactables.splice(sel.i,1)); sel=null; draw(); renderRight();};
     const lb=el.querySelector('#p_loot'); if(lb) lb.onclick=()=>openLoot(o);
   }
 }
@@ -8348,6 +8394,7 @@ document.getElementById('btnExport').onclick=()=>{
       const d=propDef(o.type);
       const n=PILLAR_LEVEL_OFFSET[d&&d.id?d.id:(o.type||'')] || 0;
       const c=Object.assign({}, o);
+      c.editorLevel=numero(o.level||0);
       if(n) c.level=Math.max(0, (o.level||0)-n);
       return c;
     })
@@ -8413,7 +8460,8 @@ function sanearEscenario(s){
   (s.spawns.enemies||[]).forEach(e=>{ e.pos=celda(e.pos); if(e.tier!=null) e.tier=numero(e.tier,1); });
   (s.spawns.interactables||[]).forEach(o=>{ o.pos=celda(o.pos); o.rot=numero(o.rot);
     if(o.height!=null) o.height=numero(o.height);
-    if(o.level!=null) o.level=numero(o.level);
+    if(o.editorLevel!=null) o.level=numero(o.editorLevel);
+    else if(o.level!=null) o.level=numero(o.level);
     /* `uses` es TEXTO: «», «once», «always» o un número («3»).
        Pasarlo por `numero` convertía «once»/«always» en 1 y «» en 0 (= siempre). */
     if(o.uses==null) o.uses=''; else if(typeof o.uses==='number') o.uses=String(Math.max(0,Math.trunc(o.uses)));
