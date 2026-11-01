@@ -5866,11 +5866,11 @@ function renderSelPieza(el){
         <dt>${T('def')}</dt><dd>${st.def}</dd><dt>${T('atk')}</dt><dd>${st.atk}</dd></dl></div>
       ${enemigoDisparadoresHTML(sel.i)}
       <h3>${TS('La figura','The figure')}</h3>
-      ${(debiles.length||resiste.length)
+      ${s.pool ? '' : ((debiles.length||resiste.length)
         ? fila('eWeak',debiles,'w')+fila('eResist',resiste,'r')
-        : `<span class="empty">${T('noWeak')}</span>`}
-      ${marcas.length?`<div class="wr-fila"><span class="wr-tit">${T('eTraits')}</span>
-        ${marcas.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:''}
+        : `<span class="empty">${T('noWeak')}</span>`)}
+      ${s.pool ? '' : (marcas.length?`<div class="wr-fila"><span class="wr-tit">${T('eTraits')}</span>
+        ${marcas.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:'')}
       ${(e.named||e.perQuest>1)?`<p class="help">${
         [e.named?T('eNamed'):'', e.perQuest>1?T('ePerQuest',e.perQuest):'']
           .filter(Boolean).join(' · ')}</p>`:''}
