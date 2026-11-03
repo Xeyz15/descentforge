@@ -3866,9 +3866,9 @@ function dibujaSalas(C){
     const fs=Math.max(12,15/zoom), tx=s.nombre;     // rótulo más grande
     ctx.font=`600 ${fs}px system-ui,sans-serif`;
     const w=ctx.measureText(tx).width+fs*.9, h=fs*1.5;
-    ctx.globalAlpha=luz?1:.92; ctx.fillStyle=s.color;
-    ctx.beginPath(); ctx.roundRect?ctx.roundRect(lx*C+2/zoom,ly*C+2/zoom,w,h,h/2):ctx.rect(lx*C+2/zoom,ly*C+2/zoom,w,h); ctx.fill();
-    ctx.fillStyle='#fff'; ctx.textBaseline='middle';
+    ctx.globalAlpha=luz?.85:.5; ctx.strokeStyle=s.color; ctx.lineWidth=(luz?2:1.4)/zoom;
+    ctx.beginPath(); ctx.roundRect?ctx.roundRect(lx*C+2/zoom,ly*C+2/zoom,w,h,h/2):ctx.rect(lx*C+2/zoom,ly*C+2/zoom,w,h); ctx.stroke();
+    ctx.globalAlpha=1; ctx.fillStyle='#fff'; ctx.textBaseline='middle';
     ctx.fillText(tx,lx*C+2/zoom+fs*.45,ly*C+2/zoom+h/2);
     ctx.restore();
   }
