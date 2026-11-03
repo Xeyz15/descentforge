@@ -5978,12 +5978,11 @@ function renderSelPieza(el){
         <textarea id="p_locktx" placeholder="${T('pLockedTextPh')}">${esc(o.lockedText||'')}</textarea></div>`:''}`:''}
       <div class="field"><label>${T('sLevel')}</label>
         <input id="p_lv" type="number" min="0" max="${MAXLV}" value="${esc(o.level||0)}"></div>
+      ${(PILLAR_LEVEL_OFFSET[propDef(o.type).id]||0)||propDef(o.type).id==='Staircase'||propDef(o.type).id==='Archway' ? `
       <div class="field"><label>Bottom level</label>
         <span id="p_bottom">${(PILLAR_LEVEL_OFFSET[propDef(o.type).id]||0)?Math.max(0,(o.level||0)-(PILLAR_LEVEL_OFFSET[propDef(o.type).id]||0)):(o.level||0)}</span></div>
-      <div class="field"><label>Revealed with group</label>
-        <span id="p_suggestedgroup">${esc(roomHintOf(o))}</span></div>
       <div class="field"><label>Appears with group</label>
-        <span id="p_roomhint">${esc(roomHintOf(o))}</span></div>
+        <span id="p_roomhint">${esc(roomHintOf(o))}</span></div>` : ''}
 
       ${givesLoot?`<h3>${T('loot')} <button class="sm" id="p_loot">${T('edit')}</button></h3>
         <div class="objtext">${suyo?T('pLootGame'):lootSummary(o.loot)}</div>`:''}
