@@ -3062,9 +3062,16 @@ function draw(){
   state.spawns.heroStart.forEach((h,hi)=>{
     if((h[2]||0)!==level||CAP?.hero.has(hi)) return;
     const [x,y]=h;
+    const elegido=sel?.k==='hero'&&sel.i===hi;
     ctx.fillStyle=css('--verd'); ctx.globalAlpha=.9;
     ctx.beginPath(); ctx.arc(x*C+C/2,y*C+C/2,C*.31,0,7); ctx.fill(); ctx.globalAlpha=1;
-    ctx.strokeStyle=css('--ink'); ctx.lineWidth=1.5/zoom; ctx.stroke(); });
+    ctx.strokeStyle=elegido?css('--gold'):css('--ink'); ctx.lineWidth=(elegido?3:1.5)/zoom; ctx.stroke();
+    if(elegido){ ctx.strokeStyle=css('--gold'); ctx.lineWidth=1/zoom;
+      ctx.beginPath(); ctx.arc(x*C+C/2,y*C+C/2,C*.42,0,7); ctx.stroke(); }
+    const prevFont=ctx.font, prevAlign=ctx.textAlign, prevBase=ctx.textBaseline;
+    ctx.fillStyle=css('--ink'); ctx.font='bold '+(C*.34)+'px ui-sans-serif,system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(String(hi+1),x*C+C/2,y*C+C/2);
+    ctx.font=prevFont; ctx.textAlign=prevAlign; ctx.textBaseline=prevBase; });
 
   // objetos interactuables
   /* Los objetos ocupan lo que ocupan en el juego: la estantería son dos
@@ -4640,9 +4647,14 @@ let arrastre=null;    // {k,i, desde:[x,y], pos0:[x,y], vivo:bool}
 /* Lo que se está arrastrando, sea del tipo que sea. */
 function piezaDe(s){
   if(!s) return null;
-  return s.k==='tile'  ? state.board.tiles[s.i]
-       : s.k==='enemy' ? state.spawns.enemies[s.i]
-       :                 state.spawns.interactables[s.i];
+  if(s.k==='tile') return state.board.tiles[s.i];
+  if(s.k==='enemy') return state.spawns.enemies[s.i];
+  if(s.k==='hero'){
+    const h=state.spawns.heroStart[s.i]; if(!h) return null;
+    // un proxy con .pos para que el arrastre genérico lo pueda mover
+    return { get pos(){ return [h[0],h[1]]; }, set pos(v){ h[0]=v[0]; h[1]=v[1]; } };
+  }
+  return state.spawns.interactables[s.i];
 }
 
 /* Lleva la pieza arrastrada a la casilla `destino`. Devuelve si cupo. */
@@ -4650,6 +4662,13 @@ function arrastrarA(x,y){
   const p=piezaDe(arrastre); if(!p) return false;
   const nueva=[arrastre.pos0[0]+(x-arrastre.desde[0]),
                arrastre.pos0[1]+(y-arrastre.desde[1])];
+  if(arrastre.k==='hero'){
+    if(nueva.some(v=>v<0||v>=GRID)) return false;
+    const hi=arrastre.i, h=state.spawns.heroStart[hi]; if(!h) return false;
+    const level=h[2]||0;
+    if(state.spawns.heroStart.some((o,i)=>i!==hi && (o[2]||0)===level && o[0]===nueva[0] && o[1]===nueva[1])) return false;
+    h[0]=nueva[0]; h[1]=nueva[1]; return true;
+  }
   const antes=p.pos;
   p.pos=nueva;
   if(arrastre.k==='tile'){
@@ -4914,6 +4933,8 @@ function quéHayEn(x,y,v){
   const ei=state.spawns.enemies.findIndex(e=>(e.level||0)===level
       && enemyCells(e).some(([a,b])=>a===x&&b===y));
   if(ei>=0) return {k:'enemy',i:ei};
+  const hi=state.spawns.heroStart.findIndex(h=>(h[2]||0)===level && h[0]===x && h[1]===y);
+  if(hi>=0) return {k:'hero',i:hi};
   const ti=occAt(level).get(x+','+y);
   if(ti!==undefined) return {k:'tile',i:ti};
   // las alfombras no entran en occAt (no bloquean), pero hay que poder cogerlas
@@ -5143,8 +5164,11 @@ stage.addEventListener('click',ev=>{
     k>=0?state.board.blocked.splice(k,1):state.board.blocked.push([x,y,level]);
   } else if(tool==='erase'){
     const q=quéHayEn(x,y,toVertex(ev));
-    if(q) ({tile:()=>state.board.tiles, enemy:()=>state.spawns.enemies,
+    if(q){
+      if(q.k==='hero') state.spawns.heroStart.splice(q.i,1);
+      else ({tile:()=>state.board.tiles, enemy:()=>state.spawns.enemies,
             prop:()=>state.spawns.interactables})[q.k]().splice(q.i,1);
+    }
     sel=null;
   }
   commit(); setLevel(level); renderRight();      // setLevel redibuja y recuenta pisos
@@ -5163,6 +5187,14 @@ stage.addEventListener('dblclick',ev=>{
 function mueveSel(dx,dy){
   if(!sel) return;
   if(sel.k==='room') return mueveSala(dx,dy);
+  if(sel.k==='hero'){
+    const h=state.spawns.heroStart[sel.i]; if(!h) return;
+    const nx=h[0]+dx, ny=h[1]+dy;
+    if(nx<0||ny<0||nx>=GRID||ny>=GRID) return;
+    // no puede quedar sobre otra figura/loseta? se permite sobre suelo; evitar duplicado exacto
+    if(state.spawns.heroStart.some((o,i)=>i!==sel.i && (o[2]||0)===(h[2]||0) && o[0]===nx && o[1]===ny)) return;
+    h[0]=nx; h[1]=ny; draw(); renderRight(); return;
+  }
   const obj = sel.k==='tile'?state.board.tiles[sel.i]
             : sel.k==='enemy'?state.spawns.enemies[sel.i]
             : state.spawns.interactables[sel.i];
@@ -5217,8 +5249,12 @@ document.addEventListener('keydown',e=>{
   if(flechas&&sel){ e.preventDefault(); cambio(()=>mueveSel(...flechas)); }
   if((e.key==='Delete'||e.key==='Backspace')&&sel&&sel.k!=='room'){
     e.preventDefault();
-    cambio(()=>{ ({tile:()=>state.board.tiles, enemy:()=>state.spawns.enemies,
-      prop:()=>state.spawns.interactables})[sel.k]().splice(sel.i,1); sel=null; });
+    cambio(()=>{
+      if(sel.k==='hero') state.spawns.heroStart.splice(sel.i,1);
+      else ({tile:()=>state.board.tiles, enemy:()=>state.spawns.enemies,
+        prop:()=>state.spawns.interactables})[sel.k]().splice(sel.i,1);
+      sel=null;
+    });
     draw(); renderRight();
   }
 });
@@ -5894,6 +5930,21 @@ function renderSelPieza(el){
        que desaparece es el control para ponerlo. */
     el.querySelector('#s_reveal').onchange=e=>{p.reveal=e.target.value.trim()||undefined;draw();renderRight();};
     el.querySelector('#s_del').onclick=()=>{cambio(()=>{state.board.tiles.splice(sel.i,1);sel=null;});draw();renderRight();};
+  }
+  else if(sel.k==='hero'){
+    const h=state.spawns.heroStart[sel.i]; if(!h) return el.innerHTML='<p class="empty">—</p>';
+    el.innerHTML=`<h3>${TS('Hero start','Hero start')}</h3>
+      <dl class="stats"><dt>${T('sPos')}</dt><dd>${h[0]}, ${h[1]}</dd>
+      <dt>${T('sLevel')}</dt><dd>${h[2]||0}</dd></dl>
+      <div class="field"><label>X</label><input id="h_x" type="number" value="${esc(h[0])}"></div>
+      <div class="field"><label>Y</label><input id="h_y" type="number" value="${esc(h[1])}"></div>
+      <div class="field"><label>${T('sLevel')}</label><input id="h_lv" type="number" min="0" max="${MAXLV}" value="${esc(h[2]||0)}"></div>
+      <button class="sm" id="h_del">${T('delHeroStart')||TS('Delete','Delete')}</button>
+      <p class="help">${TS('Arrow keys move it. Change X/Y/level here.','Arrow keys move it. Change X/Y/level here.')}</p>`;
+    const hx=el.querySelector('#h_x'); if(hx) hx.onchange=e=>{ h[0]=+e.target.value||0; draw(); renderRight(); };
+    const hy=el.querySelector('#h_y'); if(hy) hy.onchange=e=>{ h[1]=+e.target.value||0; draw(); renderRight(); };
+    const hl=el.querySelector('#h_lv'); if(hl) hl.onchange=e=>{ h[2]=Math.max(0,Math.min(MAXLV,+e.target.value||0)); setLevel(h[2]||0); draw(); renderRight(); };
+    const hd=el.querySelector('#h_del'); if(hd) hd.onclick=()=>{ cambio(()=>state.spawns.heroStart.splice(sel.i,1)); sel=null; draw(); renderRight(); };
   }
   else if(sel.k==='enemy'){
     ensureMapEnemyPoolsFromCamp(); refreshRandomPoolDropdown();
