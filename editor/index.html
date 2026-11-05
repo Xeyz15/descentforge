@@ -2430,6 +2430,10 @@ const propDef=id=>PROPS[id]||{id,name:id,w:1,h:1};
    silencio su texto y su botín. */
 const behOf=o=>{ const d=propDef(o.type);
   if(!d.official) return 'custom';
+  if(d.id==='InteractToken' || d.id==='SightToken'){
+    if(o.behavior==='official') return 'official';
+    return 'custom';
+  }
   if(o.behavior==='custom'||o.behavior==='official') return o.behavior;
   /* El botín no es solo el modo: un cofre puede dar oro, materiales, recetas o
      equipo con el modo en «sin botín» —en el juego los hay que dan SOLO oro—, y
@@ -5087,10 +5091,11 @@ stage.addEventListener('click',ev=>{
       ultima=null; return flash(T('propNoToca'));
     }
     state.spawns.interactables.push({type:selProp,pos:[vx,vy],level,rot,name:'',text:'',
-      behavior:behOf({type:selProp}),uses:'',freeAction:false,locked:false,
+      behavior:behOf({type:selProp}),uses:'',freeAction:(selProp==='SightToken'),locked:false,
       loot:{mode:'none',items:[],traits:[],points:0}});
     sel={k:'prop',i:state.spawns.interactables.length-1}; rtab='sel'; syncTabs();
     if(selProp==='Door'||selProp==='Gate') setupDoorDefaults(state.spawns.interactables[sel.i]);
+    if(selProp==='SightToken') setupSightTokenDefaults(state.spawns.interactables[sel.i]);
   } else if(tool==='prop'){
     // un objeto ocupa varias casillas: ninguna de ellas puede estar pillada
     const [pw,ph]=propTam({type:selProp,rot});
@@ -5139,10 +5144,11 @@ stage.addEventListener('click',ev=>{
     if(!dentro){ ultima=null; return flash(T('propNoToca')); }
     if(dentro<pw*ph) flash(T('propSobresale',pw*ph-dentro));
     state.spawns.interactables.push({type:selProp,pos:[x,y],level,rot,name:'',text:'',
-      behavior:behOf({type:selProp}),uses:'',freeAction:false,locked:false,
+      behavior:behOf({type:selProp}),uses:'',freeAction:(selProp==='SightToken'),locked:false,
       loot:{mode:'none',items:[],traits:[],points:0}});
     sel={k:'prop',i:state.spawns.interactables.length-1}; rtab='sel'; syncTabs();
     if(selProp==='Door'||selProp==='Gate') setupDoorDefaults(state.spawns.interactables[sel.i]);
+    if(selProp==='SightToken') setupSightTokenDefaults(state.spawns.interactables[sel.i]);
   } else if(tool==='hero'){
     const k=state.spawns.heroStart.findIndex(c=>c[0]===x&&c[1]===y&&(c[2]||0)===level);
     if(k>=0){ state.spawns.heroStart.splice(k,1); }
@@ -8268,8 +8274,9 @@ function autoDoorName(type){
     .map(p=>{ const m=String(p.name||'').match(new RegExp('^'+type+'\s+(\d+)$','i')); return m?+m[1]:0; });
   return type+' '+(nums.length?Math.max(...nums)+1:1);
 }
-function askDoorLockedFromStart(o){
+function askDoorLockedFromStart(o, includeLocked=true){
   const w=doorWord(o);
+  const eventFor=(w==='DOOR'||w==='GATE')?'doorOpened':'interacted';
   const groups=[...new Set(state.spawns.enemies.map(e=>e.group).filter(Boolean))];
   const groupBoxes = groups.length
     ? groups.map(g=>`<label class="chk"><input type="checkbox" data-dgrp="${esc(g)}"> ${esc(g)}</label>`).join('')
@@ -8280,9 +8287,9 @@ function askDoorLockedFromStart(o){
     ? tileGroupList.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('')
     : `<option value="">${TS('No tile groups','No tile groups')}</option>`;
   openDlg(TS(w+' setup',w+' setup'),
-    `<div class="field"><label>${TS('Locked from start?','Locked from start?')}</label>
+    `${includeLocked?`<div class="field"><label>${TS('Locked from start?','Locked from start?')}</label>
        <label class="chk"><input type="radio" name="doorLock" value="1" checked> ${TS('Locked from Start','Locked from Start')}</label>
-       <label class="chk"><input type="radio" name="doorLock" value="0"> ${TS('Not locked','Not locked')}</label></div>
+       <label class="chk"><input type="radio" name="doorLock" value="0"> ${TS('Not locked','Not locked')}</label></div>`:''}
      <div class="field"><label>${TS('Reveal / room setup','Reveal / room setup')}</label>
        <label class="chk"><input type="radio" name="doorRoomOpt" value="new" ${defaultExisting?'':'checked'}> ${TS('Create new room behind door (Room Builder)','Create new room behind door (Room Builder)')}</label>
        <label class="chk"><input type="radio" name="doorRoomOpt" value="existing" ${defaultExisting?'checked':''}> ${TS('Reveal an existing tile group','Reveal an existing tile group')}</label>
@@ -8301,9 +8308,9 @@ function askDoorLockedFromStart(o){
   syncTileGroupState();
   const createBtn=document.getElementById('doorSetupCreate');
   if(createBtn) createBtn.onclick=()=>{
-    const locked=(document.querySelector('input[name="doorLock"]:checked')?.value==='1');
-    o.locked=locked;
-    o.preview=locked ? ('The '+w+' is LOCKED.') : ('Select a Hero to OPEN this '+w+'.');
+    const locked=includeLocked ? (document.querySelector('input[name="doorLock"]:checked')?.value==='1') : false;
+    if(includeLocked){ o.locked=locked; o.preview=locked ? ('The '+w+' is LOCKED.') : ('Select a Hero to OPEN this '+w+'.'); }
+    else o.locked=false;
     const createRoom=(document.querySelector('input[name="doorRoomOpt"]:checked')?.value==='new');
     const selectedTileGroup=(document.getElementById('doorTileGroup')?.value||'').trim();
     const selectedGroups=[...document.querySelectorAll('input[data-dgrp]:checked')].map(x=>x.dataset.dgrp);
@@ -8313,15 +8320,15 @@ function askDoorLockedFromStart(o){
     if(i<0) return;
     if(createRoom) salaDetrasDe(i);
     const findOrCreateDoorTrigger=()=>{
-      const trigs=state.triggers.filter(t=>t.event?.id==='doorOpened' && +t.event?.params?.interactable===i);
+      const trigs=state.triggers.filter(t=>t.event?.id===eventFor && +t.event?.params?.interactable===i);
       if(trigs.length) return trigs;
       let newTrig=null;
       const id='t'+Date.now().toString(36);
-      newTrig={id,name:TS('Opens ','Opens ')+(o.name||w),once:true,event:{id:'doorOpened',params:{interactable:i}},conditions:[],actions:[]};
+      newTrig={id,name:TS('Opens ','Opens ')+(o.name||w),once:true,event:{id:eventFor,params:{interactable:i}},conditions:[],actions:[]};
       cambio(()=>state.triggers.push(newTrig));
       return [newTrig];
     };
-    const trigs=createRoom ? state.triggers.filter(t=>t.event?.id==='doorOpened' && +t.event?.params?.interactable===i) : findOrCreateDoorTrigger();
+    const trigs=createRoom ? state.triggers.filter(t=>t.event?.id===eventFor && +t.event?.params?.interactable===i) : findOrCreateDoorTrigger();
     const targetTrigs = (trigs && trigs.length) ? trigs : findOrCreateDoorTrigger();
     cambio(()=>{
       targetTrigs.forEach(t=>{
@@ -8339,6 +8346,14 @@ function askDoorLockedFromStart(o){
     });
     renderRight();
   };
+}
+function setupSightTokenDefaults(o){
+  if(!o || o.type!=='SightToken') return;
+  const w=doorWord(o);
+  o.name=autoDoorName(o.type);
+  o.text='Remove Sight Token';
+  o.preview='Select a hero when adjacent to reveal this Sight Token.';
+  askDoorLockedFromStart(o, false);
 }
 function setupDoorDefaults(o){
   if(!o || (o.type!=='Door'&&o.type!=='Gate')) return;
