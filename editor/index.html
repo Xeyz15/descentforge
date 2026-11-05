@@ -9570,8 +9570,14 @@ function askRoomNameForTile(ti){
        <input id="roomNameInput" value="${esc(suggested)}"></div>
      ${current?`<p class="dim">${TS('Leave it unchanged to keep the current name.','Leave it unchanged to keep the current name.')}</p>`:''}`,
     `<button class="sm" id="roomNameCancel">${TS('Cancel','Cancel')}</button>
+     ${current?`<button class="sm" id="roomNameRemove">${TS('Remove group (Start)','Remove group (Start)')}</button>`:''}
      <button class="primary sm" id="roomNameOk">${TS('OK','OK')}</button>`);
   const cancel=document.getElementById('roomNameCancel'); if(cancel) cancel.onclick=()=>dlg.close();
+  const remove=document.getElementById('roomNameRemove'); if(remove) remove.onclick=()=>{
+    const tt=state.board.tiles[ti]; if(tt){ delete tt.reveal; commit(); setLevel(level); renderRight(); draw();
+      flash(TS('Tile set to Start.','Tile set to Start.')); }
+    dlg.close();
+  };
   const ok=document.getElementById('roomNameOk'); if(ok) ok.onclick=()=>{
     const inp=document.getElementById('roomNameInput');
     const name=(inp?.value||'').trim() || suggested;
