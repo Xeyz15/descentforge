@@ -2028,6 +2028,7 @@ const TOOLS=[{id:'select',k:'toolSelect'},{id:'tile',k:'toolTile'},{id:'enemy',k
 if(!ASSETS.enemyFamily) ASSETS.enemyFamily={}; ASSETS.enemyFamily.RANDOM_POOL='randompool'; loadImg('face:randompool', ASSETS.portraits.randompool);
 let tool='tile', selTile=DATA.tiles[0]?.id, selEnemy=DATA.enemies[0]?.id,
     selProp='Chest', rot=0, level=0, zoom=1, panX=40, panY=40, sel=null, ptab='tiles', rtab='sel';
+let roomModeActive=false, roomModeName=null;
 
 const state={
   meta:{id:'map-01',name:'',author:'',description:'',
@@ -4981,8 +4982,14 @@ stage.addEventListener('click',ev=>{
   marca();
   if(tool==='select'){
     sel=quéHayEn(x,y,toVertex(ev)); rtab='sel'; syncTabs();
+  } else if(tool==='room'){
+    const ti=losetaBajo(x,y);
+    if(ti===null){ ultima=null; return flash(TS('No tile there.','No tile there.')); }
+    askRoomNameForTile(ti);
+    return;
   } else if(tool==='tile'&&selTile){
     const p={tile:selTile,pos:[x,y],rot,level};
+    if(roomModeActive && roomModeName) p.reveal=roomModeName;
     // la loseta nueva va a la sala que se esté montando
     if(salaActiva){ const s=salaPorClave(salaActiva);
       // o la sala recién creada que aún no tiene losetas
@@ -5062,6 +5069,7 @@ stage.addEventListener('click',ev=>{
       behavior:behOf({type:selProp}),uses:'',freeAction:false,locked:false,
       loot:{mode:'none',items:[],traits:[],points:0}});
     sel={k:'prop',i:state.spawns.interactables.length-1}; rtab='sel'; syncTabs();
+    if(selProp==='Door'||selProp==='Gate') setupDoorDefaults(state.spawns.interactables[sel.i]);
   } else if(tool==='prop'){
     // un objeto ocupa varias casillas: ninguna de ellas puede estar pillada
     const [pw,ph]=propTam({type:selProp,rot});
@@ -5113,6 +5121,7 @@ stage.addEventListener('click',ev=>{
       behavior:behOf({type:selProp}),uses:'',freeAction:false,locked:false,
       loot:{mode:'none',items:[],traits:[],points:0}});
     sel={k:'prop',i:state.spawns.interactables.length-1}; rtab='sel'; syncTabs();
+    if(selProp==='Door'||selProp==='Gate') setupDoorDefaults(state.spawns.interactables[sel.i]);
   } else if(tool==='hero'){
     const k=state.spawns.heroStart.findIndex(c=>c[0]===x&&c[1]===y&&(c[2]||0)===level);
     if(k>=0){ state.spawns.heroStart.splice(k,1); }
@@ -5146,6 +5155,7 @@ stage.addEventListener('dblclick',ev=>{
   if(enUnMando(ev)) return;
   const [x,y]=toCell(ev);
   sel=quéHayEn(x,y,toVertex(ev)); rtab='sel'; syncTabs(); draw(); renderRight();
+  if(sel?.k==='tile' && sel.i!=null) askRoomNameForTile(sel.i);
 });
 
 /* Mover la selección con las flechas: colocar a ojo y ajustar después es mucho
@@ -5370,6 +5380,12 @@ function cajaBuscar(){
     <p class="empty" id="palvacio" style="display:none">${T('noResults')}</p>`;
 }
 
+function toggleRoomMode(){
+  if(roomModeActive){ roomModeActive=false; roomModeName=null; renderTools(); renderRight(); draw();
+    flash(TS('Room mode off.','Room mode off.')); return; }
+  roomModeActive=true; roomModeName=nombreSalaNueva(); renderTools(); renderRight(); draw();
+  flash(TS(`Room mode on: ${roomModeName}`,'Room mode on: '+roomModeName));
+}
 function renderTools(){
   const boton=(t,i)=>`<button data-tool="${t.id}" class="${tool===t.id?'on':''}"
     title="${T(t.k)} (${i+1})">${T(t.k)}</button>`;
@@ -5378,7 +5394,8 @@ function renderTools(){
      sacando de `TOOLS`, que es quien manda en las teclas. */
   document.getElementById('toolsLienzo').innerHTML=
     TOOLS_LIENZO.map(id=>{ const i=TOOLS.findIndex(t=>t.id===id);
-      return i<0?'':boton(TOOLS[i],i); }).join('');
+      return i<0?'':boton(TOOLS[i],i); }).join('')+
+    `<button data-roommode="1" class="${roomModeActive?'on':''}" onclick="toggleRoomMode(); return false;" title="${TS('New tiles go into the same Room # until toggled off','New tiles go into the same Room # until toggled off')}">${roomModeActive?(TS('Room mode: ','Room mode: ')+(roomModeName||'')):'+ Room mode'}</button>`;
 }
 const elegirHerramienta=e=>{ const b=e.target.closest('[data-tool]'); if(!b)return;
   tool=b.dataset.tool; renderTools(); draw(); };
@@ -5664,13 +5681,14 @@ function pintarMapEnemyPools(){
     inp.addEventListener('input', function(){
       const pi=+inp.dataset.poolname;
       const pr=state.spawns.enemyPools[pi]; if(pr) pr.name=inp.value;
+      renderRight(); refreshRandomPoolDropdown();
     });
   });
   body.querySelectorAll('[data-poolids]').forEach(function(ta){
     ta.addEventListener('change', function(){
       const pi=+ta.dataset.poolids;
       const pr=state.spawns.enemyPools[pi]; if(pr) pr.enemies=ta.value.split(/[\s,]+/).map(sv=>sv.trim()).filter(Boolean);
-      renderPalette(); renderRight();
+      renderPalette(); renderRight(); refreshRandomPoolDropdown();
     });
   });
   body.querySelectorAll('[data-pooldel]').forEach(function(b){
@@ -5678,7 +5696,7 @@ function pintarMapEnemyPools(){
       const pi=+b.dataset.pooldel;
       if(isNaN(pi)) return;
       state.spawns.enemyPools.splice(pi,1);
-      pintarMapEnemyPools(); renderPalette(); renderRight();
+      pintarMapEnemyPools(); renderPalette(); renderRight(); refreshRandomPoolDropdown();
     });
   });
 }
@@ -5688,19 +5706,38 @@ function abrirPoolsMapa(){
   const add=document.getElementById('mpPoolAdd');
   if(add) add.onclick=function(){ if(!state.spawns.enemyPools) state.spawns.enemyPools=[];
     state.spawns.enemyPools.push({name:'Pool '+(state.spawns.enemyPools.length+1), enemies:[]});
-    pintarMapEnemyPools(); };
+    pintarMapEnemyPools(); renderPalette(); renderRight(); refreshRandomPoolDropdown(); };
   pintarMapEnemyPools();
   const done=document.getElementById('mpPoolDone'); if(done) done.onclick=function(){ dlg.close(); };
 }
 
+function refreshRandomPoolDropdown(){
+  try{
+    const sel=document.getElementById('s_pool');
+    if(!sel) return;
+    const current=sel.value;
+    const opts=['<option value="">—</option>'].concat((state.spawns.enemyPools||[]).map(function(p,i){
+      const name=p.name||('Pool '+(i+1));
+      const selected=(String(current||'')===String(name)||(Number.isInteger(+current)&&+current===i)) ? ' selected' : '';
+      return '<option value="'+esc(name)+'"'+selected+'>'+esc(name)+'</option>';
+    }));
+    sel.innerHTML=opts.join('');
+    if(![...sel.options].some(o=>o.value===current) && sel.options.length) sel.selectedIndex=0;
+  }catch(e){}
+}
 function ensureMapEnemyPoolsFromCamp(){
   try{
     state.spawns=state.spawns||{heroStart:[],enemies:[],interactables:[],enemyPools:[]};
     if(!Array.isArray(state.spawns.enemyPools)) state.spawns.enemyPools=[];
-    if(state.spawns.enemyPools.length) return;
-    if(typeof camp!=='undefined' && camp && Array.isArray(camp.enemyPools)&&camp.enemyPools.length){
-      state.spawns.enemyPools=camp.enemyPools.map(function(p,i){ return {name:'Pool '+(i+1), enemies:(p.enemies||[]).slice()}; });
-    }
+    if(typeof camp==='undefined' || !camp || !Array.isArray(camp.enemyPools) || !camp.enemyPools.length) return;
+    camp.enemyPools.forEach(function(p,i){
+      if(!state.spawns.enemyPools[i]){
+        state.spawns.enemyPools.push({name:'Pool '+(i+1), enemies:(p.enemies||[]).slice()});
+      } else if(!(state.spawns.enemyPools[i].enemies||[]).length && (p.enemies||[]).length){
+        state.spawns.enemyPools[i].enemies=(p.enemies||[]).slice();
+      }
+    });
+    refreshRandomPoolDropdown();
   }catch(e){}
 }
 function renderRight(){
@@ -5841,6 +5878,7 @@ function renderSelPieza(el){
     el.querySelector('#s_del').onclick=()=>{cambio(()=>{state.board.tiles.splice(sel.i,1);sel=null;});draw();renderRight();};
   }
   else if(sel.k==='enemy'){
+    ensureMapEnemyPoolsFromCamp(); refreshRandomPoolDropdown();
     const s=state.spawns.enemies[sel.i]; if(!s) return el.innerHTML='<p class="empty">—</p>';
     const e=enemyById[s.enemy], f=arte('portraits',ASSETS.enemyFamily[s.enemy]||'');
     /* **Las cifras son las del nivel elegido, no las del más bajo.**
@@ -5884,12 +5922,12 @@ function renderSelPieza(el){
         <input id="s_grp" value="${esc(s.group||'')}" list="gruposenemigos">
         <datalist id="gruposenemigos">${enemyGroups().map(g=>`<option value="${esc(g)}">`).join('')}</datalist></div>
       <p class="help">${T('sGroupHelp')}</p>
-      <div class="field" style="margin-top:10px"><label>Forge Enemy Pools</label>
+      ${(e.id==='RANDOM_POOL' || String(e.name||'').toLowerCase().includes('random'))?`<div class="field" style="margin-top:10px"><label>Forge Enemy Pools</label>
         <select id="s_pool">
-          <option value="">—</option>
+          <option value="">${(state.spawns.enemyPools||[]).length? '—' : TS('No pools yet','No pools yet')}</option>
           ${(state.spawns.enemyPools||[]).map((p,i)=>`<option value="${esc(p.name||('Pool '+(i+1)))}" ${(String(s.pool||'')===String(p.name||('Pool '+(i+1))))||(Number.isInteger(+s.pool)&&+s.pool===i)?'selected':''}>${esc(p.name||('Pool '+(i+1)))}</option>`).join('')}
         </select>
-      </div>
+      </div>`:''}
 
       <div class="field"><label>${T('sSpawnText')}</label>
         <textarea id="s_txt" placeholder="${T('sSpawnTextPh')}">${esc(s.text||'')}</textarea></div>
@@ -8152,6 +8190,99 @@ function trozosQueSobran(lv){
    de la caja. Sin modo de juego son todos; la Supervivencia cuenta solo la
    oleada más grande, porque nunca hay dos en juego (modos.js). */
 function enemigosALaVez(){ return state.spawns.enemies; }
+/* Default Door/Gate properties and the locked-from-start popup requested for newly
+   placed doors/gates. */
+function doorWord(o){ return String((o&&o.type)||'Door').toUpperCase(); }
+function autoDoorName(type){
+  const nums=state.spawns.interactables
+    .filter(p=>p.type===type)
+    .map(p=>{ const m=String(p.name||'').match(new RegExp('^'+type+'\s+(\d+)$','i')); return m?+m[1]:0; });
+  return type+' '+(nums.length?Math.max(...nums)+1:1);
+}
+function askDoorLockedFromStart(o){
+  const w=doorWord(o);
+  const groups=[...new Set(state.spawns.enemies.map(e=>e.group).filter(Boolean))];
+  const groupBoxes = groups.length
+    ? groups.map(g=>`<label class="chk"><input type="checkbox" data-dgrp="${esc(g)}"> ${esc(g)}</label>`).join('')
+    : `<p class="dim">${TS('No enemy groups yet.','No enemy groups yet.')}</p>`;
+  const tileGroupList=[...new Set((state.board.tiles||[]).map(t=>String(t.reveal||'').trim()).filter(Boolean))];
+  const tileGroupOptions = tileGroupList.length
+    ? tileGroupList.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('')
+    : `<option value="">${TS('No tile groups','No tile groups')}</option>`;
+  openDlg(TS(w+' setup',w+' setup'),
+    `<div class="field"><label>${TS('Locked from start?','Locked from start?')}</label>
+       <label class="chk"><input type="radio" name="doorLock" value="1"> ${TS('Locked from Start','Locked from Start')}</label>
+       <label class="chk"><input type="radio" name="doorLock" value="0" checked> ${TS('Not locked','Not locked')}</label></div>
+     <div class="field"><label>${TS('Reveal / room setup','Reveal / room setup')}</label>
+       <label class="chk"><input type="radio" name="doorRoomOpt" value="new" checked> ${TS('Create new room behind door (Room Builder)','Create new room behind door (Room Builder)')}</label>
+       <label class="chk"><input type="radio" name="doorRoomOpt" value="existing"> ${TS('Reveal an existing tile group','Reveal an existing tile group')}</label>
+       <select id="doorTileGroup" style="margin-top:6px" ${tileGroupList.length?'':'disabled'}>${tileGroupOptions}</select></div>
+     <div class="field"><label>${TS('Spawn enemy groups when opened','Spawn enemy groups when opened')}</label>${groupBoxes}</div>`,
+    `<button class="sm" id="doorSetupCancel">${TS('Cancel','Cancel')}</button>
+     <button class="primary sm" id="doorSetupCreate">${TS('Create','Create')}</button>`);
+  const cancelBtn=document.getElementById('doorSetupCancel');
+  if(cancelBtn) cancelBtn.onclick=()=>dlg.close();
+  const syncTileGroupState=()=>{
+    const existing=(document.querySelector('input[name="doorRoomOpt"]:checked')?.value==='existing');
+    const sel=document.getElementById('doorTileGroup');
+    if(sel) sel.disabled=!existing || !tileGroupList.length;
+  };
+  document.querySelectorAll('input[name="doorRoomOpt"]').forEach(r=>r.onchange=syncTileGroupState);
+  syncTileGroupState();
+  const createBtn=document.getElementById('doorSetupCreate');
+  if(createBtn) createBtn.onclick=()=>{
+    const locked=(document.querySelector('input[name="doorLock"]:checked')?.value==='1');
+    o.locked=locked;
+    o.preview=locked ? ('The '+w+' is LOCKED.') : ('Select a Hero to OPEN this '+w+'.');
+    const createRoom=(document.querySelector('input[name="doorRoomOpt"]:checked')?.value==='new');
+    const selectedTileGroup=(document.getElementById('doorTileGroup')?.value||'').trim();
+    const selectedGroups=[...document.querySelectorAll('input[data-dgrp]:checked')].map(x=>x.dataset.dgrp);
+    dlg.close();
+    renderRight(); draw();
+    const i=state.spawns.interactables.indexOf(o);
+    if(i<0) return;
+    if(createRoom) salaDetrasDe(i);
+    const findOrCreateDoorTrigger=()=>{
+      const trigs=state.triggers.filter(t=>t.event?.id==='doorOpened' && +t.event?.params?.interactable===i);
+      if(trigs.length) return trigs;
+      let newTrig=null;
+      const id='t'+Date.now().toString(36);
+      newTrig={id,name:TS('Opens ','Opens ')+(o.name||w),once:true,event:{id:'doorOpened',params:{interactable:i}},conditions:[],actions:[]};
+      cambio(()=>state.triggers.push(newTrig));
+      return [newTrig];
+    };
+    const trigs=createRoom ? state.triggers.filter(t=>t.event?.id==='doorOpened' && +t.event?.params?.interactable===i) : findOrCreateDoorTrigger();
+    const targetTrigs = (trigs && trigs.length) ? trigs : findOrCreateDoorTrigger();
+    cambio(()=>{
+      targetTrigs.forEach(t=>{
+        if(!Array.isArray(t.actions)) t.actions=[];
+        // add existing tile reveal if requested
+        if(!createRoom && selectedTileGroup){
+          const hasTileReveal=t.actions.some(a=>(a.id==='revealTiles'||a.id==='revealRoom') && String(a.params?.group||'')===selectedTileGroup);
+          if(!hasTileReveal) t.actions.push({id:'revealTiles',params:{group:selectedTileGroup}});
+        }
+        const existingGroups=new Set((t.actions||[]).filter(a=>a.id==='spawnGroup').map(a=>String(a.params?.group||'')));
+        selectedGroups.forEach(g=>{
+          if(!existingGroups.has(String(g))) t.actions.push({id:'spawnGroup',params:{group:g}});
+        });
+      });
+    });
+    renderRight();
+  };
+}
+function setupDoorDefaults(o){
+  if(!o || (o.type!=='Door'&&o.type!=='Gate')) return;
+  const w=doorWord(o);
+  o.name=autoDoorName(o.type);
+  o.text="The "+w+" swings OPEN. \nRemove "+w+".";
+  o.behavior='custom';
+  o.uses='always';
+  o.locked=false;
+  o.lockedText="The "+w+" will NOT OPEN.";
+  o.preview="The "+w+" is LOCKED.";
+  askDoorLockedFromStart(o);
+}
+
 function mapIssues(){
   const out=[];
   if(!state.board.tiles.length){ out.push(T('mIssNoTiles')); return out; }
@@ -9359,6 +9490,26 @@ function losetaBajo(x,y){
   if(r===undefined) return null;
   const k=claveSala(state.board.tiles[r].reveal);
   return capasOcultas.has(k)||capasBloq.has(k)?null:r;
+}
+function askRoomNameForTile(ti){
+  const t=state.board.tiles[ti]; if(!t) return;
+  const current=(t.reveal||'').trim();
+  const suggested=current || nombreSalaNueva();
+  openDlg(TS('+ Room','+ Room'),
+    `<div class="field"><label>${TS('Room name for these tiles:','Room name for these tiles:')}</label>
+       <input id="roomNameInput" value="${esc(suggested)}"></div>
+     ${current?`<p class="dim">${TS('Leave it unchanged to keep the current name.','Leave it unchanged to keep the current name.')}</p>`:''}`,
+    `<button class="sm" id="roomNameCancel">${TS('Cancel','Cancel')}</button>
+     <button class="primary sm" id="roomNameOk">${TS('OK','OK')}</button>`);
+  const cancel=document.getElementById('roomNameCancel'); if(cancel) cancel.onclick=()=>dlg.close();
+  const ok=document.getElementById('roomNameOk'); if(ok) ok.onclick=()=>{
+    const inp=document.getElementById('roomNameInput');
+    const name=(inp?.value||'').trim() || suggested;
+    const tt=state.board.tiles[ti]; if(tt){ tt.reveal=name; commit(); setLevel(level); renderRight(); draw();
+      flash(TS(`Tile set to «${name}»`,`Tile set to «${name}»`)); }
+    dlg.close();
+  };
+  setTimeout(()=>document.getElementById('roomNameInput')?.focus(),0);
 }
 function nombreSalaNueva(){
   let n=1; const usados=new Set(salasDelMapa().map(s=>s.k));
