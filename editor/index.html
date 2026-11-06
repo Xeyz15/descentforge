@@ -7237,8 +7237,12 @@ function keyGatherWizard(){
      <div class="field"><label>${TS('Door/gate to unlock (optional)','Door/gate to unlock (optional)')}</label>
        <select id="kg_door"><option value="">${TS('None','None')}</option>
          ${(state.spawns.interactables||[]).map((o,i)=>(o.type==='Door'||o.type==='Gate')?`<option value="${i}">#${i} ${esc(o.name||o.type)}</option>`:'').join('')}</select></div>
-     <div class="field"><label>${TS('Secret passage tile group to reveal','Secret passage tile group to reveal')}</label>
-       <input id="kg_group" value="Room 2"></div>
+     <div class="field"><label>${TS('Secret passage tile group to reveal (optional)','Secret passage tile group to reveal (optional)')}</label>
+       <select id="kg_group">
+         <option value="">${TS('None','None')}</option>
+         ${(tileGroups()||[]).map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('')}
+         ${(tileGroups()||[]).some(g=>g==='Room 2')?'':`<option value="Room 2">Room 2</option>`}
+       </select></div>
      <p class="help">${TS('After you click Create, you will be prompted to place each key on the map.','After you click Create, you will be prompted to place each key on the map.')}</p>`,
     `<button class="sm" id="kg_cancel">${TS('Cancel','Cancel')}</button>
      <button class="primary sm" id="kg_create">${TS('Place tokens','Place tokens')}</button>`);
@@ -7255,7 +7259,8 @@ function keyGatherWizard(){
       relics:{var:'relics',flag:'relic_found',flavor:'You obtained a relic.',progress:'Relics gathered',complete:'The way is clear.'}}[kind]||{var:'keys',flag:'key_taken',flavor:'You found an item.',progress:'Items collected',complete:'You can continue.'};
     const kindVar=kindCfg.var, kindFlag=kindCfg.flag, kindFlavor=kindCfg.flavor, kindProgress=kindCfg.progress, kindComplete=kindCfg.complete;
     const capKind=kind.charAt(0).toUpperCase()+kind.slice(1);
-    const group=(document.getElementById('kg_group')?.value||'').trim() || 'Room 2';
+    const groupRaw=(document.getElementById('kg_group')?.value||'').trim();
+    const group = groupRaw || null;
     dlg.close();
     const collected=[];
     function placeOne(i){
@@ -7287,9 +7292,9 @@ function keyGatherWizard(){
             {id:'showMessage',params:{text:kindComplete}}];
           if(doorIdx!==null){ compActions.push({id:'unlockDoor',params:{interactable:doorIdx}});
             const door=state.spawns.interactables[doorIdx]; if(door&&Array.isArray(door.pos)) compActions.push({id:'focusCamera',params:{cell:[door.pos[0],door.pos[1]]}}); }
-          // no revealTiles here: the door/gate trigger reveals its own tiles.
-          state.triggers.push({id:'kg_complete',name:'Keys complete',once:true,
-            event:{id:'variableAbove',params:{var:'keys',value:n-1}},
+          if(group) compActions.push({id:'revealTiles',params:{group}});
+          state.triggers.push({id:'kg_complete',name:capKind+' complete',once:true,
+            event:{id:'variableAbove',params:{var:kindVar,value:n-1}},
             conditions:[], actions:compActions});
         });
         trgOpen=before; rtab='trg'; syncTabs(); renderRight(); draw();
@@ -8902,10 +8907,58 @@ function mapIssues(){
   (state.triggers||[]).forEach(t=>{
     const nom=t.name||t.id;
     faltan(nom, evById[t.event?.id], t.event?.params);
-    // también dentro de las ramas: el validador las mira y el editor no (Codex, 13-oct)
     todasLasAcciones(t).forEach(a=>faltan(nom, acById[a.id], a.params||{}));
     (t.conditions||[]).forEach(c=>faltan(nom, cdById[c.id], c.params));
   });
+
+  // Objective reachability / unobtainable objective checker
+  [...(state.objectives?.primary||[]),...(state.objectives?.optional||[])].forEach((o,oi)=>{
+    const d=objById[o.id]; if(!d) { out.push(TS('Objective '+(oi+1)+': unknown objective','Objective '+(oi+1)+': unknown objective')); return; }
+    const params=o.params||{};
+    (d.params||[]).forEach(p=>{
+      if(['group','enemy','interactable','area','cell'].includes(p.key) &&
+         (params[p.key]===undefined||params[p.key]===null||params[p.key]==='')){
+        out.push(TS('Objective '+(oi+1)+' ('+L(d,'name')+') missing '+p.key,
+                    'Objective '+(oi+1)+' ('+L(d,'name')+') missing '+p.key));
+      }
+    });
+    if(params.group){
+      if(!gruposEn.has(params.group)) out.push(TS('Objective '+(oi+1)+' group "'+params.group+'" is not placed',
+                                                  'Objective '+(oi+1)+' group "'+params.group+'" is not placed'));
+      const rooms=[...new Set((state.spawns.enemies||[]).filter(e=>e.group===params.group)
+        .map(e=>{const r=tileGroupForCell(e.pos[0],e.pos[1],e.level||0); return r===null?'(no tile)':(r||'(start)');}))];
+      rooms.forEach(r=>{ if(r!=='(start)' && r!=='(no tile)' && !groupIsRevealed(r))
+        out.push(TS('Objective '+(oi+1)+' group "'+params.group+'" room "'+r+'" is not revealed by any trigger',
+                    'Objective '+(oi+1)+' group "'+params.group+'" room "'+r+'" is not revealed by any trigger')); });
+    }
+    if(params.interactable!==undefined && params.interactable!==null && params.interactable!==''){
+      const idx=Number(params.interactable);
+      const obj=state.spawns.interactables[idx];
+      if(!obj) out.push(TS('Objective '+(oi+1)+' interactable #'+idx+' does not exist',
+                           'Objective '+(oi+1)+' interactable #'+idx+' does not exist'));
+      else {
+        const rg=(roomHintOf?roomHintOf(obj):'').trim();
+        if(rg && rg!=='(start)' && !groupIsRevealed(rg)) out.push(TS('Objective '+(oi+1)+' object in room "'+rg+'" is not revealed by any trigger',
+                                                                     'Objective '+(oi+1)+' object in room "'+rg+'" is not revealed by any trigger'));
+      }
+    }
+    if(Array.isArray(params.cell) && params.cell.length>=2){
+      const level=params.cell.length>=3?params.cell[2]:0;
+      const rg=tileGroupForCell(params.cell[0],params.cell[1],level);
+      const room=rg===null?'(no tile)':(rg||'(start)');
+      if(rg===null) out.push(TS('Objective '+(oi+1)+' cell has no tile','Objective '+(oi+1)+' cell has no tile'));
+      else if(room!=='(start)' && !groupIsRevealed(room)) out.push(TS('Objective '+(oi+1)+' cell room "'+room+'" is not revealed by any trigger',
+                                                                      'Objective '+(oi+1)+' cell room "'+room+'" is not revealed by any trigger'));
+    }
+    if(Array.isArray(params.area) && params.area.length>=4){
+      const rg=tileGroupForCell(params.area[0],params.area[1],0);
+      const room=rg===null?'(no tile)':(rg||'(start)');
+      if(rg===null) out.push(TS('Objective '+(oi+1)+' area has no tile','Objective '+(oi+1)+' area has no tile'));
+      else if(room!=='(start)' && !groupIsRevealed(room)) out.push(TS('Objective '+(oi+1)+' area room "'+room+'" is not revealed by any trigger',
+                                                                      'Objective '+(oi+1)+' area room "'+room+'" is not revealed by any trigger'));
+    }
+  });
+
   return out;
 }
 
