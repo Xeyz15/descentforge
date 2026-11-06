@@ -140,6 +140,15 @@
   .toolbar{position:absolute;left:10px;top:44px;display:flex;gap:3px;align-items:center;
            background:color-mix(in srgb,var(--panel) 92%,transparent);padding:4px 6px;border-radius:5px}
   .toolbar button{height:24px;padding:0 8px;font-size:12px}
+  .objcheckfloat{position:absolute;left:10px;top:72px;width:300px;max-height:40vh;overflow:auto;
+    background:color-mix(in srgb,var(--panel,rgba(255,255,255,.92)) 92%,transparent);
+    border:1px solid var(--linea);border-radius:8px;padding:8px 10px;font-size:12px;z-index:6;}
+  .objcheckfloat details{margin:0;} .objcheckfloat summary{cursor:pointer;font-weight:600;}
+  .objcheckfloat .card{padding:4px 0;border-bottom:1px solid var(--edge);}
+  .placehint{left:10px;bottom:48px;max-width:340px;padding:8px 10px;
+    background:var(--panel);border:1px solid var(--edge);border-radius:8px;
+    box-shadow:0 4px 12px rgba(0,0,0,.18);z-index:6;display:none;
+    font-size:12px;line-height:1.35;color:var(--text);}
 
   .field{display:flex;flex-direction:column;gap:3px;margin-bottom:9px}
   label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
@@ -752,6 +761,8 @@
          son lo que se hace CON lo que ya está puesto, y se usan sin dejar de
          mirar el tablero. Misma caja que el selector de alturas. -->
     <div class="toolbar" id="toolsLienzo"></div>
+    <div class="objcheckfloat" id="objCheckFloat"></div>
+    <div class="overlay placehint" id="placeHint"></div>
     <div class="overlay" id="hint"></div>
     <div class="overlay" id="coords">—</div>
   </div>
@@ -2029,6 +2040,7 @@ if(!ASSETS.enemyFamily) ASSETS.enemyFamily={}; ASSETS.enemyFamily.RANDOM_POOL='r
 let tool='tile', selTile=DATA.tiles[0]?.id, selEnemy=DATA.enemies[0]?.id,
     selProp='Chest', rot=0, level=0, zoom=1, panX=40, panY=40, sel=null, ptab='tiles', rtab='sel';
 let roomModeActive=false, roomModeName=null;
+let objHighlight=null;
 
 const state={
   meta:{id:'map-01',name:'',author:'',description:'',
@@ -3138,6 +3150,35 @@ function draw(){
 
   dibujaSalas(C);
   dibujaMarcas(C);
+  if(objHighlight){
+    const objTiles=new Set(objHighlight.tiles||[]);
+    // Oscurece todas las losetas que NO forman parte del objetivo, dejando
+    // la sala del objetivo limpia y a la vista.
+    if(objTiles && objTiles.size){
+      ctx.save();
+      ctx.globalAlpha=.35; ctx.fillStyle=css('--ink');
+      (state.board.tiles||[]).forEach((t,ti)=>{ if((t.level||0)!==level) return;
+        if(objTiles.has(ti)) return;
+        tileCells(t).forEach(([x,y])=>ctx.fillRect(x*C,y*C,C,C)); });
+      ctx.restore();
+    }
+    // Señala en oro, con un rectángulo, la figura o el objeto ligado al objetivo.
+    ctx.save();
+    (objHighlight.interactables||[]).forEach(ii=>{
+      const o=state.spawns.interactables[ii];
+      if(o&&(o.level||0)===level){ const [cw,ch]=propTam(o); const x=esVertice(o.type)?o.pos[0]-cw/2:o.pos[0]; const y=esVertice(o.type)?o.pos[1]-ch/2:o.pos[1];
+        ctx.globalAlpha=.22; ctx.fillStyle='#f2d63b'; ctx.fillRect(x*C-3,y*C-3,cw*C+6,ch*C+6);
+        ctx.globalAlpha=.9; ctx.strokeStyle='#f2d63b'; ctx.lineWidth=4/zoom; ctx.strokeRect(x*C-3,y*C-3,cw*C+6,ch*C+6); }
+    });
+    (objHighlight.enemies||[]).forEach(ei=>{
+      const e=state.spawns.enemies[ei];
+      if(e&&(e.level||0)===level){ const [ew,eh]=enemyTam(e);
+        ctx.globalAlpha=.22; ctx.fillStyle='#f2d63b'; ctx.fillRect(e.pos[0]*C-3,e.pos[1]*C-3,ew*C+6,eh*C+6);
+        ctx.globalAlpha=.9; ctx.strokeStyle='#f2d63b'; ctx.lineWidth=4/zoom;
+        ctx.strokeRect(e.pos[0]*C-3,e.pos[1]*C-3,ew*C+6,eh*C+6); }
+    });
+    ctx.restore();
+  }
   dibujaFantasma(C);
   ctx.restore();
   updateCounts();
@@ -3361,6 +3402,13 @@ const rectoMarca=m=> m.tipo==='cell' ? [m.v[0],m.v[1],m.v[0],m.v[1]]
   : [Math.min(m.v[0],m.v[2]),Math.min(m.v[1],m.v[3]),Math.max(m.v[0],m.v[2]),Math.max(m.v[1],m.v[3])];
 const visibleAqui=m=> m.id!=='moveObject' || (+(m.params.level)||0)===level;
 
+function marcasObjEn(x,y){
+  if(!marcasOn) return [];
+  return marcasDelGuion().filter(visibleAqui).filter(m=>{
+    const [a,b,c,d]=rectoMarca(m);
+    return x>=a&&x<=c&&y>=b&&y<=d;
+  });
+}
 /* Lo que cae en una casilla, para el rótulo de abajo a la derecha. */
 function marcasEn(x,y){
   if(!marcasOn) return [];
@@ -4979,6 +5027,14 @@ function estorbo(p){
    casilla vacía (donde no se captura nada) sí funcionaba. */
 stage.addEventListener('click',ev=>{
   if(enUnMando(ev)) return;
+  if(pick && mode!=='campaign'){
+    const [px,py]=toCell(ev); if(px<0||py<0||px>=GRID||py>=GRID) { moved=false; return; }
+    if(pick.type==='cell'){ const cb=pick.cb; pick=null; cb([px,py]); flash(T('picked')); return; }
+    if(!pick.first){ pick.first=[px,py]; flash(T('pickArea2')); return; }
+    const [x0,y0]=pick.first, cb=pick.cb; pick=null;
+    cb([Math.min(x0,px),Math.min(y0,py),Math.max(x0,px),Math.max(y0,py)]);
+    flash(T('picked')); return;
+  }
   if(moved){ moved=false; return; }
   if(mode==='campaign'){
     const [px,py]=toWorldPx(ev);
@@ -4995,18 +5051,13 @@ stage.addEventListener('click',ev=>{
      ni las zonas ni las casillas —que son la mitad de los objetivos y de los
      disparadores— se podían rellenar con el editor; había que escribirlas a
      mano en el JSON. */
-  if(pick){
-    if(pick.type==='cell'){ const cb=pick.cb; pick=null; cb([x,y]); flash(T('picked')); return; }
-    if(!pick.first){ pick.first=[x,y]; flash(T('pickArea2')); return; }
-    const [x0,y0]=pick.first, cb=pick.cb; pick=null;
-    cb([Math.min(x0,x),Math.min(y0,y),Math.max(x0,x),Math.max(y0,y)]);
-    flash(T('picked'));
-    return;
-  }
-
   marca();
   if(tool==='select'){
+    objHighlight=null;
     sel=quéHayEn(x,y,toVertex(ev)); rtab='sel'; syncTabs();
+    const _marks=marcasObjEn(x,y);
+    const _mt=_marks.find(m=>m.ti!=null);
+    if(_mt!=null){ trgOpen=_mt.ti; rtab='trg'; syncTabs(); }
   } else if(tool==='room'){
     const ti=losetaBajo(x,y);
     if(ti===null){ ultima=null; return flash(TS('No tile there.','No tile there.')); }
@@ -5267,6 +5318,8 @@ document.addEventListener('keydown',e=>{
 
 let ht; function flash(m){ const h=document.getElementById('hint'); h.textContent=m;
   clearTimeout(ht); ht=setTimeout(()=>{h.textContent=T('hint');},2200); }
+function showPlaceHint(t){ const e=document.getElementById('placeHint'); if(e){ e.textContent=t; e.style.display='block'; } }
+function hidePlaceHint(){ const e=document.getElementById('placeHint'); if(e){ e.style.display='none'; } }
 
 /* ================= reutilizar una loseta =================
    Cada loseta física existe una vez (o las que traiga la caja). Para ponerla
@@ -5800,7 +5853,16 @@ function ensureMapEnemyPoolsFromCamp(){
     refreshRandomPoolDropdown();
   }catch(e){}
 }
+function updateObjCheckFloat(){
+  const el=document.getElementById('objCheckFloat'); if(!el) return;
+  const wasOpen = localStorage.getItem('objCheckOpen')==='1' || !!el.querySelector('details')?.open;
+  el.innerHTML=renderObjectiveChecklistHTML ? renderObjectiveChecklistHTML() : '';
+  const d=el.querySelector('details'); if(!d) return;
+  d.open = wasOpen;
+  d.addEventListener('toggle',()=>localStorage.setItem('objCheckOpen', d.open?'1':'0'));
+}
 function renderRight(){
+  updateObjCheckFloat();
   const el=document.getElementById('rpanel');
   renderSalas();                          // el árbol de salas va con el panel
   if(rtab==='tut') return renderTutor(el);
@@ -5898,9 +5960,139 @@ function renderMap(el){
   el.querySelector('#f_scene').onchange=e=>{state.board.baseScene=e.target.value||undefined;};
 }
 
+function selectObjectiveTarget(i){
+  const P=(state.objectives&&state.objectives.primary)||[];
+  const o=P[i]; if(!o) return;
+  // keep the map highlight as before
+  const prevHighlight = objHighlight && objHighlight.idx===i;
+  highlightObjective(i);
+  // If highlightObjective toggled off, undo that toggle intent? keep behavior simple.
+  const params=o.params||{};
+  let target=null;
+  if(params.interactable!==undefined && params.interactable!==null && params.interactable!==''){
+    const idx=Number(params.interactable);
+    if(idx>=0 && idx < (state.spawns.interactables||[]).length) target={k:'prop',i:idx};
+  }
+  if(!target && params.enemy){
+    const ei=(state.spawns.enemies||[]).findIndex(e=>e.enemy===params.enemy);
+    if(ei>=0) target={k:'enemy',i:ei};
+  }
+  if(!target && params.group){
+    const ei=(state.spawns.enemies||[]).findIndex(e=>e.group===params.group);
+    if(ei>=0) target={k:'enemy',i:ei};
+  }
+  if(!target && Array.isArray(params.cell) && params.cell.length>=2){
+    const lv=params.cell.length>=3?params.cell[2]:0;
+    const ti=(state.board.tiles||[]).findIndex(t=>(t.level||0)===lv && tileCells(t).some(c=>c[0]===params.cell[0]&&c[1]===params.cell[1]));
+    if(ti>=0) target={k:'tile',i:ti};
+  }
+  if(!target && Array.isArray(params.area) && params.area.length>=4){
+    const ti=(state.board.tiles||[]).findIndex(t=>(t.level||0)===0 && tileCells(t).some(c=>c[0]===params.area[0]&&c[1]===params.area[1]));
+    if(ti>=0) target={k:'tile',i:ti};
+  }
+  if(target){ sel=target; rtab='sel'; }
+  else rtab='obj';
+  syncTabs(); renderRight();
+}
+function selectObjectiveForEditing(i){
+  highlightObjective(i);
+  sel={k:'objective',i}; rtab='sel'; syncTabs();
+  renderRight();
+}
+function _highlightObjectiveImpl(i){
+  const P=(state.objectives&&state.objectives.primary)||[];
+  const o=P[i]; if(!o){ objHighlight=null; draw(); return; }
+  if(objHighlight && objHighlight.idx===i){ objHighlight=null; updateObjCheckFloat(); if(typeof renderRight==='function') renderRight(); draw(); flash(TS('Highlight cleared.','Highlight cleared.')); return; }
+  const idxs=new Set(); const interactIdx=[];
+  const addTilesForGroup=g=>{ const gg=String(g||'').trim(); if(!gg) return;
+    (state.board.tiles||[]).forEach((t,ti)=>{ if((t.reveal||'').trim()===gg) idxs.add(ti); }); };
+  const params=o.params||{};
+  if(params.interactable!==undefined && params.interactable!==null && params.interactable!==''){
+    const oi=Number(params.interactable); const obj=state.spawns.interactables[oi];
+    if(obj){
+      const rg=(typeof roomHintOf==='function'?roomHintOf(obj):'').trim();
+      if(rg) addTilesForGroup(rg);
+      const ti=(state.board.tiles||[]).findIndex(t=>(t.level||0)===(obj.level||0) && tileCells(t).some(c=>c[0]===obj.pos[0]&&c[1]===obj.pos[1]));
+      if(ti>=0) idxs.add(ti);
+      interactIdx.push(oi);
+    }
+  }
+  const _isKeyObj = (o.id==='collect_keys' || o.id==='use_n_objects' || String(params.type||'').toLowerCase().includes('interacttoken'));
+  if(_isKeyObj){
+    (state.spawns.interactables||[]).forEach((obj,oi)=>{
+      if(obj.type!=='InteractToken') return;
+      interactIdx.push(oi);
+      const ti=(state.board.tiles||[]).findIndex(t=>(t.level||0)===(obj.level||0) && tileCells(t).some(c=>c[0]===obj.pos[0]&&c[1]===obj.pos[1]));
+      if(ti>=0) idxs.add(ti);
+    });
+  }
+  if(params.group){
+    (state.spawns.enemies||[]).filter(e=>e.group===params.group).forEach(e=>{
+      const ti=(state.board.tiles||[]).findIndex(t=>(t.level||0)===(e.level||0) && tileCells(t).some(c=>c[0]===e.pos[0]&&c[1]===e.pos[1]));
+      if(ti>=0) idxs.add(ti);
+      const rg=tileGroupForCell(e.pos[0],e.pos[1],e.level||0); if(rg) addTilesForGroup(rg);
+    });
+  }
+  if(Array.isArray(params.cell) && params.cell.length>=2){
+    const lv=params.cell.length>=3?params.cell[2]:0;
+    const ti=(state.board.tiles||[]).findIndex(t=>(t.level||0)===lv && tileCells(t).some(c=>c[0]===params.cell[0]&&c[1]===params.cell[1]));
+    if(ti>=0) idxs.add(ti);
+    const rg=tileGroupForCell(params.cell[0],params.cell[1],lv); if(rg) addTilesForGroup(rg);
+  }
+  if(Array.isArray(params.area) && params.area.length>=4){
+    const rg=tileGroupForCell(params.area[0],params.area[1],0); if(rg) addTilesForGroup(rg);
+  }
+  const _enemyIdx=[];
+  if(params.enemy){ (state.spawns.enemies||[]).forEach((e,ei)=>{ if(e.enemy===params.enemy) _enemyIdx.push(ei); }); }
+  if(params.group){ (state.spawns.enemies||[]).forEach((e,ei)=>{ if(e.group===params.group) _enemyIdx.push(ei); }); }
+  const _enemyList=[...new Set(_enemyIdx)];
+  const _interactList=[...new Set(interactIdx)];
+  objHighlight={idx:i, tiles:idxs, interactables:_interactList, interactable:_interactList.length?_interactList[0]:null,
+    enemies:_enemyList, enemy:_enemyList.length?_enemyList[0]:null};
+  updateObjCheckFloat(); if(typeof renderRight==='function') renderRight(); draw(); flash(TS('Objective highlighted on map.','Objective highlighted on map.'));
+}
+function highlightObjective(i){
+  try{ _highlightObjectiveImpl(i); }
+  catch(e){ console.error(e); alert('Highlight error: '+(e&&e.message?e.message:e)); }
+}
+function renderObjectiveChecklistHTML(){
+  const P=(state.objectives&&state.objectives.primary)||[];
+  if(!P.length) return `<details style="margin-top:12px"><summary>${TS('Quest objectives (0)','Quest objectives (0)')}</summary><p class="empty">${TS('No primary objectives yet.','No primary objectives yet.')}</p></details>`;
+  const items=P.map((o,i)=>{
+    const d=objById[o.id];
+    const name=d?L(d,'name'): (o.id||TS('Objective','Objective'));
+    const status=objectiveTargetStatusHTML(o);
+    const playerText=(o.text||'').trim();
+    const selObj = objHighlight && objHighlight.idx===i;
+    return `<div style="padding:6px 0;border-bottom:1px solid var(--edge);cursor:pointer;${selObj?'outline:2px solid #c9a44a;outline-offset:2px;border-radius:4px;':''}" onclick="event.stopPropagation(); selectObjectiveForEditing(${i}); return false;" title="${TS('Highlight this objective on the map','Highlight this objective on the map')}">
+      <div style="display:flex;gap:6px;align-items:center">
+        <span class="tag">${i+1}</span><strong style="flex:1">${esc(name)}</strong>
+      </div>
+      ${playerText?`<div style="margin:3px 0 2px 20px;font-style:italic;color:var(--dim)">${esc(playerText)}</div>`:''}
+      ${status?status:`<p class="help" style="margin-top:2px;font-size:11px">${TS('Assigned targets appear here.','Assigned targets appear here.')}</p>`}
+    </div>`;
+  }).join('');
+  return `<details style="margin-top:12px" ${P.length?'open':''}>
+    <summary>${TS('Quest objectives','Quest objectives')} (${P.length})</summary>
+    ${items}
+    <p class="help" style="margin-top:6px">${TS('Edit full objective parameters in the Objectives tab.','Edit full objective parameters in the Objectives tab.')}</p>
+  </details>`;
+}
 function renderSel(el){
-  if(!sel) return el.innerHTML=`<p class="empty">${T('nothingSel')}</p>`;
-  if(sel.k==='room') return renderSala(el);
+  if(!sel){ el.innerHTML=`<p class="empty">${T('nothingSel')}</p>`; return; }
+  if(sel.k==='room'){ renderSala(el); return; }
+  if(sel.k==='objective'){
+    const P=(state.objectives&&state.objectives.primary)||[];
+    const o=P[sel.i]; if(!o) return el.innerHTML=`<p class="empty">${T('nothingSel')}</p>`;
+    const d=objById[o.id];
+    el.innerHTML=tarjetaObjetivo(o,sel.i,'odel')+(objectiveTargetStatusHTML(o)||'');
+    el.querySelector('[data-odel]')?.addEventListener('click',()=>{ P.splice(sel.i,1); sel=null; renderRight(); });
+    el.querySelectorAll('[data-otext]').forEach(inp=>inp.oninput=()=>{ o.text=inp.value; });
+    el.querySelectorAll('[data-ohid]').forEach(c=>c.onchange=()=>{ if(c.checked) o.hidden=true; else { delete o.hidden; delete o.mission; } renderRight(); });
+    el.querySelectorAll('[data-omis]').forEach(inp=>inp.oninput=()=>{ const v=inp.value.trim(); if(v) o.mission=v; else delete o.mission; });
+    bindParams(el);
+    return;
+  }
   renderSelPieza(el);
   /* de qué sala es lo que se mira, encima de su ficha */
   el.insertAdjacentHTML('afterbegin',migaSalaHTML()); bindMiga(el);
@@ -6175,15 +6367,92 @@ function lootSummary(l){
 }
 
 /* ---------- objetivos ---------- */
+
+function tileGroupForCell(x,y,level){
+  for(const p of (state.board.tiles||[])){
+    if((p.level||0)!==(level||0)) continue;
+    const cs=tileCells(p); if(Array.isArray(cs)&&cs.some(c=>c[0]===x&&c[1]===y)) return (p.reveal||'').trim();
+  }
+  return null;
+}
+function groupIsRevealed(g){
+  if(!g) return true;
+  const gg=String(g).trim();
+  if(!gg || gg==='(start)') return true;
+  return (state.triggers||[]).some(t=>todasLasAcciones(t).some(a=>
+    (a.id==='revealRoom'||a.id==='revealTiles') && String(a.params?.group||'').trim()===gg));
+}
+function objectiveTargetStatusHTML(o){
+  try{
+  const d=objById[o.id]; if(!d) return '';
+  const params=o.params||{};
+  const out=[];
+  const BIND_KEYS=['group','enemy','interactable','area','cell'];
+  (d.params||[]).forEach(p=>{
+    if(BIND_KEYS.includes(p.key) && (params[p.key]===undefined||params[p.key]===null||params[p.key]==='')){
+      out.push('⚠ missing '+p.key);
+    }
+  });
+  if(params.group){
+    const cnt=(state.spawns.enemies||[]).filter(e=>e.group===params.group).length;
+    const rooms=[...new Set((state.spawns.enemies||[])
+      .filter(e=>e.group===params.group)
+      .map(e=>{const r=tileGroupForCell(e.pos[0],e.pos[1],e.level||0); return r===null?'(no tile)':(r||'(start)');}))];
+    out.push('Group '+params.group+' ('+cnt+') → '+(rooms.length?rooms.join(', '):'(no enemies)'));
+    rooms.forEach(r=>{ if(r!=='(start)' && r!=='(no tile)' && !groupIsRevealed(r)) out.push('⚠ '+r+' not revealed by trigger'); });
+    const gtargets=(state.spawns.enemies||[]).filter(e=>e.group===params.group);
+    if(gtargets.length) out.push('Targets: '+gtargets.map(e=>{
+      const r=tileGroupForCell(e.pos[0],e.pos[1],e.level||0);
+      const room=r===null?'(no tile)':(r||'(start)');
+      return (e.enemy||L(enemyById[e.enemy],'name')||'?')+' @ '+e.pos[0]+','+e.pos[1]+' ('+room+')';
+    }).join('; '));
+  }
+  if(params.enemy){ const e=enemyById[params.enemy]; out.push('Enemy: '+(e?L(e,'name'):params.enemy)); }
+  const _tokenObj = 'collect_keys'===o.id || 'use_n_objects'===o.id || (params.type||'').toLowerCase().includes('interacttoken');
+  if(_tokenObj){
+    const toks=(state.spawns.interactables||[]).filter(x=>x.type==='InteractToken');
+    if(toks.length) out.push('Tokens: '+toks.map((o,idx)=>'#'+idx+' @ '+o.pos[0]+','+o.pos[1]+' ('+(roomHintOf?roomHintOf(o):(tileGroupForCell(o.pos[0],o.pos[1],o.level||0)||'(start)'))+')').join('; '));
+  }
+  if(params.interactable!==undefined && params.interactable!==null && params.interactable!==''){
+    const idx=Number(params.interactable);
+    const obj=state.spawns.interactables[idx];
+    if(!obj){ out.push('⚠ interactable #'+idx+' missing'); }
+    else{
+      const rg=(roomHintOf?roomHintOf(obj):'').trim();
+      out.push('Object: '+obj.type+' #'+idx+' @ '+obj.pos[0]+','+obj.pos[1]+' → '+(rg||'(start)'));
+      if(rg && rg!=='(start)' && !groupIsRevealed(rg)) out.push('⚠ '+rg+' not revealed by trigger');
+    }
+  }
+  if(Array.isArray(params.cell) && params.cell.length>=2){
+    const level=params.cell.length>=3?params.cell[2]:0;
+    const rg=tileGroupForCell(params.cell[0],params.cell[1],level);
+    const shown=rg===null?'(no tile)':(rg||'(start)');
+    out.push('Cell '+params.cell.join(',')+' → '+shown);
+    if(rg && rg.trim() && !groupIsRevealed(rg.trim())) out.push('⚠ '+rg.trim()+' not revealed by trigger');
+  }
+  if(Array.isArray(params.area) && params.area.length>=4){
+    const rg=tileGroupForCell(params.area[0],params.area[1],0);
+    const shown=rg===null?'(no tile)':(rg||'(start)');
+    out.push('Area '+params.area.join(',')+' → '+shown);
+    if(rg && rg.trim() && !groupIsRevealed(rg.trim())) out.push('⚠ '+rg.trim()+' not revealed by trigger');
+  }
+  if(!out.length) return '';
+  return `<p class="help" style="margin-top:4px;font-size:11px;line-height:1.35">${out.map(x=>esc(String(x))).join(' · ')}</p>`;
+  }catch(e){ return '<p class="help" style="margin-top:4px;font-size:11px;color:var(--blood)">Objective status unavailable.</p>'; }
+}
+
 /* Una tarjeta de objetivo, que es igual para los principales y los opcionales:
    se pintaban solo los principales y los opcionales no había forma de ponerlos
    —el formato los admite, el mod los enseña y el generador los usaba—. */
 function tarjetaObjetivo(o,i,quita){
   const d=objById[o.id]; if(!d) return '';
-  return `<div class="card"><div class="hd"><div><span class="cat">${L(d,'cat')}</span>
+  const _hsel = quita==='odel' && objHighlight && objHighlight.idx===i;
+  return `<div class="card" style="${_hsel?'outline:2px solid #c9a44a;outline-offset:2px;':''}"><div class="hd"><div><span class="cat">${L(d,'cat')}</span>
     <strong style="display:block">${L(d,'name')}</strong>
     <span class="tag ${d.judge==='auto'?'':'w'}" title="${T(d.judge==='auto'?'judgeAutoHelp':'judgePlayerHelp')}"
       >${T(d.judge==='auto'?'judgeAuto':'judgePlayer')}</span></div>
+    ${quita==='odel'?`<button class="sm" data-ohi="${i}" title="${TS('Highlight on map','Highlight on map')}">📍</button>`:''}
+    ${i>0&&quita==='odel'?`<button class="sm" data-oup="${i}" aria-label="${esc(T('sUp'))}" title="${esc(T('sUp'))}">↑</button>`:''}
     <button class="sm" data-${quita}="${i}">✕</button></div>
     ${d.params.map(p=>paramField(p,o.params,`${quita==='odel'?'obj':'opt'}|${i}`)).join('')}
     <div class="field"><label>${T('objText')}</label>
@@ -6193,6 +6462,7 @@ function tarjetaObjetivo(o,i,quita){
     ${o.hidden?`<p class="help">${T('objHiddenHelp')}</p>
     <div class="field"><label>${T('objMission')}</label>
       <input data-omis="${quita==='odel'?'p':'s'}|${i}" value="${esc(o.mission||'')}" placeholder="${T('objMissionPh')}"></div>`:''}
+    ${objectiveTargetStatusHTML(o)}
   </div>`;
 }
 
@@ -6214,6 +6484,9 @@ function renderObjectives(el){
   el.querySelector('#s_add').onclick=()=>openObjPicker('optional');
   el.querySelector('#f_add').onclick=openFailPicker;
   el.querySelectorAll('[data-odel]').forEach(b=>b.onclick=()=>{P.splice(+b.dataset.odel,1);renderRight();});
+  el.querySelectorAll('[data-ohi]').forEach(b=>b.onclick=()=>{ selectObjectiveForEditing(+b.dataset.ohi); });
+  el.querySelectorAll('[data-oup]').forEach(b=>b.onclick=()=>{const i=+b.dataset.oup; if(i<=0) return;
+    cambio(()=>{ const x=P.splice(i,1)[0]; P.splice(i-1,0,x); }); renderRight();});
   el.querySelectorAll('[data-sdel]').forEach(b=>b.onclick=()=>{S.splice(+b.dataset.sdel,1);renderRight();});
   // El texto que se lee arriba en la partida. Sin esto el mod solo tenía el
   // identificador y en pantalla salía «defeat_group» en vez de la frase.
@@ -6383,6 +6656,8 @@ function wirePicker(items,attr,onPick){
         ${x.mod==='mesa'?`<span class="tag w" title="${esc(T('accionMesaHelp'))}">${T('accionMesa')}</span>`:''}
         <span class="cat">${esc(L(x,'cat'))}</span></button>`).join('')||`<p class="empty">${T('noResults')}</p>`;
     list.querySelectorAll(`[${attr}]`).forEach(b=>b.onclick=()=>{ cambio(()=>onPick(b.getAttribute(attr))); dlg.close(); renderRight(); }); };
+  list.onclick=e=>{ const w=e.target.closest('[data-ckey]'); if(!w) return;
+    keyGatherWizard(); }
   document.querySelectorAll('[data-cf]').forEach(b=>b.onclick=()=>{
     cf=b.dataset.cf; document.querySelectorAll('[data-cf]').forEach(x=>x.classList.toggle('on',x===b)); paint(); });
   document.getElementById('pq').oninput=e=>{q=e.target.value.toLowerCase();paint();};
@@ -6947,6 +7222,98 @@ function openDlg(title,body,foot){ document.getElementById('dlgTitle').textConte
 
 /* `lista` es «primary» u «optional»: el mismo catálogo sirve para las dos, y
    tenerlo dos veces era pedir que se separaran. */
+function keyGatherWizard(){
+  openDlg(TS('Key Gather Wizard','Key Gather Wizard'),
+    `<div class="field"><label>${TS('Item type','Item type')}</label>
+       <select id="kg_type">
+         <option value="keys">${TS('Keys','Keys')}</option>
+         <option value="levers">${TS('Levers','Levers')}</option>
+         <option value="shards">${TS('Shards','Shards')}</option>
+         <option value="runes">${TS('Runes','Runes')}</option>
+         <option value="relics">${TS('Relics','Relics')}</option>
+       </select></div>
+     <div class="field"><label>${TS('How many to gather?','How many to gather?')}</label>
+       <input id="kg_n" type="number" min="1" value="3"></div>
+     <div class="field"><label>${TS('Door/gate to unlock (optional)','Door/gate to unlock (optional)')}</label>
+       <select id="kg_door"><option value="">${TS('None','None')}</option>
+         ${(state.spawns.interactables||[]).map((o,i)=>(o.type==='Door'||o.type==='Gate')?`<option value="${i}">#${i} ${esc(o.name||o.type)}</option>`:'').join('')}</select></div>
+     <div class="field"><label>${TS('Secret passage tile group to reveal','Secret passage tile group to reveal')}</label>
+       <input id="kg_group" value="Room 2"></div>
+     <p class="help">${TS('After you click Create, you will be prompted to place each key on the map.','After you click Create, you will be prompted to place each key on the map.')}</p>`,
+    `<button class="sm" id="kg_cancel">${TS('Cancel','Cancel')}</button>
+     <button class="primary sm" id="kg_create">${TS('Place tokens','Place tokens')}</button>`);
+  const cancel=document.getElementById('kg_cancel'); if(cancel) cancel.onclick=()=>dlg.close();
+  const create=document.getElementById('kg_create'); if(create) create.onclick=()=>{
+    showPlaceHint(TS('Key Gather wizard started.','Key Gather wizard started.')); const ni=Math.max(1,+document.getElementById('kg_n')?.value||3);
+    const doorVal=(document.getElementById('kg_door')?.value||'').trim();
+    const doorIdx=doorVal===''?null:+doorVal;
+    const kind=(document.getElementById('kg_type')?.value||'keys').trim() || 'keys';
+    const kindCfg={keys:{var:'keys',flag:'key_taken',flavor:'You found a key.',progress:'Keys collected',complete:'You can open the door now.'},
+      levers:{var:'levers',flag:'lever_pulled',flavor:'You pulled a lever.',progress:'Levers pulled',complete:'You can proceed.'},
+      shards:{var:'shards',flag:'shard_collected',flavor:'You collected a shard.',progress:'Shards collected',complete:'You can continue.'},
+      runes:{var:'runes',flag:'rune_found',flavor:'You found a rune.',progress:'Runes gathered',complete:'The path is open.'},
+      relics:{var:'relics',flag:'relic_found',flavor:'You obtained a relic.',progress:'Relics gathered',complete:'The way is clear.'}}[kind]||{var:'keys',flag:'key_taken',flavor:'You found an item.',progress:'Items collected',complete:'You can continue.'};
+    const kindVar=kindCfg.var, kindFlag=kindCfg.flag, kindFlavor=kindCfg.flavor, kindProgress=kindCfg.progress, kindComplete=kindCfg.complete;
+    const capKind=kind.charAt(0).toUpperCase()+kind.slice(1);
+    const group=(document.getElementById('kg_group')?.value||'').trim() || 'Room 2';
+    dlg.close();
+    const collected=[];
+    function placeOne(i){
+      if(i>=ni){
+        const n=collected.length; if(!n) return;
+        state.objectives.primary.push({id:'collect_keys',params:{n:n,var:kindVar,type:'InteractToken'},text:'Find the '+n+' '+kind+' to open the way.'});
+        const before=state.triggers.length;
+        cambio(()=>{
+          const init={id:'kg_'+Date.now().toString(36)+'_init',name:capKind+': init',once:true,event:{id:'mapStart',params:{}},conditions:[],actions:[
+            {id:'setVariable',params:{var:kindVar,value:0}}]};
+          collected.forEach(idx=>init.actions.push({id:'setVariable',params:{var:kindFlag+'_'+idx,value:0}}));
+          state.triggers.push(init);
+          collected.forEach(idx=>{
+            state.triggers.push({id:'kg_'+idx+'_token',name:'Key token '+idx,once:true,
+              event:{id:'interacted',params:{interactable:idx}},
+              conditions:[{id:'varEquals',params:{var:'key_taken_'+idx,value:0}}],
+              actions:[
+                {id:'setVariable',params:{var:'key_taken_'+idx,value:1}},
+                {id:'addVariable',params:{var:'keys',value:1}},
+                {id:'hideObject',params:{interactable:idx}}
+              ]});
+          });
+          for(let k=1;k<n;k++){
+            state.triggers.push({id:'kg_progress_'+k,name:capKind+' progress '+k+'/'+n,once:true,
+              event:{id:'variableAbove',params:{var:kindVar,value:k-1}},
+              conditions:[], actions:[{id:'showMessage',params:{text:kindProgress+' '+k+'/'+n+'.'}}]});
+          }
+          const compActions=[{id:'showMessage',params:{text:kindProgress+' '+n+'/'+n+'.'}},
+            {id:'showMessage',params:{text:kindComplete}}];
+          if(doorIdx!==null){ compActions.push({id:'unlockDoor',params:{interactable:doorIdx}});
+            const door=state.spawns.interactables[doorIdx]; if(door&&Array.isArray(door.pos)) compActions.push({id:'focusCamera',params:{cell:[door.pos[0],door.pos[1]]}}); }
+          // no revealTiles here: the door/gate trigger reveals its own tiles.
+          state.triggers.push({id:'kg_complete',name:'Keys complete',once:true,
+            event:{id:'variableAbove',params:{var:'keys',value:n-1}},
+            conditions:[], actions:compActions});
+        });
+        trgOpen=before; rtab='trg'; syncTabs(); renderRight(); draw();
+        hidePlaceHint(); flash(TS('Key Gather wizard placed tokens and generated triggers.','Key Gather wizard placed tokens and generated triggers.'));
+        return;
+      }
+      showPlaceHint(TS('Place key '+(i+1)+'/'+ni+' on the map. Click the tile location for this key.','Place key '+(i+1)+'/'+ni+' on the map. Click the tile location for this key.'));
+      startPick('cell',([x,y])=>{
+        cambio(()=>{ state.spawns.interactables.push({type:'InteractToken',pos:[x,y],level,rot:0,name:'Key token',text:'You found a key.',behavior:'custom',uses:'once',freeAction:false,locked:false,loot:{mode:'none',items:[],traits:[],points:0}}); });
+        const idx=state.spawns.interactables.length-1;
+        showPlaceHint(TS('Key '+(i+1)+' placed. Place next key.','Key '+(i+1)+' placed. Place next key.'));
+        collected.push(idx);
+        sel={k:'prop',i:idx}; rtab='sel'; syncTabs(); renderRight(); draw();
+        placeOne(i+1);
+      });
+    }
+    showPlaceHint(TS('Prepare to place '+ni+' key tokens on the map.','Prepare to place '+ni+' key tokens on the map.'));
+    openDlg(TS('Place tokens','Place tokens'),
+      `<p>${TS('You will now be prompted to place '+ni+' key tokens one by one.','You will now be prompted to place '+ni+' key tokens one by one.')}</p>
+       <p class="help">${TS('Click OK, then click the tile for each key when prompted.','Click OK, then click the tile for each key when prompted.')}</p>`,
+      `<button class="primary sm" id="kg_place_start">${TS('OK','OK')}</button>`);
+    const _ps=document.getElementById('kg_place_start'); if(_ps) _ps.onclick=()=>{ dlg.close(); try { placeOne(0); } catch(e){ hidePlaceHint(); alert('placeOne error: '+(e&&e.message?e.message:e)); } };
+  };
+}
 function openObjPicker(lista){
   const donde=lista==='optional'?'optional':'primary';
   const cats=[...new Set(LIB.objectives.map(o=>o.cat))];
@@ -6956,16 +7323,24 @@ function openObjPicker(lista){
      <input id="oq" placeholder="${T('searchObj')}" style="margin-bottom:10px">
      <div class="objlist" id="olist"></div>`);
   const list=document.getElementById('olist'); let cf='',q='';
-  const paint=()=>{ list.innerHTML=LIB.objectives
+  const paint=()=>{ const _base=LIB.objectives
       .filter(o=>(!cf||o.cat===cf)&&(!q||(L(o,'name')+L(o,'text')).toLowerCase().includes(q)))
       .map(o=>`<button class="objitem" data-oid="${o.id}">
         <div class="bd"><b>${esc(L(o,'name'))}</b><small>${esc(L(o,'text'))}</small></div>
         <span class="cat">${esc(L(o,'cat'))}<br>
           <span class="tag ${o.judge==='auto'?'':'w'}" style="margin-top:3px"
-            >${T(o.judge==='auto'?'judgeAuto':'judgePlayer')}</span></span></button>`).join('')||`<p class="empty">${T('noResults')}</p>`;
+            >${T(o.judge==='auto'?'judgeAuto':'judgePlayer')}</span></span></button>`).join('');
+    const _wiz = (!q && (cf==='Recolección'||cf==='Gathering' || String(cf).toLowerCase().includes('gather')||String(cf).toLowerCase().includes('reco'))) ?
+      `<button class="objitem" data-ckey="1">
+        <div class="bd"><b>${TS('Collect N Tokens (Wizard)','Collect N Tokens (Wizard)')}</b>
+          <small>${TS('Creates a gather-keys objective and leaves the trigger setup to you.','Creates a gather-keys objective and leaves the trigger setup to you.')}</small></div>
+        <span class="cat">${esc(L(LIB.objectives.find(o=>o.cat==='Recolección'),'cat')||'Gathering')}</span></button>` : '';
+    list.innerHTML = (_wiz+_base) || `<p class="empty">${T('noResults')}</p>`;
     list.querySelectorAll('[data-oid]').forEach(b=>b.onclick=()=>{
       const d=objById[b.dataset.oid], params=defParams(d);
       state.objectives[donde].push({id:d.id,params}); dlg.close(); renderRight(); }); };
+  list.onclick=e=>{ const w=e.target.closest('[data-ckey]'); if(!w) return;
+    keyGatherWizard(); }
   document.querySelectorAll('[data-cf]').forEach(b=>b.onclick=()=>{
     cf=b.dataset.cf; document.querySelectorAll('[data-cf]').forEach(x=>x.classList.toggle('on',x===b)); paint(); });
   document.getElementById('oq').oninput=e=>{q=e.target.value.toLowerCase();paint();};
@@ -9926,6 +10301,7 @@ function formasDeGanar(s){
       `<button class="gchip" data-ggana="use_object" data-gobj="${i}">${esc(nombreObjeto(i))}</button>`).join('')):''}
     ${op('⏳',TS('Sobrevivir unas rondas','Survive some rounds'),`<label class="glin">${TS('Rondas','Rounds')} <input type="number" min="1" value="6" id="gGanaR" style="width:80px"></label>
       <button class="primary sm" data-ggana="survive_rounds">${TS('Así','Like this')}</button>`)}
+    ${op('💰',TS('Reunir las llaves','Gather the keys'),`<button class="primary sm" id="gWizObj2">${TS('Collect N Tokens (Wizard)','Collect N Tokens (Wizard)')}</button>`)}
     <button class="sm" id="gMasObj">${TS('Más formas de ganar…','More ways to win…')}</button></div>`;
 }
 /* Cada paso: qué decir y qué botones. */
@@ -10045,6 +10421,7 @@ function ligarPaso(el,s,id){
   const nv=el.querySelector('#gNueva'); if(nv) nv.onclick=()=>nuevaSalaGuiada();
   const fi=el.querySelector('#gFin'); if(fi) fi.onclick=()=>{ guiaOpcion=guiaOpcion==='fin'?'':'fin'; renderRight(); };
   const mo=el.querySelector('#gMasObj'); if(mo) mo.onclick=()=>{ rtab='obj'; syncTabs(); renderRight(); };
+  const gw2=el.querySelector('#gWizObj2'); if(gw2) gw2.onclick=()=>keyGatherWizard();
   el.querySelectorAll('[data-ggana]').forEach(b=>b.onclick=()=>{
     const d=objById[b.dataset.ggana]; if(!d) return;
     const params=defParams(d);
@@ -10188,11 +10565,16 @@ function elegirObjetivo(lista,despues){
         <span>${objs.filter(d=>d.cat===c).slice(0,3).map(d=>esc(L(d,'name'))).join(' · ')}…</span></button>`).join('')}</div>`);
     document.querySelectorAll('[data-mcat]').forEach(b=>b.onclick=()=>{
       const c=b.dataset.mcat;
+      const _wizard = c==='Recolección' ? `<div class="objlist" style="margin-bottom:8px"><button class="objitem" data-mwiz="1">
+        <div class="bd"><b>${TS('Collect N Tokens (Wizard)','Collect N Tokens (Wizard)')}</b>
+          <span class="dim" style="display:block;font-size:13px">${TS('Creates gather-keys objective + all triggers.','Creates gather-keys objective + all triggers.')}</span></div></button></div>` : '';
       openDlg(`${ICO_CAT[c]||'🎯'} ${nomCat(c)}`,`<p><button class="sm" id="m_atras">← ${T('sBack')}</button></p>
+        ${_wizard}
         <div class="objlist">${objs.filter(d=>d.cat===c).map(d=>`<button class="objitem" data-mid="${esc(d.id)}">
           <div class="bd"><b>${esc(L(d,'name'))}</b><span class="dim" style="display:block;font-size:13px">${esc(L(d,'text')||'')}</span></div>
           <span class="tag ${d.judge==='auto'?'':'w'}">${d.judge==='auto'?TS('la app','the app'):TS('los jugadores','the players')}</span></button>`).join('')}</div>`);
       document.getElementById('m_atras').onclick=pinta;
+      const _mw=document.querySelector('[data-mwiz]'); if(_mw) _mw.onclick=()=>{ dlg.close(); keyGatherWizard(); };
       document.querySelectorAll('[data-mid]').forEach(x=>x.onclick=()=>{
         const d=objById[x.dataset.mid];
         cambio(()=>(state.objectives[lista]=state.objectives[lista]||[]).push({id:d.id,params:defParams(d)}));
