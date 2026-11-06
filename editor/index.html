@@ -7243,7 +7243,7 @@ function keyGatherWizard(){
          ${(tileGroups()||[]).map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('')}
          ${(tileGroups()||[]).some(g=>g==='Room 2')?'':`<option value="Room 2">Room 2</option>`}
        </select></div>
-     <p class="help">${TS('After you click Create, you will be prompted to place each key on the map.','After you click Create, you will be prompted to place each key on the map.')}</p>`,
+     <p class="help">${TS('After you click Place tokens, you will be prompted to place each item on the map.','After you click Place tokens, you will be prompted to place each item on the map.')}</p>`,
     `<button class="sm" id="kg_cancel">${TS('Cancel','Cancel')}</button>
      <button class="primary sm" id="kg_create">${TS('Place tokens','Place tokens')}</button>`);
   const cancel=document.getElementById('kg_cancel'); if(cancel) cancel.onclick=()=>dlg.close();
@@ -7269,22 +7269,22 @@ function keyGatherWizard(){
         state.objectives.primary.push({id:'collect_keys',params:{n:n,var:kindVar,type:'InteractToken'},text:'Find the '+n+' '+kind+' to open the way.'});
         const before=state.triggers.length;
         cambio(()=>{
-          const init={id:'kg_'+Date.now().toString(36)+'_init',name:capKind+': init',once:true,event:{id:'mapStart',params:{}},conditions:[],actions:[
+          const init={id:'kg_'+Date.now().toString(36)+'_init',name:kindVar+': init',once:true,event:{id:'mapStart',params:{}},conditions:[],actions:[
             {id:'setVariable',params:{var:kindVar,value:0}}]};
           collected.forEach(idx=>init.actions.push({id:'setVariable',params:{var:kindFlag+'_'+idx,value:0}}));
           state.triggers.push(init);
           collected.forEach(idx=>{
-            state.triggers.push({id:'kg_'+idx+'_token',name:'Key token '+idx,once:true,
+            state.triggers.push({id:'kg_'+idx+'_token',name:kindVar+': Token '+idx,once:true,
               event:{id:'interacted',params:{interactable:idx}},
-              conditions:[{id:'varEquals',params:{var:'key_taken_'+idx,value:0}}],
+              conditions:[{id:'varEquals',params:{var:kindFlag+'_'+idx,value:0}}],
               actions:[
-                {id:'setVariable',params:{var:'key_taken_'+idx,value:1}},
-                {id:'addVariable',params:{var:'keys',value:1}},
+                {id:'setVariable',params:{var:kindFlag+'_'+idx,value:1}},
+                {id:'addVariable',params:{var:kindVar,value:1}},
                 {id:'hideObject',params:{interactable:idx}}
               ]});
           });
           for(let k=1;k<n;k++){
-            state.triggers.push({id:'kg_progress_'+k,name:capKind+' progress '+k+'/'+n,once:true,
+            state.triggers.push({id:'kg_progress_'+k,name:kindVar+': progress '+k+'/'+n,once:true,
               event:{id:'variableAbove',params:{var:kindVar,value:k-1}},
               conditions:[], actions:[{id:'showMessage',params:{text:kindProgress+' '+k+'/'+n+'.'}}]});
           }
@@ -7293,7 +7293,7 @@ function keyGatherWizard(){
           if(doorIdx!==null){ compActions.push({id:'unlockDoor',params:{interactable:doorIdx}});
             const door=state.spawns.interactables[doorIdx]; if(door&&Array.isArray(door.pos)) compActions.push({id:'focusCamera',params:{cell:[door.pos[0],door.pos[1]]}}); }
           if(group) compActions.push({id:'revealTiles',params:{group}});
-          state.triggers.push({id:'kg_complete',name:capKind+' complete',once:true,
+          state.triggers.push({id:'kg_complete',name:kindVar+': complete',once:true,
             event:{id:'variableAbove',params:{var:kindVar,value:n-1}},
             conditions:[], actions:compActions});
         });
