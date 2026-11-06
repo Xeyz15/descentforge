@@ -7243,7 +7243,8 @@ function keyGatherWizard(){
          ${(tileGroups()||[]).map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('')}
          ${(tileGroups()||[]).some(g=>g==='Room 2')?'':`<option value="Room 2">Room 2</option>`}
        </select></div>
-     <p class="help">${TS('After you click Place tokens, you will be prompted to place each item on the map.','After you click Place tokens, you will be prompted to place each item on the map.')}</p>`,
+     <p class="help">${TS('After you click Place tokens, you will be prompted to place each item on the map.','After you click Place tokens, you will be prompted to place each item on the map.')}</p>
+     <p class="help">${TS('Choosing a door/gate also links a hidden Advance to the door objective, so collection does not skip the move into the next room.','Choosing a door/gate also links a hidden Advance to the door objective, so collection does not skip the move into the next room.')}</p>`,
     `<button class="sm" id="kg_cancel">${TS('Cancel','Cancel')}</button>
      <button class="primary sm" id="kg_create">${TS('Place tokens','Place tokens')}</button>`);
   const cancel=document.getElementById('kg_cancel'); if(cancel) cancel.onclick=()=>dlg.close();
@@ -7262,11 +7263,14 @@ function keyGatherWizard(){
     const groupRaw=(document.getElementById('kg_group')?.value||'').trim();
     const group = groupRaw || null;
     dlg.close();
+    const prefix='kg_'+Date.now().toString(36);
     const collected=[];
     function placeOne(i){
       if(i>=ni){
+        try{
         const n=collected.length; if(!n) return;
         state.objectives.primary.push({id:'collect_keys',params:{n:n,var:kindVar,type:'InteractToken'},text:'Find the '+n+' '+kind+' to open the way.'});
+        if(doorIdx!==null) state.objectives.primary.push({id:'use_object',params:{interactable:doorIdx},hidden:true,mission:'keys',text:'Advance to the door.'});
         const before=state.triggers.length;
         cambio(()=>{
           const init={id:'kg_'+Date.now().toString(36)+'_init',name:kindVar+': init',once:true,event:{id:'mapStart',params:{}},conditions:[],actions:[
@@ -7296,16 +7300,21 @@ function keyGatherWizard(){
           state.triggers.push({id:'kg_complete',name:kindVar+': complete',once:true,
             event:{id:'variableAbove',params:{var:kindVar,value:n-1}},
             conditions:[], actions:compActions});
+          state.triggers.push({id:prefix+'_announce',name:kindVar+': announce',once:true,
+            event:{id:'variableEquals',params:{var:kindVar,value:n}},
+            conditions:[], actions:[{id:'announceMission',params:{text:kindComplete,mission:'keys'}}]});
         });
-        trgOpen=before; rtab='trg'; syncTabs(); renderRight(); draw();
+        trgOpen=before; rtab='obj'; syncTabs(); renderRight(); draw();
         hidePlaceHint(); flash(TS('Key Gather wizard placed tokens and generated triggers.','Key Gather wizard placed tokens and generated triggers.'));
         return;
+        } catch(e){ hidePlaceHint(); alert('Wizard generation error: '+(e&&e.message?e.message:e)); }
       }
       showPlaceHint(TS('Place key '+(i+1)+'/'+ni+' on the map. Click the tile location for this key.','Place key '+(i+1)+'/'+ni+' on the map. Click the tile location for this key.'));
       startPick('cell',([x,y])=>{
         cambio(()=>{ state.spawns.interactables.push({type:'InteractToken',pos:[x,y],level,rot:0,name:'Key token',text:'You found a key.',behavior:'custom',uses:'once',freeAction:false,locked:false,loot:{mode:'none',items:[],traits:[],points:0}}); });
         const idx=state.spawns.interactables.length-1;
-        showPlaceHint(TS('Key '+(i+1)+' placed. Place next key.','Key '+(i+1)+' placed. Place next key.'));
+        if(i+1 < ni) showPlaceHint(TS('Key '+(i+1)+' placed. Place next key.','Key '+(i+1)+' placed. Place next key.'));
+        else showPlaceHint(TS('All keys placed. Generating triggers...','All keys placed. Generating triggers...'));
         collected.push(idx);
         sel={k:'prop',i:idx}; rtab='sel'; syncTabs(); renderRight(); draw();
         placeOne(i+1);
