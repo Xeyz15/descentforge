@@ -609,10 +609,18 @@ function _externalActivationTextsED(ext, gd){
       if(a.next!==undefined|| (a.NextActivation && (a.NextActivation.id||a.NextActivation._name))) stats.push('Next: '+(a.next||(a.NextActivation&&(a.NextActivation.id||a.NextActivation._name))||''));
       let block='';
       if(name) block += '**'+name+'**';
-      const _t = text || '';
-      if(_t) block += (block?'\n\n':'')+_t;
-      if(hint) block += (block?'\n\n':'')+'Hint: '+hint;
-      if(stats.length) block += (block?'\n':'')+stats.join('\n');
+      if(stats.length) block += (block?'
+':'')+stats.join('
+');
+      if(hint) block += (block?'
+
+':'')+'Hint:
+'+hint;
+      if(text) block += (block?'
+
+':'')+'Activation text:
+'+text;
+      if(block) lines.push(block);
       if(block) lines.push(block);
     });
     out[w.target]=lines.join('\n\n');
