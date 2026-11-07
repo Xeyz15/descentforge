@@ -644,6 +644,7 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
       const texts = _externalActivationTextsED(ext, gd);
       if (texts.activation && (!c.activation || !String(c.activation).trim())) c.activation = texts.activation;
       if (texts.tactics && (!c.tactics || !String(c.tactics).trim())) c.tactics = texts.tactics;
+      if (ext.defense_en && (!c.defense || !String(c.defense).trim())) c.defense = ext.defense_en;
     }
   } catch(e){ console.warn('external activation pull failed', e); }
 
