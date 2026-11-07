@@ -690,9 +690,9 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
     '</div>'+
     '<div class="field"><label>Mechanical traits</label><div style="display:flex;flex-wrap:wrap;gap:6px;">'+mechOpts+'</div><p class="help" style="font-size:11px;margin-top:4px;">Huge/Small are inherited from the base and shown in Advanced.</p></div>'+
     '<div class="field"><label>Theme traits</label><div style="display:flex;flex-wrap:wrap;gap:6px;">'+themeOpts+'</div><p class="help" style="font-size:11px;margin-top:4px;">Locked traits (inherited from base): '+((_lockedThemeTraits(c.base)).length? _lockedThemeTraits(c.base).join(', ') : 'none')+'</p></div>'+
-    '<div class="field"><label>Activation</label><input id="fce_activation" value="'+esc(c.activation||'')+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>Tactics</label><input id="fce_tactics" value="'+esc(c.tactics||'')+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>Defense</label><input id="fce_defense" value="'+esc(c.defense||'')+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
+    '<div class="field"><label>Activation</label><div id="fce_activation_view" style="display:flex;flex-direction:column;gap:6px;margin-bottom:4px;"></div><input type="hidden" id="fce_activation" value="'+esc(c.activation||'')+'"></div>'+
+    '<div class="field"><label>Tactics</label><div id="fce_tactics_view" style="display:flex;flex-direction:column;gap:6px;margin-bottom:4px;"></div><input type="hidden" id="fce_tactics" value="'+esc(c.tactics||'')+'"></div>'+
+    '<div class="field"><label>Defense</label><div id="fce_defense_view" style="display:flex;flex-direction:column;gap:6px;margin-bottom:4px;"></div><input type="hidden" id="fce_defense" value="'+esc(c.defense||'')+'"></div>'+
     '<button id="fce_advanced" class="sm" style="margin-top:4px;background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:4px;padding:4px 8px;cursor:pointer;font-size:11px;">Advanced (edit locked)</button>'+
     '<div id="fce_adv" style="display:none;margin-top:6px;padding:6px;border:1px dashed var(--edge);border-radius:4px;">'+
       '<div style="font-size:10px;color:var(--dim);margin-bottom:4px;margin-top:2px;">Size traits (locked)</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;">'+lockedSizeOpts+'</div>'+
@@ -745,6 +745,16 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   const wadd=document.getElementById('fce_wadd');
   if(wadd) wadd.addEventListener('click', function(){ (c.weaknesses=c.weaknesses||[]).push({damage:TRAIT_LIST[0],kind:'weakness',when:'always'}); renderWeakRows(); });
   // parse mech/theme on save unchanged; also ensure weaknesses remains c.weaknesses
+
+  (function(){
+    function splitBlocks(t){ return String(t||'').split(/
+\s*
+/).map(function(x){return x.trim();}).filter(Boolean); }
+    function renderBlocks(id, text){ const el=document.getElementById(id); if(!el) return; el.innerHTML = splitBlocks(text).map(function(b){ return '<div style="padding:6px 8px;border:1px solid var(--edge);border-radius:4px;white-space:pre-wrap;background:var(--panel2);">'+esc(b)+'</div>'; }).join(''); }
+    renderBlocks('fce_activation_view', c.activation);
+    renderBlocks('fce_tactics_view', c.tactics);
+    renderBlocks('fce_defense_view', c.defense);
+  })();
   const save=document.getElementById('fce_save');
   if(save) save.onclick=function(){
     const mechVals=[].slice.call(document.querySelectorAll('[data-cm="mech"]:checked')).map(function(x){return x.value;});
