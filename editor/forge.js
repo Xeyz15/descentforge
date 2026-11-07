@@ -609,10 +609,7 @@ function _externalActivationTextsED(ext, gd){
       if(a.next!==undefined|| (a.NextActivation && (a.NextActivation.id||a.NextActivation._name))) stats.push('Next: '+(a.next||(a.NextActivation&&(a.NextActivation.id||a.NextActivation._name))||''));
       let block='';
       if(name) block += '**'+name+'**';
-      const _t = (text||'').replace(/
-\s*
-/g, '
-');
+      const _t = text || '';
       if(_t) block += (block?'
 
 ':'')+_t;
@@ -620,7 +617,6 @@ function _externalActivationTextsED(ext, gd){
 
 ':'')+'Hint: '+hint;
       if(stats.length) block += (block?'
-
 ':'')+stats.join('
 ');
       if(block) lines.push(block);
