@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DescentForge Enemy Data Editor</title>
+<style>
+body{font-family:system-ui,sans-serif;margin:16px;background:#1b1d22;color:#eef0f4}
+h1{margin:0 0 12px}
+.row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.column{flex:1;min-width:260px}
+.panel{background:#23262d;border:1px solid #3a3f4a;border-radius:8px;padding:12px}
+button{padding:6px 12px;border:1px solid #3a3f4a;background:#2a2e36;color:#eef0f4;border-radius:6px;cursor:pointer}
+button:hover{background:#343945}
+input,textarea,select{width:100%;box-sizing:border-box;background:#15171b;color:#eef0f4;border:1px solid #3a3f4a;border-radius:6px;padding:6px}
+textarea{font-family:monospace;min-height:120px}
+label{display:block;font-size:12px;color:#8b93a1;margin:8px 0 4px}
+.list{max-height:60vh;overflow:auto}
+.item{padding:8px;border:1px solid #3a3f4a;border-radius:6px;margin-bottom:6px;cursor:pointer}
+.item.active{border-color:#e0a458;background:#33302a}
+.item small{color:#8b93a1;display:block}
+.flex{display:flex;gap:8px;align-items:center}
+.flex input{flex:1}
+img.preview{max-width:96px;max-height:96px;border-radius:6px;background:#111}
+#raw{min-height:50vh}
+.info{font-size:12px;color:#8b93a1;margin-bottom:8px}
+</style>
+</head>
+<body>
+<h1>DescentForge Enemy Data Editor</h1>
+<div class="row">
+  <div class="column panel">
+    <div class="info">Load <code>descentforge-game-data.js</code> or a JSON export. Select a monster to view/edit.</div>
+    <input type="file" id="file" accept=".js,.json" />
+    <div class="flex" style="margin-top:8px">
+      <button id="loadSample">Load sample</button>
+      <button id="exportJson">Export JSON</button>
+      <button id="exportJs">Export JS</button>
+    </div>
+    <label>Search</label>
+    <input id="search" placeholder="name, id, type..." />
+    <div class="list" id="list"></div>
+  </div>
+  <div class="column panel">
+    <div id="detail"></div>
+  </div>
+  <div class="column panel">
+    <h3>Raw JSON</h3>
+    <textarea id="raw" placeholder="Select a monster"></textarea>
+    <div class="flex" style="margin-top:8px">
+      <button id="applyRaw">Apply raw</button>
+      <button id="addMonster">Add new</button>
+      <button id="deleteMonster">Delete</button>
+    </div>
+  </div>
+</div>
+<script>
+let data = null;
+let CAT = null;
+let CAT_ATIV = null;
+let monsters = [];
+let selected = null;
+
+function extractJson(text){
+  text = text.trim();
+  // Try plain JSON
+  try { return JSON.parse(text); } catch(e){}
+  // JS export: window.BIGORNA_JOGO = {...};
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  if(start>=0 && end>start){
+    try { return JSON.parse(text.slice(start,end+1)); } catch(e){}
+  }
+  return null;
+}
+
+function getMonsters(d){
+  if(!d) return [];
+  if(Array.isArray(d.monstros)) return d.monstros;
+  if(d.catalogo && Array.isArray(d.catalogo.monstros)) return d.catalogo.monstros;
+  if(d.enemies && Array.isArray(d.enemies)) return d.enemies;
+  // search
+  for(const k of Object.keys(d)){
+    if(Array.isArray(d[k]) && d[k].length && d[k][0] && (d[k][0].Type || d[k][0].type)) return d[k];
+  }
+  return [];
+}
+
+function renderList(){
+  const q = (document.getElementById('search').value||'').toLowerCase();
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+  monsters.forEach((m,i)=>{
+    const name = m.name_en || m.Name || m._name || m.name || ('#'+i);
+    const type = m.Type || m.type || '';
+    const id = m.Id || m._id || m.id || '';
+    const hay = (name+' '+type+' '+id).toLowerCase();
+    if(q && !hay.includes(q)) return;
+    const div = document.createElement('div');
+    div.className = 'item'+(selected===i?' active':'');
+    div.innerHTML = `<b>${name}</b><small>${type} · ${id}</small>`;
+    div.onclick = ()=>{ selected=i; renderList(); renderDetail(); renderRaw(); };
+    list.appendChild(div);
+  });
+}
+
+function resolveActivations(m){
+  const out = { manual: [], auto: [] };
+  if(!m) return out;
+  const collect = (arr,label) => {
+    if(!Array.isArray(arr)) return;
+    arr.forEach(ref=>{
+      // ref can be object with ref/cls/id, or a string, or already activation
+      let a = null;
+      if(ref && ref.id && ref.id in (window.__acts||{})) a = window.__acts[ref.id];
+      if(!a && (CAT || CAT_ATIV)){
+        const cat = (CAT && CAT.ativacoes) ? CAT : (data && data.catalogo) ? data.catalogo : null;
+        if(cat && cat.ativacoes){
+          if(ref && ref.id && cat.ativacoes[ref.id]) a = cat.ativacoes[ref.id];
+          if(!a && ref && ref.ref){ a = Object.values(cat.ativacoes).find(x=>x._name===ref.ref); }
+          if(!a && typeof ref === 'string'){ a = cat.ativacoes[ref] || Object.values(cat.ativacoes).find(x=>x._name===ref); }
+        }
+      }
+      if(!a && ref && (ref.speed!==undefined || ref.text_en!==undefined || ref.text!==undefined)){ a = ref; }
+      if(a){ out[label].push(a); }
+      else if(ref){ out[label].push({ unresolved: true, raw: ref }); }
+    });
+  };
+  collect(m.Activations || m.activations || m.activations_auto || null, 'auto');
+  collect(m.ManualActivations || m.manualActivations || m.taticas || null, 'manual');
+  return out;
+}
+
+function scalarFields(m){
+  const out={};
+  for(const k of Object.keys(m)){
+    const v=m[k];
+    if(v===null||typeof v==='undefined') continue;
+    if(Array.isArray(v) || (typeof v==='object')) continue;
+    out[k]=v;
+  }
+  return out;
+}
+
+function renderDetail(){
+  const box = document.getElementById('detail');
+  if(selected===null || !monsters[selected]){
+    box.innerHTML='<div class="info">No monster selected.</div>';
+    return;
+  }
+  const m = monsters[selected];
+  const name = m.name_en || m.Name || m._name || m.name || '';
+  const type = m.Type || m.type || '';
+  const pic = (data && data.retratos && data.retratos.monstros) ? data.retratos.monstros[kStr(m)] : null;
+  let html = '<h3>'+escapeHtml(name)+'</h3>';
+  html += '<div class="info">Type: '+escapeHtml(String(type))+'</div>';
+  if(pic){ html += '<img class="preview" src="'+pic+'" alt="" />'; }
+  html += '<label>Name (EN)</label><input id="f_name_en" value="'+escAttr(m.name_en||'')+'" />';
+  html += '<label>Plural (EN)</label><input id="f_plural_en" value="'+escAttr(m.plural_en||'')+'" />';
+  html += '<label>Description (EN)</label><textarea id="f_desc_en">'+escHtml(m.desc_en||'')+'</textarea>';
+  html += '<label>Type</label><input id="f_Type" value="'+escAttr(m.Type||m.type||'')+'" />';
+  html += '<label>Id</label><input id="f_Id" value="'+escAttr(m.Id||m._id||m.id||'')+'" />';
+  html += '<div style="margin-top:8px"><button id="applyFields">Apply fields</button></div>';
+
+  // activations
+  const acts = resolveActivations(m);
+  function actCard(a, label){
+    if(a.unresolved){
+      return '<div class="panel" style="margin-top:8px"><b>'+label+' (unresolved)</b><pre style="white-space:pre-wrap;font-size:11px">'+escapeHtml(JSON.stringify(a.raw,null,2))+'</pre></div>';
+    }
+    const rangeType = a.rangeType || a.RangeType || a.range_type || '';
+    const next = a.next || (a.NextActivation && (a.NextActivation.id||a.NextActivation._id||a.NextActivation._name)) || '';
+    let h = '<div class="panel" style="margin-top:8px">';
+    h += '<b>'+label+'</b> <small style="color:#8b93a1">'+escapeHtml(a._name||a.name||'')+'</small>';
+    h += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:12px;margin-top:6px">';
+    const stats = [['Speed', a.speed ?? a.Speed],['Damage', a.damage ?? a.Damage],['Aim', a.aim ?? a.Aim],['Attack', a.attack ?? a.Attack],['Range', a.range ?? a.Range],['Healing', a.healing ?? a.Healing],['Shield', a.shield ?? a.Shield],['Initiative', a.initiative ?? a.Initiative],['RangeType', rangeType],['Next', next]];
+    stats.forEach(([k,v])=>{ if(v===undefined||v===null||v==='') return; h += '<div><span style="color:#8b93a1">'+k+':</span> '+escapeHtml(String(v))+'</div>'; });
+    h += '</div>';
+    const text = a.text || a.text_en || '';
+    const hint = a.hint || a.hint_en || '';
+    if(hint) h += '<div style="margin-top:6px"><span style="color:#8b93a1;font-size:12px">Hint:</span><div>'+escapeHtml(hint)+'</div></div>';
+    if(text) h += '<div style="margin-top:6px"><span style="color:#8b93a1;font-size:12px">Activation text:</span><div style="white-space:pre-wrap">'+escapeHtml(text)+'</div></div>';
+    h += '</div>';
+    return h;
+  }
+  let actHtml = '';
+  acts.auto.forEach(a=>{ actHtml += actCard(a,'Automatic activation'); });
+  acts.manual.forEach(a=>{ actCard && (actHtml += actCard(a,'Manual activation (tactic)')); });
+  if(!actHtml) actHtml = '<div class="info" style="margin-top:8px">No activations/manual tactics found for this monster.</div>';
+  html += actHtml;
+
+  box.innerHTML = html;
+  document.getElementById('applyFields').onclick = applyFields;
+}
+
+function kStr(m){ // best effort texture key
+  return m.TextureTabAssetPath || m._name || '';
+}
+
+function applyFields(){
+  if(selected===null) return;
+  const m = monsters[selected];
+  m.name_en = document.getElementById('f_name_en').value;
+  m.plural_en = document.getElementById('f_plural_en').value;
+  m.desc_en = document.getElementById('f_desc_en').value;
+  if('Type' in m) m.Type = document.getElementById('f_Type').value;
+  else m.type = document.getElementById('f_Type').value;
+  if('Id' in m) m.Id = document.getElementById('f_Id').value;
+  else if('_id' in m) m._id = document.getElementById('f_Id').value;
+  else m.id = document.getElementById('f_Id').value;
+  renderList();
+  renderRaw();
+}
+
+function renderRaw(){
+  const raw = document.getElementById('raw');
+  if(selected===null || !monsters[selected]){ raw.value=''; return; }
+  raw.value = JSON.stringify(monsters[selected], null, 2);
+}
+
+function applyRaw(){
+  if(selected===null) return;
+  try {
+    const v = JSON.parse(document.getElementById('raw').value);
+    monsters[selected] = v;
+    renderList(); renderDetail(); renderRaw();
+  } catch(e){ alert('Invalid JSON: '+e.message); }
+}
+
+function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escAttr(s){return String(s).replace(/"/g,'&quot;');}
+function escHtml(s){return escapeHtml(s);}
+
+document.getElementById('file').addEventListener('change', async (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const text = await f.text();
+  const parsed = extractJson(text);
+  if(!parsed){ alert('Could not parse file'); return; }
+  data = parsed;
+  CAT = (data && data.catalogo) ? data.catalogo : (data||{});
+  CAT_ATIV = CAT && CAT.ativacoes ? CAT.ativacoes : null;
+  monsters = getMonsters(data);
+  selected = monsters.length?0:null;
+  renderList(); renderDetail(); renderRaw();
+});
+
+document.getElementById('search').addEventListener('input', renderList);
+document.getElementById('applyRaw').addEventListener('click', applyRaw);
+
+document.getElementById('exportJson').addEventListener('click', ()=>{
+  const blob = new Blob([JSON.stringify(monsters,null,2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='enemies.json'; a.click();
+});
+document.getElementById('exportJs').addEventListener('click', ()=>{
+  const obj = data||{};
+  // put monsters back
+  if(obj.catalogo) obj.catalogo.monstros = monsters; else if(Array.isArray(obj.monstros)) obj.monstros=monsters; else obj.monstros=monsters;
+  const text = 'window.BIGORNA_JOGO = '+JSON.stringify(obj)+';';
+  const blob = new Blob([text], {type:'text/javascript'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='descentforge-game-data.js'; a.click();
+});
+
+document.getElementById('addMonster').addEventListener('click', ()=>{
+  const nm = prompt('New monster name?')||'New monster';
+  monsters.push({name_en:nm, Type:'', Id:'', desc_en:'', plural_en:''});
+  selected = monsters.length-1;
+  renderList(); renderDetail(); renderRaw();
+});
+document.getElementById('deleteMonster').addEventListener('click', ()=>{
+  if(selected===null) return;
+  if(!confirm('Delete?')) return;
+  monsters.splice(selected,1);
+  selected = monsters.length?0:null;
+  renderList(); renderDetail(); renderRaw();
+});
+
+document.getElementById('loadSample').addEventListener('click', ()=>{
+  monsters = [
+    {Id:'ENEMY_VAMPIRE_1', Type:'Vampire', name_en:'Vampire', plural_en:'Vampires', desc_en:'A sample monster.', health:5, defense:2, tier:1}
+  ];
+  data=null;
+  selected=0;
+  renderList(); renderDetail(); renderRaw();
+});
+</script>
+</body>
+</html>
