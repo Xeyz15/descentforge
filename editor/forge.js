@@ -632,7 +632,7 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   let baseId = baseHint || (existing? existing.base : null);
   if(!baseId && id && (typeof DATA!=='undefined' && Array.isArray(DATA.enemies) && DATA.enemies.some(function(e){return e.id===id;}))) baseId=id;
   const baseEnemy = (typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies.find(function(e){return e.id===baseId;}) : null;
-  const c=existing || {id: (baseId? ('CUSTOM_'+baseId) : ('CUSTOM_ENEMY_'+(list.length+1))), name:(baseEnemy && (baseEnemy.name_en||baseEnemy.name)) || ('Custom monster '+(list.length+1)), base: (baseId||''), hp:(baseEnemy? baseEnemy.hp : 40), def:(baseEnemy? baseEnemy.def : 2), atk:(baseEnemy? baseEnemy.atk : 2), mech:(baseEnemy && Array.isArray(baseEnemy.mech))? baseEnemy.mech.filter(function(t){return t!=='Huge' && t!=='Small';}).slice() : [], theme:(baseEnemy && Array.isArray(baseEnemy.theme))? baseEnemy.theme.slice() : [], weaknesses: _forgeWeaknessesFromExisting(existing, baseId) };
+  const c=existing || {id: (baseId? ('CUSTOM_'+baseId) : ('CUSTOM_ENEMY_'+(list.length+1))), name:(baseEnemy && (baseEnemy.name_en||baseEnemy.name)) || ('Custom monster '+(list.length+1)), base: (baseId||''), hp:(baseEnemy? baseEnemy.hp : 40), def:(baseEnemy? baseEnemy.def : 2), atk:(baseEnemy? baseEnemy.atk : 2), mech:(baseEnemy && Array.isArray(baseEnemy.mech))? baseEnemy.mech.filter(function(t){return t!=='Huge' && t!=='Small';}).slice() : [], theme:(baseEnemy && Array.isArray(baseEnemy.theme))? baseEnemy.theme.slice() : [], weaknesses: _forgeWeaknessesFromExisting(existing, baseId), immune: (existing && Array.isArray(existing.immune)) ? existing.immune.slice() : ((baseEnemy && Array.isArray(baseEnemy.immune)) ? baseEnemy.immune.slice() : []) };
   if (!Array.isArray(c.tiers) || !c.tiers.length) c.tiers = _baseTiers(c.base || baseId);
   if (!Array.isArray(c.immune)) c.immune = [];
   if (!c.activation) c.activation = _baseExtra(c.base || baseId).activation || (baseEnemy && baseEnemy.activation) || '';
@@ -763,7 +763,8 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   renderWeakRows();
   const CONDS_IMMUNE=['Dazed','Enfeebled','Afflicted','Slowed','Exposed','Doomed','Confused'];
   const immuneBox=document.getElementById('fce_immune_rows');
-  if(immuneBox){ immuneBox.innerHTML=CONDS_IMMUNE.map(function(cd){ return '<label style="font-size:11px;margin-right:8px;"><input type="checkbox" value="'+esc(cd)+'" data-ci="immune" '+((c.immune||[]).indexOf(cd)>=0?'checked':'')+'> '+esc(cd)+'</label>'; }).join(''); }
+  function renderImmuneRows(){ if(!immuneBox) return; immuneBox.innerHTML=CONDS_IMMUNE.map(function(cd){ return '<label style="font-size:11px;margin-right:8px;"><input type="checkbox" value="'+esc(cd)+'" data-ci="immune" '+((c.immune||[]).indexOf(cd)>=0?'checked':'')+'> '+esc(cd)+'</label>'; }).join(''); }
+  if(immuneBox) renderImmuneRows();
   const tierBox=document.getElementById('fce_tiers');
   const renderTierRows=function(){
     if(!tierBox) return;
@@ -779,6 +780,9 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   renderTierRows();
   const baseSel=document.getElementById('fce_base');
   if(baseSel) baseSel.addEventListener('change', function(){ c.base=baseSel.value; c.weaknesses=_baseWeaknesses(baseSel.value).slice(); c.tiers=_baseTiers(baseSel.value); renderWeakRows(); renderTierRows();
+    const _be=(typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies.find(function(e){return e.id===baseSel.value;}) : (window.DESCENTFORGE_EXTERNAL_GAME_DATA? _externalBaseEnemyED(baseSel.value) : null);
+    if(_be && Array.isArray(_be.immune)) { c.immune=_be.immune.slice(); if(typeof renderImmuneRows==='function') renderImmuneRows(); }
+
     const _p=document.getElementById('fce_portrait'); if(_p){ const _src=(typeof arte==='function' && typeof ASSETS!=='undefined' && ASSETS.enemyFamily)? arte('portraits', (ASSETS.enemyFamily[baseSel.value]||'')) : ''; if(_src){ _p.src=_src; _p.style.display=''; } else { _p.style.display='none'; } } });
   const wadd=document.getElementById('fce_wadd');
   if(wadd) wadd.addEventListener('click', function(){ (c.weaknesses=c.weaknesses||[]).push({damage:TRAIT_LIST[0],kind:'weakness',when:'always'}); renderWeakRows(); });
