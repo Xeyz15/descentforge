@@ -895,6 +895,7 @@ function renderEnemiesCategory(){
   if(!camp.enemyTags || typeof camp.enemyTags!=='object' || Array.isArray(camp.enemyTags)) camp.enemyTags={};
   if(camp.enemyPools.length===0) enemyPoolsSelected=-1; else if(enemyPoolsSelected<0 || enemyPoolsSelected>=camp.enemyPools.length) enemyPoolsSelected=Math.max(0,camp.enemyPools.length-1);
   const baseItems=((typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies : []).filter(function(e){
+    if(e && e.id==='RANDOM_POOL') return false;
     return !(camp && Array.isArray(camp.customEnemies) && camp.customEnemies.some(function(c){return c.id===e.id;}));
   });
   const customEnemies=(typeof camp!=='undefined' && Array.isArray(camp.customEnemies))? camp.customEnemies : [];
@@ -1749,8 +1750,7 @@ function applyExternalEnemyGameData(parsed){
     // keep custom enemies already in editor
     const custom = (DATA.enemies || []).filter(function(e){ return e && e.custom; });
     // Keep virtual/special base entries (like RANDOM_POOL) that external catalogs do not contain.
-    const specials = (DATA.enemies || []).filter(function(e){ return e && !e.custom && e.id === 'RANDOM_POOL'; });
-    DATA.enemies = specials.concat(custom).concat(conv);
+    DATA.enemies = custom.concat(conv);
     window.DESCENTFORGE_EXTERNAL_ENEMY_COUNT = conv.length;
     return true;
   } catch(err){ console.warn('external enemy game data apply failed', err); return false; }
