@@ -895,7 +895,6 @@ function renderEnemiesCategory(){
   if(!camp.enemyTags || typeof camp.enemyTags!=='object' || Array.isArray(camp.enemyTags)) camp.enemyTags={};
   if(camp.enemyPools.length===0) enemyPoolsSelected=-1; else if(enemyPoolsSelected<0 || enemyPoolsSelected>=camp.enemyPools.length) enemyPoolsSelected=Math.max(0,camp.enemyPools.length-1);
   const baseItems=((typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies : []).filter(function(e){
-    if(e && e.id==='RANDOM_POOL') return false;
     return !(camp && Array.isArray(camp.customEnemies) && camp.customEnemies.some(function(c){return c.id===e.id;}));
   });
   const customEnemies=(typeof camp!=='undefined' && Array.isArray(camp.customEnemies))? camp.customEnemies : [];
