@@ -1050,20 +1050,7 @@ function renderEnemiesCategory(){
   const createBtn='<button id="enemCreatePool" style="padding:4px 8px;border:1px solid var(--edge);background:var(--torch);color:var(--ink);border-radius:4px;cursor:pointer;font-size:11px;">Create pool</button>';
   const poolSel= (camp.enemyPools.length? '<select id="enemPoolSel" style="padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;">'+
             camp.enemyPools.map(function(p,i){return '<option value="'+i+'" '+(i===enemyPoolsSelected?'selected':'')+'>pool'+(i+1)+' ('+(p.enemies||[]).length+')</option>';}).join('')+ '</select>' : '');
-  const customRows=(camp.customEnemies||[]).map(function(c){
-    const src=(typeof arte==='function' && typeof ASSETS!=='undefined' && ASSETS.enemyFamily)? arte('portraits', (ASSETS.enemyFamily[c.base]||'')) : '';
-    const img=src? '<img src="'+src+'" style="width:40px;height:40px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;margin-right:8px;">' : '';
-    return '<div style="padding:6px;margin-bottom:4px;border:1px solid var(--edge);background:var(--panel2);border-radius:6px;display:flex;align-items:center;gap:8px;">'+
-      img+
-      '<div style="flex:1;min-width:0;">'+
-        '<div style="font-size:12px;">'+esc(c.name||c.id)+'</div>'+
-        '<div style="color:var(--dim);font-size:11px;">'+esc(c.id)+' | HP '+esc(c.hp)+' | DEF '+esc(c.def)+' | ATK '+esc(c.atk)+(c.base?' | base '+esc(c.base):'')+'</div>'+
-      '</div>'+
-      '<button class="sm" data-forcustedit="'+c.id+'" style="background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:4px;padding:4px 8px;cursor:pointer;font-size:11px;">Edit</button>'+
-      '<button class="sm" data-forcustdel="'+c.id+'" style="background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:4px;padding:4px 8px;cursor:pointer;font-size:11px;">Del</button>'+
-      (Array.isArray(c.weaknesses) && c.weaknesses.length ? '<div style="width:100%;color:var(--verd);font-size:11px;margin-top:2px;">Weak: '+esc(c.weaknesses.map(function(w){return (w.kind==='resist'?'Resist: ':'')+w.damage;}).join(', '))+'</div>' : '')+
-    '</div>';
-  }).join('');
+  const customRows=(Array.isArray(customAsEnemies) && customAsEnemies.length) ? customAsEnemies.map(row).join('') : (camp.customEnemies||[]).map(function(c){ return ''; }).join('');
   const customSection='<div style="margin-top:12px;border:1px solid var(--edge);border-radius:6px;padding:8px;background:var(--panel);max-width:980px;margin-left:auto;margin-right:auto;">'+
     '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'+
       '<h3 style="margin:0;font-size:14px;">Custom</h3>'+
