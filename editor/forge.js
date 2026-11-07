@@ -553,7 +553,6 @@ function _baseTiers(baseId){
 }
 
 function _baseExtra(baseId){
-  if (baseId==='ENEMY_WARY_BANDIT_1') return {activation:'Serrated Bolt: During the defense, the first time the hero places a fatigue on a card, they also scar it.', tactics:'Tactic 1:\nThe Bandit sprints forward then backflips into the air, launching knives and bolts in all directions!\n\nMove to within 3 spaces of as many heroes as possible. Then, this attack targets all heroes within range.\n\nTactic 2:\nThe Bandit leaps from the defensive posture, daggers twirling through nimble fingers.\n\nTactic 3:\nBloodlust: After the Attack, the target is pushed 2 spaces.', defense:'Smokebomb: After the attack, this enemy shifts 2 away from the hero.'};
   return {activation:'', tactics:'', defense:''};
 }
 
