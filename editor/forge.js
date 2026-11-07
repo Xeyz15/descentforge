@@ -652,8 +652,32 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   if (!c.defense) c.defense = _baseExtra(c.base || baseId).defense || (baseEnemy && baseEnemy.defense) || '';
   if (c.tiers && c.tiers.length) { c.hp=c.tiers[0].health; c.def=c.tiers[0].defense; c.atk=c.tiers[0].attack; }
 
+  // Build base options as FAMILY names (one representative enemy per family), so changing base changes the physical piece/model.
+  const _familyReps={};
+  if(typeof ENEMY_TYPE_CAPS!=='undefined'){
+    const _keys=Object.keys(ENEMY_TYPE_CAPS);
+    _keys.forEach(function(k){
+      const fam=ENEMY_TYPE_CAPS[k];
+      const name=familyName(fam);
+      if(_familyReps[name]) return;
+      const members=(fam.member_ids||[]);
+      let rep=null;
+      for(let i=0;i<members.length;i++){ if((typeof DATA!=='undefined' && Array.isArray(DATA.enemies)) && DATA.enemies.some(function(e){return e.id===members[i];})){ rep=members[i]; break; } }
+      if(!rep && members.length) rep=members[0];
+      if(rep) _familyReps[name]=rep;
+    });
+  }
+  // Fallback: if no caps, keep per-enemy options
+  const _famNames=Object.keys(_familyReps).sort();
   const bases=((typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies : []);
-  const baseOpts=bases.map(function(e){ return '<option value="'+esc(e.id)+'" '+(e.id===c.base?'selected':'')+'>'+esc(e.name_en||e.name||e.id)+'</option>'; }).join('');
+  let baseOpts='';
+  if(_famNames.length){
+    baseOpts=_famNames.map(function(nm){ const rep=_familyReps[nm]; return '<option value="'+esc(rep)+'" '+(rep===c.base?'selected':'')+'>'+esc(nm)+'</option>'; }).join('')+
+      '<option value="" '+(c.base && !_famNames.some(function(nm){return _familyReps[nm]===c.base;})?'selected':'')+'>— original —</option>';
+  } else {
+    baseOpts=bases.map(function(e){ return '<option value="'+esc(e.id)+'" '+(e.id===c.base?'selected':'')+'>'+esc(e.name_en||e.name||e.id)+'</option>'; }).join('');
+  }
+
   const sizeTraits=_sizeTraits(c.base);
   const lockedSizeOpts=['Huge','Small'].map(function(t){ return '<label style="font-size:11px;margin-right:8px;opacity:.7;"><input type="checkbox" value="'+esc(t)+'" '+(sizeTraits.indexOf(t)>=0?'checked':'')+' disabled> '+esc(t)+' (locked)</label>'; }).join('');
   const _MEC=(typeof MECANICOS!=='undefined')?MECANICOS:['Melee','Ranged','Striker','Tank','Support','Debuffer','Fast','Slow','Flying','Huge','Small'];
