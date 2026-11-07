@@ -962,7 +962,10 @@ const idList=rankedIds.map(function(id){ const e=enemyById && enemyById[id]; con
   '</div>';
   main.innerHTML=
     '<div style="width:980px;max-width:100%;margin:0 auto 8px;display:flex;flex-direction:column;gap:4px;border:1px solid var(--edge);border-radius:6px;padding:6px;background:var(--panel2);">'+mechSel+themeSel+customSel+
-      '<div style="text-align:right;"><button id="enemyFilterMode" class="sm" type="button" style="border:1px solid var(--edge);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:10px;background:var(--panel2);color:var(--text);">Filter: '+(enemyFilterMode==='and'?'AND (all selected)':'OR (any selected)')+'</button></div>'+
+      '<div style="text-align:right;display:flex;gap:4px;justify-content:flex-end;align-items:center;flex-wrap:wrap;">'+
+        '<button id="loadExtEnemyData" class="sm" type="button" style="border:1px solid var(--edge);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:10px;background:var(--panel2);color:var(--text);">Load game data</button>'+
+        '<button id="enemyFilterMode" class="sm" type="button" style="border:1px solid var(--edge);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:10px;background:var(--panel2);color:var(--text);">Filter: '+(enemyFilterMode==='and'?'AND (all selected)':'OR (any selected)')+'</button>'+
+      '</div>'+
     '</div>'+
     '<div style="display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:12px;max-width:1320px;margin:0 auto;align-items:start;">'+
       '<div style="min-width:0;">'+blocks+(customSection||'')+'</div>'+
@@ -973,6 +976,7 @@ const idList=rankedIds.map(function(id){ const e=enemyById && enemyById[id]; con
   main.querySelectorAll('[data-mech]').forEach(function(cb){ cb.addEventListener('change', function(){ var t=cb.getAttribute('data-mech'); if(cb.checked){ if(enemyMechFilter.indexOf(t)<0) enemyMechFilter.push(t); } else { enemyMechFilter=enemyMechFilter.filter(function(v){return v!==t;}); } renderEnemiesCategory(); }); });
   main.querySelectorAll('[data-theme]').forEach(function(cb){ cb.addEventListener('change', function(){ var t=cb.getAttribute('data-theme'); if(cb.checked){ if(enemyThemeFilter.indexOf(t)<0) enemyThemeFilter.push(t); } else { enemyThemeFilter=enemyThemeFilter.filter(function(v){return v!==t;}); } renderEnemiesCategory(); }); });
   const _fm=main.querySelector('#enemyFilterMode'); if(_fm) _fm.addEventListener('click', function(){ enemyFilterMode = (enemyFilterMode==='and' ? 'or' : 'and'); renderEnemiesCategory(); });
+  const _led=main.querySelector('#loadExtEnemyData'); if(_led) _led.addEventListener('click', function(){ openExternalEnemyGameDataPicker(); });
   const _c=main.querySelector('#enemCreatePool'); if(_c) _c.addEventListener('click',function(){ if(!camp.enemyPools) camp.enemyPools=[]; camp.enemyPools.push({enemies:[]}); enemyPoolsSelected=camp.enemyPools.length-1; renderEnemiesCategory(); if(typeof ensureMapEnemyPoolsFromCamp==='function'){ ensureMapEnemyPoolsFromCamp(); if(typeof renderPalette==='function') renderPalette(); if(typeof renderRight==='function') renderRight(); if(typeof refreshRandomPoolDropdown==='function') refreshRandomPoolDropdown(); } });
   const _s=main.querySelector('#enemPoolSel'); if(_s) _s.addEventListener('change',function(){ enemyPoolsSelected=parseInt(_s.value,10); renderEnemiesCategory(); });
   main.querySelectorAll('[data-enempool]').forEach(function(btn){ btn.addEventListener('click',function(){ var id=btn.getAttribute('data-enempool'); var pi=parseInt(btn.getAttribute('data-pool'),10); var p=camp.enemyPools && camp.enemyPools[pi]; if(!p) return; if(!Array.isArray(p.enemies)) p.enemies=[]; var i=p.enemies.indexOf(id); if(i<0) p.enemies.push(id); else p.enemies.splice(i,1); renderEnemiesCategory(); if(typeof ensureMapEnemyPoolsFromCamp==='function'){ ensureMapEnemyPoolsFromCamp(); if(typeof renderPalette==='function') renderPalette(); if(typeof renderRight==='function') renderRight(); if(typeof refreshRandomPoolDropdown==='function') refreshRandomPoolDropdown(); } }); });
@@ -1553,3 +1557,85 @@ if(modesel){
   modesel.addEventListener('click',function(e){ const real=e.target.closest('[data-mode]'); if(real) closeForge(); });
 }
 })();
+
+// === DescentForge external game data (enemy) override ===
+function _bitsED(mask, list){ const out=[]; if(!mask || !list) return out; for(let i=0;i<list.length;i++){ if(mask & (1<<i)) out.push(list[i]); } return out; }
+function _traitNameED(v){ try{ if(typeof TRAITS !== 'undefined' && TRAITS[v]) return TRAITS[v]; }catch(e){} return v; }
+function convertExternalEnemyED(c){
+  const tiers = Array.isArray(c.Tiers) ? c.Tiers : [];
+  const first = tiers.length ? tiers[0] : {};
+  const act = (typeof c._act === 'number') ? (c._act + 1) : (c.act || 1);
+  const id = c._id || c.id || c.Id;
+  return {
+    id: id,
+    name: c.name_en || c._name || c.name || id,
+    name_en: c.name_en || c._name || '',
+    type: c.Type || c.type || '',
+    act: act,
+    size: (typeof c.Size === 'number') ? c.Size : 0,
+    mech: _bitsED(c.MechanicalTraits || 0, (typeof TRAITS_MEC !== 'undefined') ? TRAITS_MEC : []),
+    theme: _bitsED(c.ThemeTraits || 0, (typeof TRAITS_TEMA !== 'undefined') ? TRAITS_TEMA : []),
+    named: !!c.IsNamed,
+    villain: !!c.IsVillain,
+    perQuest: c.PerQuest || c.perQuest || 0,
+    hp: first.StartingHealth || 0,
+    def: first.Defense || 0,
+    atk: first.BaseAttack || 0,
+    tiers: tiers.map(function(t){ return t.Tier; }),
+    tierStats: (function(){ const o={}; tiers.forEach(function(t){ o[t.Tier]={hp:t.StartingHealth,def:t.Defense,atk:t.BaseAttack}; }); return o; })(),
+    custom: false,
+    _external: true
+  };
+}
+function applyExternalEnemyGameData(parsed){
+  try {
+    const src = (parsed && parsed.catalogo) ? parsed.catalogo : parsed || {};
+    const mons = Array.isArray(src.monstros) ? src.monstros : (Array.isArray(parsed && parsed.monstros) ? parsed.monstros : []);
+    const conv = mons.map(convertExternalEnemyED).filter(function(e){ return e && e.id; });
+    if(!conv.length) return false;
+    // keep custom enemies already in editor
+    const custom = (DATA.enemies || []).filter(function(e){ return e && e.custom; });
+    DATA.enemies = custom.concat(conv);
+    window.DESCENTFORGE_EXTERNAL_ENEMY_COUNT = conv.length;
+    return true;
+  } catch(err){ console.warn('external enemy game data apply failed', err); return false; }
+}
+function extractJsonED(text){
+  text = String(text||'').trim();
+  try { return JSON.parse(text); } catch(e){}
+  const a = text.indexOf('{'), b = text.lastIndexOf('}');
+  if(a>=0 && b>a){ try { return JSON.parse(text.slice(a,b+1)); } catch(e){} }
+  return null;
+}
+function openExternalEnemyGameDataPicker(){
+  const inp = document.createElement('input');
+  inp.type='file';
+  inp.accept='.js,.json';
+  inp.onchange = async function(){
+    const f = inp.files && inp.files[0]; if(!f) return;
+    try {
+      const txt = await f.text();
+      const parsed = extractJsonED(txt);
+      if(!parsed){ alert('Could not parse file'); return; }
+      const ok = applyExternalEnemyGameData(parsed);
+      if(!ok){ alert('No enemies found in file'); return; }
+      if(typeof renderEnemiesCategory==='function') renderEnemiesCategory();
+      alert('Loaded '+ (window.DESCENTFORGE_EXTERNAL_ENEMY_COUNT||0) +' enemies from game data.');
+    } catch(err){ alert('Load failed: '+(err&&err.message?err.message:err)); }
+  };
+  inp.click();
+}
+function tryAutoExternalEnemyGameData(){
+  // Global override
+  if(window.DESCENTFORGE_GAME_DATA && applyExternalEnemyGameData(window.DESCENTFORGE_GAME_DATA)){
+    if(typeof renderEnemiesCategory==='function') renderEnemiesCategory();
+    return true;
+  }
+  // Local file next to page (fetch may be blocked on file://)
+  fetch('descentforge-game-data.js').then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); }).then(function(txt){
+    const parsed = extractJsonED(txt);
+    if(parsed && applyExternalEnemyGameData(parsed)){ if(typeof renderEnemiesCategory==='function') renderEnemiesCategory(); }
+  }).catch(function(){ /* no auto file */ });
+}
+// run auto attempt when forge loads
+try { setTimeout(tryAutoExternalEnemyGameData, 0); } catch(e){}
