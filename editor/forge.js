@@ -597,21 +597,32 @@ function _externalActivationTextsED(ext, gd){
       const text = a.text_en || a.text || '';
       const hint = a.hint_en || a.hint || '';
       const stats = [];
-      if(a.speed!==undefined) stats.push('Speed '+a.speed);
-      if(a.damage!==undefined) stats.push('Damage '+a.damage);
-      if(a.aim!==undefined) stats.push('Aim '+a.aim);
-      if(a.attack!==undefined) stats.push('Attack '+a.attack);
-      if(a.range!==undefined) stats.push('Range '+a.range);
-      if(a.healing!==undefined) stats.push('Healing '+a.healing);
-      if(a.shield!==undefined) stats.push('Shield '+a.shield);
-      if(a.initiative!==undefined) stats.push('Initiative '+a.initiative);
-      if(a.rangeType!==undefined||a.RangeType!==undefined) stats.push('RangeType '+(a.rangeType||a.RangeType));
-      if(a.next!==undefined|| (a.NextActivation && (a.NextActivation.id||a.NextActivation._name))) stats.push('Next '+(a.next||(a.NextActivation&&(a.NextActivation.id||a.NextActivation._name))||''));
+      if(a.speed!==undefined) stats.push('Speed: '+a.speed);
+      if(a.damage!==undefined) stats.push('Damage: '+a.damage);
+      if(a.aim!==undefined) stats.push('Aim: '+a.aim);
+      if(a.attack!==undefined) stats.push('Attack: '+a.attack);
+      if(a.range!==undefined) stats.push('Range: '+a.range);
+      if(a.healing!==undefined) stats.push('Healing: '+a.healing);
+      if(a.shield!==undefined) stats.push('Shield: '+a.shield);
+      if(a.initiative!==undefined) stats.push('Initiative: '+a.initiative);
+      if(a.rangeType!==undefined||a.RangeType!==undefined) stats.push('RangeType: '+(a.rangeType||a.RangeType));
+      if(a.next!==undefined|| (a.NextActivation && (a.NextActivation.id||a.NextActivation._name))) stats.push('Next: '+(a.next||(a.NextActivation&&(a.NextActivation.id||a.NextActivation._name))||''));
       let block='';
-      if(name) block += name+': ';
-      if(text) block += text;
-      if(hint) block += (block?'\n':'')+'Hint: '+hint;
-      if(stats.length) block += (block?'\n':'')+'('+stats.join(', ')+')';
+      if(name) block += '**'+name+'**';
+      const _t = (text||'').replace(/
+\s*
+/g, '
+');
+      if(_t) block += (block?'
+
+':'')+_t;
+      if(hint) block += (block?'
+
+':'')+'Hint: '+hint;
+      if(stats.length) block += (block?'
+
+':'')+stats.join('
+');
       if(block) lines.push(block);
     });
     out[w.target]=lines.join('\n\n');
