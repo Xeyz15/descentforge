@@ -381,7 +381,7 @@ function renderSimpleCategory(title, items, imgFolder){
   const rows=items.map(function(x){
     const name = prettyName((typeof L==='function') ? L(x,'name') : (x.name_en||x.name||x.id));
     const isIn=inStartInv(x.id);
-    const img = imgFolder ? '<img src="../img/'+imgFolder+'/'+x.id+'.png" style="width:48px;height:48px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;margin-right:8px;" onerror="this.style.display=&quot;none&quot;;">' : '';
+    const img = imgFolder ? '<img src="../img/'+imgFolder+'/'+x.id+'.png" style="width:40px;height:40px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;margin-right:6px;" onerror="this.style.display=&quot;none&quot;;">' : '';
     return '<div style="padding:8px;margin-bottom:6px;border:1px solid var(--edge);background:var(--panel2);border-radius:6px;display:flex;justify-content:space-between;align-items:center;gap:8px;">'+
       '<div style="display:flex;align-items:center;gap:8px;">'+img+'<span>'+esc(name)+'</span></div>'+
       '<span style="font-size:11px;color:'+(isIn?'var(--verd)':'var(--dim)')+';">'+(isIn?'In Starting Inventory':'Not in Starting Inventory')+'</span>'+
@@ -918,18 +918,17 @@ function renderEnemiesCategory(){
     const act=actOf(x);
     const weak=weaknessDisplayOf(x.id);
     const src=portrait(x);
-    const img=src? '<img src="'+src+'" style="width:48px;height:48px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;margin-right:8px;">' : '';
+    const img=src? '<img src="'+src+'" style="width:40px;height:40px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;margin-right:6px;">' : '';
     const bossTagKey=(camp.enemyTags && camp.enemyTags[x.id]) || ENEMY_TAG_BY_LIST[x.id] || (/boss/i.test(String(x.id||'')) ? 'boss' : (/named/i.test(String(x.id||'')) ? 'mini' : ''));
     const bossTag=bossTagKey ? (bossTagKey==='boss' ? 'BOSS' : (bossTagKey==='mini' ? 'MINI' : (bossTagKey==='base' ? 'BASE' : ''))) : '';
     const border=bossTag==='BOSS' ? 'border-color:var(--torch);box-shadow:0 0 0 1px var(--torch);' : (bossTag==='MINI' ? 'border-color:#d9a441;box-shadow:0 0 0 1px #d9a441;' : (bossTag==='BASE' ? 'border-color:var(--verd);box-shadow:0 0 0 1px var(--verd);' : ''));
-    return '<div style="padding:6px;margin-bottom:4px;border:1px solid var(--edge);'+border+'background:var(--panel2);border-radius:6px;display:flex;flex-direction:column;gap:4px;">'+
+    return '<div style="padding:4px;margin-bottom:2px;border:1px solid var(--edge);'+border+'background:var(--panel2);border-radius:6px;display:flex;flex-direction:column;gap:2px;">'+
       '<div style="display:flex;align-items:flex-start;gap:8px;">'+
         img+
         '<div style="flex:1;min-width:0;">'+
           '<div style="font-size:12px;">'+esc(x.name_en||x.name||x.id)+'</div>'+
           '<div style="color:var(--dim);font-size:11px;">'+esc(x.id)+'</div>'+
-          '<div style="color:var(--dim);font-size:11px;">HP '+esc(x.hp)+' | DEF '+esc(x.def)+' | ATK '+esc(x.atk)+' | Act '+((x.act||1)>=2?'II':'I')+'</div>'+
-          '<div style="color:var(--dim);font-size:10px;">Mech: '+esc((x.mech||[]).join(', ')||'---')+' | Theme: '+esc((x.theme||[]).join(', ')||'---')+'</div>'+
+          '<div style="color:var(--dim);font-size:10px;">HP '+esc(x.hp)+' | DEF '+esc(x.def)+' | ATK '+esc(x.atk)+' | Act '+((x.act||1)>=2?'II':'I')+'  •  Mech: '+esc((x.mech||[]).join(', ')||'---')+'  •  Theme: '+esc((x.theme||[]).join(', ')||'---')+'</div>'+
           '<div style="color:var(--verd);font-size:11px;">Weak: '+(weak.length? weak.join(', ') : 'none listed')+'</div>'+
           (bossTag? '<div style="display:inline-block;margin-top:2px;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700;background:'+(bossTag==='BOSS'?'var(--torch)':(bossTag==='MINI'?'#d9a441':'var(--verd)'))+';color:#000;">'+bossTag+'</div>' : '')+
         '</div>'+
