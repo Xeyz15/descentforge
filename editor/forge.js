@@ -567,6 +567,64 @@ function _forgeWeaknessesFromExisting(existing, baseHint){
   return _baseWeaknesses(bid);
 }
 
+
+function _externalBaseEnemyED(baseId){
+  const gd = window.DESCENTFORGE_EXTERNAL_GAME_DATA;
+  if(!gd) return null;
+  const src = (gd.catalogo) ? gd.catalogo : gd;
+  const mons = Array.isArray(src.monstros)? src.monstros : [];
+  return mons.find(function(m){ const id=m._id||m.id||m.Id; return id===baseId; }) || null;
+}
+function _resolveExternalActivationED(ref, gd){
+  if(!ref) return null;
+  const src = (gd && gd.catalogo) ? gd.catalogo : (gd||{});
+  const acts = src.ativacoes || {};
+  if(ref.id && acts[ref.id]) return acts[ref.id];
+  if(ref.ref){ const f=Object.values(acts).find(function(a){return a._name===ref.ref;}); if(f) return f; }
+  if(typeof ref==='string'){ if(acts[ref]) return acts[ref]; const f=Object.values(acts).find(function(a){return a._name===ref;}); if(f) return f; }
+  if(ref.speed!==undefined || ref.text_en!==undefined || ref.hint_en!==undefined || ref.text!==undefined) return ref;
+  return null;
+}
+function _externalActivationTextsED(ext, gd){
+  const out={activation:'', tactics:''};
+  if(!ext) return out;
+  const arrs = [ {src: ext.Activations || ext.activations || [], target:'activation'}, {src: ext.ManualActivations || ext.manualActivations || [], target:'tactics'} ];
+  arrs.forEach(function(w){
+    const lines=[];
+    (w.src||[]).forEach(function(ref){
+      const a=_resolveExternalActivationED(ref, gd);
+      if(!a) return;
+      const name = a._name || a.name || '';
+      const text = a.text_en || a.text || '';
+      const hint = a.hint_en || a.hint || '';
+      const stats = [];
+      if(a.speed!==undefined) stats.push('Speed '+a.speed);
+      if(a.damage!==undefined) stats.push('Damage '+a.damage);
+      if(a.aim!==undefined) stats.push('Aim '+a.aim);
+      if(a.attack!==undefined) stats.push('Attack '+a.attack);
+      if(a.range!==undefined) stats.push('Range '+a.range);
+      if(a.healing!==undefined) stats.push('Healing '+a.healing);
+      if(a.shield!==undefined) stats.push('Shield '+a.shield);
+      if(a.initiative!==undefined) stats.push('Initiative '+a.initiative);
+      if(a.rangeType!==undefined||a.RangeType!==undefined) stats.push('RangeType '+(a.rangeType||a.RangeType));
+      if(a.next!==undefined|| (a.NextActivation && (a.NextActivation.id||a.NextActivation._name))) stats.push('Next '+(a.next||(a.NextActivation&&(a.NextActivation.id||a.NextActivation._name))||''));
+      let block='';
+      if(name) block += name+': ';
+      if(text) block += text;
+      if(hint) block += (block?'
+':'')+'Hint: '+hint;
+      if(stats.length) block += (block?'
+':'')+'('+stats.join(', ')+')';
+      if(block) lines.push(block);
+    });
+    out[w.target]=lines.join('
+
+');
+  });
+  return out;
+}
+
+
 function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseHint=",baseHint,"tiers=", (id && ensureCustomEnemies().find(c=>c.id===id)&&ensureCustomEnemies().find(c=>c.id===id).tiers) ? "yes":"no");
   const list=ensureCustomEnemies();
     let existing=id? list.find(function(c){return c.id===id;}) : null;
@@ -582,6 +640,17 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   if (!Array.isArray(c.tiers) || !c.tiers.length) c.tiers = _baseTiers(c.base || baseId);
   if (!c.activation) c.activation = _baseExtra(c.base || baseId).activation || (baseEnemy && baseEnemy.activation) || '';
   if (!c.tactics) c.tactics = _baseExtra(c.base || baseId).tactics || (baseEnemy && baseEnemy.tactics) || '';
+  // pull detailed activation data from externally loaded game data (if available)
+  try {
+    const ext = _externalBaseEnemyED(c.base || baseId || id);
+    if (ext) {
+      const gd = window.DESCENTFORGE_EXTERNAL_GAME_DATA;
+      const texts = _externalActivationTextsED(ext, gd);
+      if (texts.activation && (!c.activation || !String(c.activation).trim())) c.activation = texts.activation;
+      if (texts.tactics && (!c.tactics || !String(c.tactics).trim())) c.tactics = texts.tactics;
+    }
+  } catch(e){ console.warn('external activation pull failed', e); }
+
   if (c.defense==null && c.defence!=null) c.defense = c.defence;
   if (!c.defense) c.defense = _baseExtra(c.base || baseId).defense || (baseEnemy && baseEnemy.defense) || '';
   if (c.tiers && c.tiers.length) { c.hp=c.tiers[0].health; c.def=c.tiers[0].defense; c.atk=c.tiers[0].attack; }
