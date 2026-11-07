@@ -661,7 +661,9 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
     const _keys=Object.keys(ENEMY_TYPE_CAPS);
     _keys.forEach(function(k){
       const fam=ENEMY_TYPE_CAPS[k];
-      const name=(fam && fam.family_name) ? fam.family_name : 'Other';
+      if(!fam) return;
+      if((fam.act||1) > 1 && !(typeof forgeAllowedAct2==='function' && forgeAllowedAct2())) return;
+      const name=fam.family_name ? fam.family_name : 'Other';
       if(_familyReps[name]) return;
       const members=(fam.member_ids||[]);
       let rep=null;
