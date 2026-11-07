@@ -743,6 +743,25 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   function renderWeakChecks(){ if(!weakBox) return; const sel=weaknessTraits('weakness'); const _wo=['Slash','Pierce','Crush'].concat(TRAIT_LIST.filter(function(t){return ['Slash','Pierce','Crush'].indexOf(t)<0;})); const _pill=function(d){ return '<label style="display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="'+esc(d)+'" data-cw="weak" '+(sel.indexOf(d)>=0?'checked':'')+' style="margin:0;"> '+ (TRAIT_GLYPH(d)?TRAIT_GLYPH(d)+' ':'') + esc(d)+'</label>'; }; weakBox.innerHTML=_wo.slice(0,3).map(_pill).join('')+'<div style="grid-column:1 / -1;height:0;"></div>'+_wo.slice(3).map(_pill).join(''); }
   function renderResistChecks(){ if(!resistBox) return; const sel=weaknessTraits('resist'); resistBox.innerHTML=TRAIT_LIST.map(function(d){ return '<label style="display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="'+esc(d)+'" data-cw="resist" '+(sel.indexOf(d)>=0?'checked':'')+' style="margin:0;"> '+ (TRAIT_GLYPH(d)?TRAIT_GLYPH(d)+' ':'') + esc(d)+'</label>'; }).join(''); }
   renderWeakChecks(); renderResistChecks();
+  (function(){
+    function syncWeakResist(){
+      const wCh=[].slice.call(document.querySelectorAll('#fce_weak_checks input:checked')).map(function(x){return x.value;});
+      const rCh=[].slice.call(document.querySelectorAll('#fce_resist_checks input:checked')).map(function(x){return x.value;});
+      document.querySelectorAll('#fce_weak_checks input').forEach(function(cb){ cb.disabled = rCh.indexOf(cb.value)>=0 && cb.checked===false; });
+      document.querySelectorAll('#fce_resist_checks input').forEach(function(cb){ cb.disabled = wCh.indexOf(cb.value)>=0 && cb.checked===false; });
+    }
+    function onWeakResistChange(e){
+      const cb=e.target; if(!cb || cb.type!=='checkbox') return;
+      const otherBox = (cb.closest('#fce_weak_checks')? '#fce_resist_checks' : '#fce_weak_checks');
+      const other = document.querySelector(otherBox+' input[value="'+cb.value.replace(/"/g,'\\"')+'"]');
+      if(other){ if(cb.checked){ other.checked=false; other.disabled=true; } else { other.disabled=false; } }
+      syncWeakResist();
+    }
+    const _wb=document.getElementById('fce_weak_checks'); if(_wb) _wb.addEventListener('change', onWeakResistChange);
+    const _rb=document.getElementById('fce_resist_checks'); if(_rb) _rb.addEventListener('change', onWeakResistChange);
+    syncWeakResist();
+    window.syncWeakResistChecks = syncWeakResist;
+  })();
   function renderWeakRows(){
     const box=document.getElementById('fce_weak_rows'); if(!box) return;
     box.innerHTML=(c.weaknesses||[]).map(function(w,i){
@@ -785,7 +804,7 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   };
   renderTierRows();
   const baseSel=document.getElementById('fce_base');
-  if(baseSel) baseSel.addEventListener('change', function(){ c.base=baseSel.value; c.weaknesses=_baseWeaknesses(baseSel.value).slice(); c.tiers=_baseTiers(baseSel.value); renderWeakChecks(); renderResistChecks(); renderTierRows();
+  if(baseSel) baseSel.addEventListener('change', function(){ c.base=baseSel.value; c.weaknesses=_baseWeaknesses(baseSel.value).slice(); c.tiers=_baseTiers(baseSel.value); renderWeakChecks(); renderResistChecks(); if(window.syncWeakResistChecks) window.syncWeakResistChecks(); renderTierRows();
     const _be=(typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies.find(function(e){return e.id===baseSel.value;}) : (window.DESCENTFORGE_EXTERNAL_GAME_DATA? _externalBaseEnemyED(baseSel.value) : null);
     if(_be && Array.isArray(_be.immune)) { c.immune=_be.immune.slice(); if(typeof renderImmuneRows==='function') renderImmuneRows(); }
     (function(){ const _st=_sizeTraits(baseSel.value); const _sz=document.getElementById('fce_size_traits'); if(_sz) _sz.innerHTML=['Huge','Small'].map(function(t){ return '<label style="font-size:11px;margin-right:8px;opacity:.7;"><input type="checkbox" value="'+esc(t)+'" '+( _st.indexOf(t)>=0 ? 'checked' : '')+' disabled> '+esc(t)+' (locked)</label>'; }).join(''); })();
