@@ -712,12 +712,7 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
       '<div class="field"><label>Name</label><input id="fce_name" value="'+esc(c.name||'')+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
     '</div>'+
 
-    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px;">'+
-      '<div class="field"><label>HP</label><input id="fce_hp" type="number" value="'+esc(c.hp)+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-      '<div class="field"><label>DEF</label><input id="fce_def" type="number" value="'+esc(c.def)+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-      '<div class="field"><label>ATK</label><input id="fce_atk" type="number" value="'+esc(c.atk)+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '</div>'+
-    '<div class="field"><label>Weaknesses / Resistances</label>'+
+    '<input type="hidden" id="fce_hp" value="'+esc(c.hp)+'"><input type="hidden" id="fce_def" value="'+esc(c.def)+'"><input type="hidden" id="fce_atk" value="'+esc(c.atk)+'">'+    '<div class="field"><label>Weaknesses / Resistances</label>'+
       '<div id="fce_weak_rows" style="display:flex;flex-direction:column;gap:4px;margin-bottom:6px;"></div>'+
       '<button id="fce_wadd" class="sm" style="background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;">'+esc('Add')+'</button>'+
     '</div>'+
