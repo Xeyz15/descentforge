@@ -1589,6 +1589,7 @@ function convertExternalEnemyED(c){
 }
 function applyExternalEnemyGameData(parsed){
   try {
+    window.DESCENTFORGE_EXTERNAL_GAME_DATA = parsed;
     const src = (parsed && parsed.catalogo) ? parsed.catalogo : parsed || {};
     const mons = Array.isArray(src.monstros) ? src.monstros : (Array.isArray(parsed && parsed.monstros) ? parsed.monstros : []);
     const conv = mons.map(convertExternalEnemyED).filter(function(e){ return e && e.id; });
