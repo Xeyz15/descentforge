@@ -27,6 +27,7 @@ img.preview{max-width:96px;max-height:96px;border-radius:6px;background:#111}
 </head>
 <body>
 <h1>DescentForge Enemy Data Editor</h1>
+<div id="status" class="info">Ready. Will try to auto-load ./descentforge-game-data.js</div>
 <div class="row">
   <div class="column panel">
     <div class="info">Load <code>descentforge-game-data.js</code> or a JSON export. Select a monster to view/edit.</div>
@@ -282,6 +283,28 @@ document.getElementById('loadSample').addEventListener('click', ()=>{
   selected=0;
   renderList(); renderDetail(); renderRaw();
 });
+
+async function tryAutoLoad(){
+  const st = document.getElementById('status');
+  try{
+    const r = await fetch('descentforge-game-data.js');
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const text = await r.text();
+    const parsed = extractJson(text);
+    if(!parsed) throw new Error('parse failed');
+    data = parsed;
+    CAT = (data && data.catalogo) ? data.catalogo : (data||{});
+    CAT_ATIV = CAT && CAT.ativacoes ? CAT.ativacoes : null;
+    monsters = getMonsters(data);
+    selected = monsters.length ? 0 : null;
+    renderList(); renderDetail(); renderRaw();
+    if(st) st.textContent = 'Auto-loaded descentforge-game-data.js ('+monsters.length+' enemies). You can override with file picker.';
+  }catch(err){
+    if(st) st.textContent = 'No local descentforge-game-data.js (fetch: '+err.message+'). Use file picker or place file next to this page.';
+  }
+}
+window.addEventListener('load', tryAutoLoad);
+
 </script>
 </body>
 </html>
