@@ -674,13 +674,19 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   const portraitSrc=(typeof arte==='function' && typeof ASSETS!=='undefined' && ASSETS.enemyFamily)? arte('portraits', (ASSETS.enemyFamily[c.base]||'')) : '';
   const body=
     (portraitSrc? '<div style="text-align:center;margin-bottom:8px;"><img src="'+portraitSrc+'" style="width:64px;height:64px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;"></div>' : '')+
-    '<div class="field"><label>ID</label><input id="fce_id" value="'+esc(c.id)+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>Name</label><input id="fce_name" value="'+esc(c.name||'')+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>Base enemy</label><select id="fce_base" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div>'+
-    '<label class="chk" style="margin-bottom:8px;display:block;"><input type="checkbox" id="fce_named" '+(c.named?'checked':'')+'> Named</label>'+
-    '<div class="field"><label>HP</label><input id="fce_hp" type="number" value="'+esc(c.hp)+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>DEF</label><input id="fce_def" type="number" value="'+esc(c.def)+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>ATK</label><input id="fce_atk" type="number" value="'+esc(c.atk)+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">'+
+      '<div class="field"><label>ID</label><input id="fce_id" value="'+esc(c.id)+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
+      '<div class="field"><label>Name</label><input id="fce_name" value="'+esc(c.name||'')+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
+    '</div>'+
+    '<div style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:6px;align-items:end;">'+
+      '<div class="field"><label>Base enemy</label><select id="fce_base" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div>'+
+      '<label class="chk" style="margin-bottom:4px;white-space:nowrap;"><input type="checkbox" id="fce_named" '+(c.named?'checked':'')+'> Named</label>'+
+    '</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px;">'+
+      '<div class="field"><label>HP</label><input id="fce_hp" type="number" value="'+esc(c.hp)+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
+      '<div class="field"><label>DEF</label><input id="fce_def" type="number" value="'+esc(c.def)+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
+      '<div class="field"><label>ATK</label><input id="fce_atk" type="number" value="'+esc(c.atk)+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
+    '</div>'+
     '<div class="field"><label>Weaknesses / Resistances</label>'+
       '<div id="fce_weak_rows" style="display:flex;flex-direction:column;gap:4px;margin-bottom:6px;"></div>'+
       '<button id="fce_wadd" class="sm" style="background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;">'+esc('Add')+'</button>'+
