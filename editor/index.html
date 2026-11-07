@@ -9139,11 +9139,15 @@ document.getElementById('btnExport').onclick=()=>{
     enemyPools:(camp && Array.isArray(camp.enemyPools) && camp.enemyPools.length? camp.enemyPools : state.spawns.enemyPools||[]).map(function(p,i){ return {name:'Pool '+(i+1), enemies:(p.enemies||[]).slice()}; })
   };
   (function ensureForgeCustomInExport(){ try {
-      if (camp && Array.isArray(camp.customEnemies) && camp.customEnemies.length) {
+      const customSource = (camp && Array.isArray(camp.customEnemies) && camp.customEnemies.length) ? camp.customEnemies
+      : ((state && state.custom && Array.isArray(state.custom.enemies) && state.custom.enemies.length) ? state.custom.enemies : []);
+    if (customSource.length) {
         if (!state.custom) state.custom={enemies:[]};
         if (!Array.isArray(state.custom.enemies)) state.custom.enemies=[];
+        if (!state.custom) state.custom={};
+        if (!Array.isArray(state.custom.enemies)) state.custom.enemies=[];
         const seen=new Set(state.custom.enemies.map(function(c){return c.id;}));
-        camp.customEnemies.forEach(function(c){
+        customSource.forEach(function(c){
           if (seen.has(c.id)) return;
           seen.add(c.id);
           const b = (delJuego().find(function(e){return e.id===c.base;}) || DATA.enemies.find(function(e){return e.id===c.base;}));
@@ -9151,7 +9155,8 @@ document.getElementById('btnExport').onclick=()=>{
           state.custom.enemies.push({id:c.id,name:(c.name||c.id),base:c.base,named:!!c.named,
             tiers: tierNums.map(function(t){ return {tier:+t, health:c.hp, defense:c.def, attack:c.atk}; }),
             mechanical:(c.mech||[]).slice(), theme:(c.theme||[]).slice(),
-            weaknesses:(c.weaknesses||[]).map(function(w){ return {damage:w.damage, kind:w.kind, when:w.when||'always'}; })});
+            weaknesses:(c.weaknesses||[]).map(function(w){ return {damage:w.damage, kind:w.kind, when:w.when||'always'}; }),
+            immune: Array.isArray(c.immune) ? c.immune.slice() : []});
         });
       }
     } catch(e){ console.warn('Forge custom export sync failed', e && (e.stack||e)); }
@@ -9160,7 +9165,7 @@ document.getElementById('btnExport').onclick=()=>{
     meta:{...state.meta,heroCount:heroCountReal(),created:new Date().toISOString().slice(0,10)},
     board:state.board,spawns:exportedSpawns,objectives:state.objectives,triggers:state.triggers,
     // el Taller, solo si hay algo: un mapa sin contenido propio se exporta como siempre
-    ...((propios().length||Object.keys(state.custom||{}).some(k=>k!=='enemies'))?{custom:state.custom}:{})},
+    ...((propios().length || (state.custom && Array.isArray(state.custom.enemies) && state.custom.enemies.length) || Object.keys(state.custom||{}).some(k=>k!=='enemies'))?{custom:state.custom}:{})},
     state.meta.id+'.dmap'); };
 
 /* Cuántos héroes admite el mapa DE VERDAD: nunca más que casillas de salida.
