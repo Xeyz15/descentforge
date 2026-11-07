@@ -1042,6 +1042,7 @@ const idList=rankedIds.map(function(id){ const e=enemyById && enemyById[id]; con
     '<div style="width:980px;max-width:100%;margin:0 auto 8px;display:flex;flex-direction:column;gap:4px;border:1px solid var(--edge);border-radius:6px;padding:6px;background:var(--panel2);">'+mechSel+themeSel+customSel+
       '<div style="text-align:right;display:flex;gap:4px;justify-content:flex-end;align-items:center;flex-wrap:wrap;">'+
         '<button id="loadExtEnemyData" class="sm" type="button" style="border:1px solid var(--edge);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:10px;background:var(--panel2);color:var(--text);">Load game data</button>'+
+        '<span id="extEnemyDataStatus" style="font-size:10px;color:var(--dim);margin-left:6px;">External enemy data: not loaded</span>'+
         '<button id="enemyFilterMode" class="sm" type="button" style="border:1px solid var(--edge);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:10px;background:var(--panel2);color:var(--text);">Filter: '+(enemyFilterMode==='and'?'AND (all selected)':'OR (any selected)')+'</button>'+
       '</div>'+
     '</div>'+
@@ -1708,17 +1709,40 @@ function openExternalEnemyGameDataPicker(){
   };
   inp.click();
 }
+function updateExtEnemyDataStatus(msg){ try { const el=document.getElementById('extEnemyDataStatus'); if(el) el.textContent=msg; } catch(e){} }
+
 function tryAutoExternalEnemyGameData(){
-  // Global override
-  if(window.DESCENTFORGE_GAME_DATA && applyExternalEnemyGameData(window.DESCENTFORGE_GAME_DATA)){
-    if(typeof renderEnemiesCategory==='function') renderEnemiesCategory();
-    return true;
+  function applyAndReport(parsed, note){
+    if(!parsed) return false;
+    const ok = applyExternalEnemyGameData(parsed);
+    if(ok){ updateExtEnemyDataStatus('External enemy data: '+ (window.DESCENTFORGE_EXTERNAL_ENEMY_COUNT||0) +' loaded ('+note+')'); if(typeof renderEnemiesCategory==='function') renderEnemiesCategory(); return true; }
+    updateExtEnemyDataStatus('External enemy data: parse found no enemies');
+    return false;
   }
-  // Local file next to page (fetch may be blocked on file://)
-  fetch('descentforge-game-data.js').then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); }).then(function(txt){
-    const parsed = extractJsonED(txt);
-    if(parsed && applyExternalEnemyGameData(parsed)){ if(typeof renderEnemiesCategory==='function') renderEnemiesCategory(); }
-  }).catch(function(){ /* no auto file */ });
+  // Already present?
+  if(window.DESCENTFORGE_EXTERNAL_GAME_DATA){ applyAndReport(window.DESCENTFORGE_EXTERNAL_GAME_DATA, 'global'); return; }
+  if(window.BIGORNA_JOGO){ window.DESCENTFORGE_EXTERNAL_GAME_DATA = window.BIGORNA_JOGO; applyAndReport(window.BIGORNA_JOGO, 'global JS'); return; }
+  // Prefer injected script (works better under file://)
+  try {
+    const sc = document.createElement('script');
+    sc.src = 'descentforge-game-data.js';
+    sc.async = true;
+    sc.onload = function(){ try { const g = window.BIGORNA_JOGO || window.DESCENTFORGE_GAME_DATA; if(g){ window.DESCENTFORGE_EXTERNAL_GAME_DATA=g; applyAndReport(g, 'auto-loaded file'); } else { updateExtEnemyDataStatus('External enemy data: file loaded but no game data global'); } } catch(e){ updateExtEnemyDataStatus('External enemy data: error '+ (e&&e.message?e.message:e)); } };
+    sc.onerror = function(){ updateExtEnemyDataStatus('External enemy data: no default file (use button to load)'); };
+    document.head.appendChild(sc);
+  } catch(e){ updateExtEnemyDataStatus('External enemy data: auto-load failed'); }
+  // fetch fallback (may be blocked on file://)
+  try {
+    fetch('descentforge-game-data.js').then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); }).then(function(txt){
+      try {
+        // if script tag didn't succeed, try JSON-ish parse
+        if(!window.DESCENTFORGE_EXTERNAL_GAME_DATA){
+          const parsed = extractJsonED ? extractJsonED(txt) : null;
+          if(parsed){ window.DESCENTFORGE_EXTERNAL_GAME_DATA = parsed; applyAndReport(parsed, 'fetch'); }
+        }
+      } catch(e){ console.warn(e); }
+    }).catch(function(){ /* silent; button remains */ });
+  } catch(e){}
 }
-// run auto attempt when forge loads
+
 try { setTimeout(tryAutoExternalEnemyGameData, 0); } catch(e){}
