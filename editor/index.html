@@ -5856,8 +5856,9 @@ function ensureMapEnemyPoolsFromCamp(){
 }
 function updateObjCheckFloat(){
   const el=document.getElementById('objCheckFloat'); if(!el) return;
-  // Quest objectives checklist belongs to the Scenario Map Editor; hide it on the Campaign page.
-  if (typeof mode!=='undefined' && mode==='campaign') { el.innerHTML=''; return; }
+  // Quest objectives checklist belongs to the Scenario Map Editor; hide it entirely on the Campaign page.
+  if (typeof mode!=='undefined' && mode==='campaign') { el.innerHTML=''; el.style.display='none'; return; }
+  el.style.display='';
   const wasOpen = localStorage.getItem('objCheckOpen')==='1' || !!el.querySelector('details')?.open;
   el.innerHTML=renderObjectiveChecklistHTML ? renderObjectiveChecklistHTML() : '';
   const d=el.querySelector('details'); if(!d) return;
