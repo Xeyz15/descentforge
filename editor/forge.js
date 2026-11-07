@@ -1748,7 +1748,9 @@ function applyExternalEnemyGameData(parsed){
     updateExtEnemyDataStatus('External enemy data: '+conv.length+' loaded (button)');
     // keep custom enemies already in editor
     const custom = (DATA.enemies || []).filter(function(e){ return e && e.custom; });
-    DATA.enemies = custom.concat(conv);
+    // Keep virtual/special base entries (like RANDOM_POOL) that external catalogs do not contain.
+    const specials = (DATA.enemies || []).filter(function(e){ return e && !e.custom && e.id === 'RANDOM_POOL'; });
+    DATA.enemies = specials.concat(custom).concat(conv);
     window.DESCENTFORGE_EXTERNAL_ENEMY_COUNT = conv.length;
     return true;
   } catch(err){ console.warn('external enemy game data apply failed', err); return false; }
