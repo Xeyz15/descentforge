@@ -611,15 +611,11 @@ function _externalActivationTextsED(ext, gd){
       let block='';
       if(name) block += name+': ';
       if(text) block += text;
-      if(hint) block += (block?'
-':'')+'Hint: '+hint;
-      if(stats.length) block += (block?'
-':'')+'('+stats.join(', ')+')';
+      if(hint) block += (block?'\n':'')+'Hint: '+hint;
+      if(stats.length) block += (block?'\n':'')+'('+stats.join(', ')+')';
       if(block) lines.push(block);
     });
-    out[w.target]=lines.join('
-
-');
+    out[w.target]=lines.join('\n\n');
   });
   return out;
 }
