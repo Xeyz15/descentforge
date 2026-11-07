@@ -1677,6 +1677,7 @@ function applyExternalEnemyGameData(parsed){
     const mons = Array.isArray(src.monstros) ? src.monstros : (Array.isArray(parsed && parsed.monstros) ? parsed.monstros : []);
     const conv = mons.map(convertExternalEnemyED).filter(function(e){ return e && e.id; });
     if(!conv.length) return false;
+    updateExtEnemyDataStatus('External enemy data: '+conv.length+' loaded (button)');
     // keep custom enemies already in editor
     const custom = (DATA.enemies || []).filter(function(e){ return e && e.custom; });
     DATA.enemies = custom.concat(conv);
