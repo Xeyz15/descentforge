@@ -673,13 +673,17 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   const lockedThemeOpts=lockedThemeTraits.map(function(t){ return '<label style="font-size:11px;margin-right:8px;"><input type="checkbox" value="'+esc(t)+'" data-cm="theme" '+((c.theme||[]).indexOf(t)>=0?'checked':'')+'> '+esc(t)+'</label>'; }).join('');
   const portraitSrc=(typeof arte==='function' && typeof ASSETS!=='undefined' && ASSETS.enemyFamily)? arte('portraits', (ASSETS.enemyFamily[c.base]||'')) : '';
   const body=
-    (portraitSrc? '<div style="text-align:center;margin-bottom:8px;"><img src="'+portraitSrc+'" style="width:64px;height:64px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;"></div>' : '')+
+    (portraitSrc
+      ? '<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;">'+
+          '<img src="'+portraitSrc+'" style="width:64px;height:64px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;flex:none;">'+
+          '<div style="flex:1;min-width:0;"><div class="field"><label>Base enemy</label><select id="fce_base" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div></div>'+
+        '</div>'
+      : '<div class="field" style="margin-bottom:6px;"><label>Base enemy</label><select id="fce_base" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div>')+
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">'+
       '<div class="field"><label>ID</label><input id="fce_id" value="'+esc(c.id)+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
       '<div class="field"><label>Name</label><input id="fce_name" value="'+esc(c.name||'')+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
     '</div>'+
-    '<div style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:6px;align-items:end;">'+
-      '<div class="field"><label>Base enemy</label><select id="fce_base" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div>'+
+    '<div style="display:flex;justify-content:flex-end;margin-bottom:6px;">'+
       '<label class="chk" style="margin-bottom:4px;white-space:nowrap;"><input type="checkbox" id="fce_named" '+(c.named?'checked':'')+'> Named</label>'+
     '</div>'+
     '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px;">'+
