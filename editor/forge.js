@@ -965,11 +965,14 @@ function renderEnemiesCategory(){
     });
     const rows=list.map(row).join('');
     const famCap=(function(){ const fx=familyOf(list && list[0]? list[0].id : ''); return (fx && fx.cap!=null) ? ' (cap '+fx.cap+')' : ''; })();
-    return '<div style="margin-bottom:10px;border:1px solid var(--edge);border-radius:6px;padding:8px;background:var(--panel);">'+
+    return '<div data-fam="'+esc(famName)+'" style="margin-bottom:10px;border:1px solid var(--edge);border-radius:6px;padding:8px;background:var(--panel);">'+
       '<h3 style="margin:0 0 6px 0;font-size:14px;">'+esc(famName)+famCap+'</h3>'+
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">'+rows+'</div>'+
     '</div>';
   }).join('');
+  const famNav = '<div style="width:180px;max-width:100%;display:flex;flex-direction:column;gap:4px;position:sticky;top:8px;height:calc(100vh - 220px);overflow-y:auto;padding:6px;border:1px solid var(--edge);border-radius:6px;background:var(--panel);">' +
+      (order||[]).map(function(f){ return '<button type="button" data-famjump="'+esc(f)+'" style="display:block;width:100%;padding:4px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);color:var(--text);cursor:pointer;font-size:11px;text-align:left;">'+esc(f)+'</button>'; }).join('') +
+    '</div>';
   const mechOpts=Array.from(new Set(filteredBase.reduce(function(acc,x){ if(Array.isArray(x.mech)) x.mech.forEach(function(t){ if(['Base','Mini','Boss'].indexOf(t)<0) acc.push(t); }); return acc; },[]))).sort();
   const themeOpts=Array.from(new Set(filteredBase.reduce(function(acc,x){ if(Array.isArray(x.theme)) x.theme.forEach(function(t){acc.push(t);}); return acc; },[]))).sort();
   const customOpts=['Base','Mini','Boss'].filter(function(t){ return (filteredBase||[]).some(function(x){ return Array.isArray(x.mech) && x.mech.indexOf(t)>=0; }); });
@@ -1042,7 +1045,8 @@ const idList=rankedIds.map(function(id){ const e=enemyById && enemyById[id]; con
         '<button id="enemyFilterMode" class="sm" type="button" style="border:1px solid var(--edge);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:10px;background:var(--panel2);color:var(--text);">Filter: '+(enemyFilterMode==='and'?'AND (all selected)':'OR (any selected)')+'</button>'+
       '</div>'+
     '</div>'+
-    '<div style="display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:12px;max-width:1320px;margin:0 auto;align-items:start;">'+
+    '<div style="display:grid;grid-template-columns:180px minmax(0,1fr) 360px;gap:12px;max-width:1520px;margin:0 auto;align-items:start;">'+
+      famNav+
       '<div style="min-width:0;">'+blocks+(customSection||'')+'</div>'+
       '<div style="position:sticky;top:8px;height:calc(100vh - 220px);overflow-y:scroll;overscroll-behavior:contain;">'+poolSection+'</div>'+
     '</div>';
@@ -1052,6 +1056,7 @@ const idList=rankedIds.map(function(id){ const e=enemyById && enemyById[id]; con
   main.querySelectorAll('[data-theme]').forEach(function(cb){ cb.addEventListener('change', function(){ var t=cb.getAttribute('data-theme'); if(cb.checked){ if(enemyThemeFilter.indexOf(t)<0) enemyThemeFilter.push(t); } else { enemyThemeFilter=enemyThemeFilter.filter(function(v){return v!==t;}); } renderEnemiesCategory(); }); });
   const _fm=main.querySelector('#enemyFilterMode'); if(_fm) _fm.addEventListener('click', function(){ enemyFilterMode = (enemyFilterMode==='and' ? 'or' : 'and'); renderEnemiesCategory(); });
   const _led=main.querySelector('#loadExtEnemyData'); if(_led) _led.addEventListener('click', function(){ openExternalEnemyGameDataPicker(); });
+  main.querySelectorAll('[data-famjump]').forEach(function(btn){ btn.addEventListener('click', function(){ var name=btn.getAttribute('data-famjump'); var tg=main.querySelector('[data-fam="'+(window.CSS && CSS.escape ? CSS.escape(name) : name)+'"]'); if(tg) tg.scrollIntoView({behavior:'smooth', block:'start'}); }); });
   const _c=main.querySelector('#enemCreatePool'); if(_c) _c.addEventListener('click',function(){ if(!camp.enemyPools) camp.enemyPools=[]; camp.enemyPools.push({enemies:[]}); enemyPoolsSelected=camp.enemyPools.length-1; renderEnemiesCategory(); if(typeof ensureMapEnemyPoolsFromCamp==='function'){ ensureMapEnemyPoolsFromCamp(); if(typeof renderPalette==='function') renderPalette(); if(typeof renderRight==='function') renderRight(); if(typeof refreshRandomPoolDropdown==='function') refreshRandomPoolDropdown(); } });
   const _s=main.querySelector('#enemPoolSel'); if(_s) _s.addEventListener('change',function(){ enemyPoolsSelected=parseInt(_s.value,10); renderEnemiesCategory(); });
   main.querySelectorAll('[data-enempool]').forEach(function(btn){ btn.addEventListener('click',function(){ var id=btn.getAttribute('data-enempool'); var pi=parseInt(btn.getAttribute('data-pool'),10); var p=camp.enemyPools && camp.enemyPools[pi]; if(!p) return; if(!Array.isArray(p.enemies)) p.enemies=[]; var i=p.enemies.indexOf(id); if(i<0) p.enemies.push(id); else p.enemies.splice(i,1); renderEnemiesCategory(); if(typeof ensureMapEnemyPoolsFromCamp==='function'){ ensureMapEnemyPoolsFromCamp(); if(typeof renderPalette==='function') renderPalette(); if(typeof renderRight==='function') renderRight(); if(typeof refreshRandomPoolDropdown==='function') refreshRandomPoolDropdown(); } }); });
