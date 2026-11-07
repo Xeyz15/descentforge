@@ -5668,7 +5668,7 @@ function renderPalette(){
         <span class="st">${propios().length||''}</span></button>`+
       Object.keys(porActo).sort((a,b)=> a==='T' ? -1 : b==='T' ? 1 : String(a).localeCompare(String(b))).map(a=>
       `<button class="palgrupo" data-actgrp="${a}" aria-expanded="true"
-        >▾ ${a==='T'?'Random Pool':T('actEnemies',a==='2'?'II':'I')}
+        >▾ ${a==='T'?'Random Pool and Custom':T('actEnemies',a==='2'?'II':'I')}
         <small>${porActo[a].length}</small></button>`+
       (porActo[a].map(e=>{
       const f=arte('portraits',ASSETS.enemyFamily[e.id]||'');
