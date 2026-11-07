@@ -635,7 +635,7 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   const c=existing || {id: (baseId? ('CUSTOM_'+baseId) : ('CUSTOM_ENEMY_'+(list.length+1))), name:(baseEnemy && (baseEnemy.name_en||baseEnemy.name)) || ('Custom monster '+(list.length+1)), base: (baseId||''), hp:(baseEnemy? baseEnemy.hp : 40), def:(baseEnemy? baseEnemy.def : 2), atk:(baseEnemy? baseEnemy.atk : 2), mech:(baseEnemy && Array.isArray(baseEnemy.mech))? baseEnemy.mech.filter(function(t){return t!=='Huge' && t!=='Small';}).slice() : [], theme:(baseEnemy && Array.isArray(baseEnemy.theme))? baseEnemy.theme.slice() : [], weaknesses: _forgeWeaknessesFromExisting(existing, baseId), immune: (existing && Array.isArray(existing.immune)) ? existing.immune.slice() : ((baseEnemy && Array.isArray(baseEnemy.immune)) ? baseEnemy.immune.slice() : []) };
   if (!Array.isArray(c.tiers) || !c.tiers.length) c.tiers = _baseTiers(c.base || baseId);
   if (!Array.isArray(c.immune)) c.immune = [];
-  if (!c._traitMode || typeof c._traitMode !== 'object') { c._traitMode={}; TRAIT_LIST.forEach(function(t){ c._traitMode[t]='none'; }); (c.weaknesses||[]).forEach(function(w){ if(w && w.damage) c._traitMode[w.damage] = (w.kind==='resist'?'resist':'weak'); }); }
+  if (!c._traitMode || typeof c._traitMode !== 'object') { c._traitMode={}; ['Crush','Slash','Pierce','Ignos','Anemos','Aquos','Terros','Lumos','Umbros','Vigos','Mortos','Toxos','Fortunos'].forEach(function(t){ c._traitMode[t]='none'; }); (c.weaknesses||[]).forEach(function(w){ if(w && w.damage) c._traitMode[w.damage] = (w.kind==='resist'?'resist':'weak'); }); }
   if (!c.activation) c.activation = _baseExtra(c.base || baseId).activation || (baseEnemy && baseEnemy.activation) || '';
   if (!c.tactics) c.tactics = _baseExtra(c.base || baseId).tactics || (baseEnemy && baseEnemy.tactics) || '';
   // pull detailed activation data from externally loaded game data (if available)
@@ -740,7 +740,7 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
 const traitModeBox=document.getElementById('fce_trait_mode');
   if(!c._traitMode){
     c._traitMode={};
-    TRAIT_LIST.forEach(function(t){ c._traitMode[t]='none'; });
+    ['Crush','Slash','Pierce','Ignos','Anemos','Aquos','Terros','Lumos','Umbros','Vigos','Mortos','Toxos','Fortunos'].forEach(function(t){ c._traitMode[t]='none'; });
     (c.weaknesses||[]).forEach(function(w){ if(w && w.damage) c._traitMode[w.damage]=(w.kind==='resist'?'resist':'weak'); });
   }
   function syncTraitModeWeaknesses(){
