@@ -747,9 +747,7 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   // parse mech/theme on save unchanged; also ensure weaknesses remains c.weaknesses
 
   (function(){
-    function splitBlocks(t){ return String(t||'').split(/
-\s*
-/).map(function(x){return x.trim();}).filter(Boolean); }
+    function splitBlocks(t){ return String(t||'').split(/\n\s*\n/).map(function(x){return x.trim();}).filter(Boolean); }
     function renderBlocks(id, text){ const el=document.getElementById(id); if(!el) return; el.innerHTML = splitBlocks(text).map(function(b){ return '<div style="padding:6px 8px;border:1px solid var(--edge);border-radius:4px;white-space:pre-wrap;background:var(--panel2);">'+esc(b)+'</div>'; }).join(''); }
     renderBlocks('fce_activation_view', c.activation);
     renderBlocks('fce_tactics_view', c.tactics);
