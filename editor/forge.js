@@ -714,10 +714,8 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
       '<div class="field"><label>Name</label><input id="fce_name" value="'+esc(c.name||'')+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
     '</div>'+
 
-    '<input type="hidden" id="fce_hp" value="'+esc(c.hp)+'"><input type="hidden" id="fce_def" value="'+esc(c.def)+'"><input type="hidden" id="fce_atk" value="'+esc(c.atk)+'">'+    '<div class="field"><label>Weaknesses / Resistances</label>'+
-      '<div id="fce_weak_rows" style="display:flex;flex-direction:column;gap:4px;margin-bottom:6px;"></div>'+
-      '<button id="fce_wadd" class="sm" style="background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;">'+esc('Add')+'</button>'+
-    '</div>'+
+    '<input type="hidden" id="fce_hp" value="'+esc(c.hp)+'"><input type="hidden" id="fce_def" value="'+esc(c.def)+'"><input type="hidden" id="fce_atk" value="'+esc(c.atk)+'">'+    '<div class="field"><label>Weak to</label><div id="fce_weak_checks" style="display:flex;flex-wrap:wrap;gap:6px;"></div></div>'+
+    '<div class="field"><label>Resists</label><div id="fce_resist_checks" style="display:flex;flex-wrap:wrap;gap:6px;"></div></div>'+
     '<div class="field"><label>Immune to</label><div style="display:flex;flex-wrap:wrap;gap:6px;" id="fce_immune_rows"></div></div>'+
     '<div class="field"><label>Tiers (stats per hero count)</label>'+
       '<div id="fce_tiers" style="display:flex;flex-direction:column;gap:6px;margin-bottom:6px;"></div>'+
@@ -737,6 +735,12 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   else { alert('Dialog not available'); return; }
 
   const TRAIT_LIST=['Crush','Slash','Pierce','Ignos','Anemos','Aquos','Terros','Lumos','Umbros','Vigos','Mortos','Toxos','Fortunos'];
+  const weakBox=document.getElementById('fce_weak_checks');
+  const resistBox=document.getElementById('fce_resist_checks');
+  function weaknessTraits(kind){ return (c.weaknesses||[]).filter(function(w){return (w.kind||'weakness')===kind;}).map(function(w){return w.damage;}); }
+  function renderWeakChecks(){ if(!weakBox) return; const sel=weaknessTraits('weakness'); weakBox.innerHTML=TRAIT_LIST.map(function(d){ return '<label style="font-size:11px;margin-right:8px;"><input type="checkbox" value="'+esc(d)+'" data-cw="weak" '+(sel.indexOf(d)>=0?'checked':'')+'> '+esc(d)+'</label>'; }).join(''); }
+  function renderResistChecks(){ if(!resistBox) return; const sel=weaknessTraits('resist'); resistBox.innerHTML=TRAIT_LIST.map(function(d){ return '<label style="font-size:11px;margin-right:8px;"><input type="checkbox" value="'+esc(d)+'" data-cw="resist" '+(sel.indexOf(d)>=0?'checked':'')+'> '+esc(d)+'</label>'; }).join(''); }
+  renderWeakChecks(); renderResistChecks();
   function renderWeakRows(){
     const box=document.getElementById('fce_weak_rows'); if(!box) return;
     box.innerHTML=(c.weaknesses||[]).map(function(w,i){
@@ -779,7 +783,7 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   };
   renderTierRows();
   const baseSel=document.getElementById('fce_base');
-  if(baseSel) baseSel.addEventListener('change', function(){ c.base=baseSel.value; c.weaknesses=_baseWeaknesses(baseSel.value).slice(); c.tiers=_baseTiers(baseSel.value); renderWeakRows(); renderTierRows();
+  if(baseSel) baseSel.addEventListener('change', function(){ c.base=baseSel.value; c.weaknesses=_baseWeaknesses(baseSel.value).slice(); c.tiers=_baseTiers(baseSel.value); renderWeakChecks(); renderResistChecks(); renderTierRows();
     const _be=(typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies.find(function(e){return e.id===baseSel.value;}) : (window.DESCENTFORGE_EXTERNAL_GAME_DATA? _externalBaseEnemyED(baseSel.value) : null);
     if(_be && Array.isArray(_be.immune)) { c.immune=_be.immune.slice(); if(typeof renderImmuneRows==='function') renderImmuneRows(); }
 
@@ -807,7 +811,10 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
       const a=document.querySelector('[data-fcetier="'+idx+'|attack"]');
       return {tier:+t.tier, health:Math.max(1,parseInt(h&&h.value,10)||t.health), defense:Math.max(0,parseInt(d&&d.value,10)||t.defense), attack:Math.max(0,parseInt(a&&a.value,10)||t.attack)};
     });
-    const nc={id:(document.getElementById('fce_id').value.trim()||c.id), name:(document.getElementById('fce_name').value.trim()||c.id), base:document.getElementById('fce_base').value, hp:(parsedTiers[0]&&parsedTiers[0].health)||c.hp, def:(parsedTiers[0]&&parsedTiers[0].defense)||c.def, atk:(parsedTiers[0]&&parsedTiers[0].attack)||c.atk, tiers:parsedTiers, mech: mechVals.concat(_sizeTraits(document.getElementById('fce_base').value)), theme:themeVals, activation:(document.getElementById('fce_activation').value.trim()), tactics:(document.getElementById('fce_tactics').value.trim()), defense:(document.getElementById('fce_defense').value.trim()), weaknesses:(c.weaknesses||[]), immune:[].slice.call(document.querySelectorAll('[data-ci="immune"]:checked')).map(function(x){return x.value;}), named: (document.getElementById('fce_named') && document.getElementById('fce_named').checked)};
+    const __weakChecked=[].slice.call(document.querySelectorAll('[data-cw="weak"]:checked')).map(function(x){return x.value;});
+    const __resistChecked=[].slice.call(document.querySelectorAll('[data-cw="resist"]:checked')).map(function(x){return x.value;});
+    const __warr=[]; __weakChecked.forEach(function(d){__warr.push({damage:d, kind:'weakness', when:'always'});}); __resistChecked.forEach(function(d){__warr.push({damage:d, kind:'resist', when:'always'});});
+    const nc={id:(document.getElementById('fce_id').value.trim()||c.id), name:(document.getElementById('fce_name').value.trim()||c.id), base:document.getElementById('fce_base').value, hp:(parsedTiers[0]&&parsedTiers[0].health)||c.hp, def:(parsedTiers[0]&&parsedTiers[0].defense)||c.def, atk:(parsedTiers[0]&&parsedTiers[0].attack)||c.atk, tiers:parsedTiers, mech: mechVals.concat(_sizeTraits(document.getElementById('fce_base').value)), theme:themeVals, activation:(document.getElementById('fce_activation').value.trim()), tactics:(document.getElementById('fce_tactics').value.trim()), defense:(document.getElementById('fce_defense').value.trim()), weaknesses:__warr, immune:[].slice.call(document.querySelectorAll('[data-ci="immune"]:checked')).map(function(x){return x.value;}), named: (document.getElementById('fce_named') && document.getElementById('fce_named').checked)};
     const originalId=id;
     const list2=ensureCustomEnemies();
     // Update or append in the Forge bank by the ORIGINAL selection id.
