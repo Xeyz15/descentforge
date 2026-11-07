@@ -738,8 +738,8 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   const weakBox=document.getElementById('fce_weak_checks');
   const resistBox=document.getElementById('fce_resist_checks');
   function weaknessTraits(kind){ return (c.weaknesses||[]).filter(function(w){return (w.kind||'weakness')===kind;}).map(function(w){return w.damage;}); }
-  function renderWeakChecks(){ if(!weakBox) return; const sel=weaknessTraits('weakness'); weakBox.innerHTML=TRAIT_LIST.map(function(d){ return '<label style="display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;"><input type="checkbox" value="'+esc(d)+'" data-cw="weak" '+(sel.indexOf(d)>=0?'checked':'')+' style="margin:0;"> '+esc(d)+'</label>'; }).join(''); }
-  function renderResistChecks(){ if(!resistBox) return; const sel=weaknessTraits('resist'); resistBox.innerHTML=TRAIT_LIST.map(function(d){ return '<label style="display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;"><input type="checkbox" value="'+esc(d)+'" data-cw="resist" '+(sel.indexOf(d)>=0?'checked':'')+' style="margin:0;"> '+esc(d)+'</label>'; }).join(''); }
+  function renderWeakChecks(){ if(!weakBox) return; const sel=weaknessTraits('weakness'); weakBox.innerHTML=TRAIT_LIST.map(function(d){ return '<label style="display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;"><input type="checkbox" value="'+esc(d)+'" data-cw="weak" '+(sel.indexOf(d)>=0?'checked':'')+' style="margin:0;"> '+esc(d)+'</label>'; }).join(''); }
+  function renderResistChecks(){ if(!resistBox) return; const sel=weaknessTraits('resist'); resistBox.innerHTML=TRAIT_LIST.map(function(d){ return '<label style="display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;"><input type="checkbox" value="'+esc(d)+'" data-cw="resist" '+(sel.indexOf(d)>=0?'checked':'')+' style="margin:0;"> '+esc(d)+'</label>'; }).join(''); }
   renderWeakChecks(); renderResistChecks();
   function renderWeakRows(){
     const box=document.getElementById('fce_weak_rows'); if(!box) return;
@@ -767,7 +767,7 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   renderWeakRows();
   const CONDS_IMMUNE=['Dazed','Enfeebled','Afflicted','Slowed','Exposed','Doomed','Confused'];
   const immuneBox=document.getElementById('fce_immune_rows');
-  function renderImmuneRows(){ if(!immuneBox) return; immuneBox.innerHTML=CONDS_IMMUNE.map(function(cd){ return '<label style="display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;"><input type="checkbox" value="'+esc(cd)+'" data-ci="immune" '+((c.immune||[]).indexOf(cd)>=0?'checked':'')+' style="margin:0;"> '+esc(cd)+'</label>'; }).join(''); }
+  function renderImmuneRows(){ if(!immuneBox) return; immuneBox.innerHTML=CONDS_IMMUNE.map(function(cd){ return '<label style="display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;"><input type="checkbox" value="'+esc(cd)+'" data-ci="immune" '+((c.immune||[]).indexOf(cd)>=0?'checked':'')+' style="margin:0;"> '+esc(cd)+'</label>'; }).join(''); }
   if(immuneBox) renderImmuneRows();
   const tierBox=document.getElementById('fce_tiers');
   const renderTierRows=function(){
