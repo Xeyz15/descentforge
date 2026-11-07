@@ -902,7 +902,7 @@ function renderEnemiesCategory(){
     const be=(typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies.find(function(e){return e.id===c.base;}) : null;
     return {id:c.id,name:c.name,name_en:c.name,hp:c.hp,def:c.def,atk:c.atk,act:(be && be.act)||1,mech:c.mech||[],theme:c.theme||[], named:!!c.named, weaknesses:c.weaknesses||[]};
   });
-  const items=baseItems.concat(customAsEnemies);
+  const items=baseItems;  // custom monsters are listed in the dedicated custom section below
 
   // Expose boss/mini tags as a Mech trait (like Huge/Small) for display and filtering.
   items.forEach(function(x){
