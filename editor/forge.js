@@ -714,9 +714,9 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
       '<div class="field"><label>Name</label><input id="fce_name" value="'+esc(c.name||'')+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
     '</div>'+
 
-    '<input type="hidden" id="fce_hp" value="'+esc(c.hp)+'"><input type="hidden" id="fce_def" value="'+esc(c.def)+'"><input type="hidden" id="fce_atk" value="'+esc(c.atk)+'">'+    '<div class="field"><label>Weak to</label><div id="fce_weak_checks" style="display:flex;flex-wrap:wrap;gap:6px;"></div></div>'+
-    '<div class="field"><label>Resists</label><div id="fce_resist_checks" style="display:flex;flex-wrap:wrap;gap:6px;"></div></div>'+
-    '<div class="field"><label>Immune to</label><div style="display:flex;flex-wrap:wrap;gap:6px;" id="fce_immune_rows"></div></div>'+
+    '<input type="hidden" id="fce_hp" value="'+esc(c.hp)+'"><input type="hidden" id="fce_def" value="'+esc(c.def)+'"><input type="hidden" id="fce_atk" value="'+esc(c.atk)+'">'+    '<div class="field"><label style="font-weight:600;">Weak to</label><div id="fce_weak_checks" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px 8px;"></div></div>'+
+    '<div class="field"><label style="font-weight:600;">Resists</label><div id="fce_resist_checks" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px 8px;"></div></div>'+
+    '<div class="field"><label style="font-weight:600;">Immune to</label><div id="fce_immune_rows" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px 8px;"></div></div>'+
     '<div class="field"><label>Tiers (stats per hero count)</label>'+
       '<div id="fce_tiers" style="display:flex;flex-direction:column;gap:6px;margin-bottom:6px;"></div>'+
     '</div>'+
