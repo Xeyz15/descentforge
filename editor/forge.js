@@ -675,7 +675,7 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   const body=
     (portraitSrc
       ? '<div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:6px;flex-wrap:wrap;">'+
-          '<img src="'+portraitSrc+'" style="width:64px;height:64px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;">'+
+          '<img id="fce_portrait" src="'+portraitSrc+'" style="width:64px;height:64px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;">'+
           '<div class="field" style="min-width:0;max-width:180px;"><label>Base enemy</label><select id="fce_base" style="width:75%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div>'+
           '<label class="chk" style="margin-bottom:0;white-space:nowrap;"><input type="checkbox" id="fce_named" '+(c.named?'checked':'')+'> Named</label>'+
         '</div>'
