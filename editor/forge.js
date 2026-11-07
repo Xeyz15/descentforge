@@ -676,11 +676,11 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
     (portraitSrc
       ? '<div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:6px;flex-wrap:wrap;">'+
           '<img src="'+portraitSrc+'" style="width:64px;height:64px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;">'+
-          '<div class="field" style="min-width:0;max-width:180px;"><label>Base enemy</label><select id="fce_base" style="width:60%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div>'+
+          '<div class="field" style="min-width:0;max-width:180px;"><label>Base enemy</label><select id="fce_base" style="width:75%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div>'+
           '<label class="chk" style="margin-bottom:0;white-space:nowrap;"><input type="checkbox" id="fce_named" '+(c.named?'checked':'')+'> Named</label>'+
         '</div>'
       : '<div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:6px;flex-wrap:wrap;">'+
-          '<div class="field" style="min-width:0;max-width:180px;"><label>Base enemy</label><select id="fce_base" style="width:60%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div>'+
+          '<div class="field" style="min-width:0;max-width:180px;"><label>Base enemy</label><select id="fce_base" style="width:75%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div>'+
           '<label class="chk" style="margin-bottom:0;white-space:nowrap;"><input type="checkbox" id="fce_named" '+(c.named?'checked':'')+'> Named</label>'+
         '</div>')+
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">'+
@@ -753,7 +753,8 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   };
   renderTierRows();
   const baseSel=document.getElementById('fce_base');
-  if(baseSel) baseSel.addEventListener('change', function(){ c.base=baseSel.value; c.weaknesses=_baseWeaknesses(baseSel.value).slice(); c.tiers=_baseTiers(baseSel.value); renderWeakRows(); renderTierRows(); });
+  if(baseSel) baseSel.addEventListener('change', function(){ c.base=baseSel.value; c.weaknesses=_baseWeaknesses(baseSel.value).slice(); c.tiers=_baseTiers(baseSel.value); renderWeakRows(); renderTierRows();
+    const _p=document.getElementById('fce_portrait'); if(_p){ const _src=(typeof arte==='function' && typeof ASSETS!=='undefined' && ASSETS.enemyFamily)? arte('portraits', (ASSETS.enemyFamily[baseSel.value]||'')) : ''; if(_src){ _p.src=_src; _p.style.display=''; } else { _p.style.display='none'; } } });
   const wadd=document.getElementById('fce_wadd');
   if(wadd) wadd.addEventListener('click', function(){ (c.weaknesses=c.weaknesses||[]).push({damage:TRAIT_LIST[0],kind:'weakness',when:'always'}); renderWeakRows(); });
   // parse mech/theme on save unchanged; also ensure weaknesses remains c.weaknesses
