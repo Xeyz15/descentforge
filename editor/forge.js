@@ -1646,15 +1646,17 @@ function convertExternalEnemyED(c){
   const first = tiers.length ? tiers[0] : {};
   const act = (typeof c._act === 'number') ? (c._act + 1) : (c.act || 1);
   const id = c._id || c.id || c.Id;
+  // keep curated mech/theme from the embedded snapshot when available (bitmasks differ by game version)
+  const orig = (typeof DATA !== 'undefined' && Array.isArray(DATA.enemies)) ? DATA.enemies.find(function(e){ return e && e.id === id; }) : null;
   return {
     id: id,
     name: c.name_en || c._name || c.name || id,
     name_en: c.name_en || c._name || '',
-    type: c.Type || c.type || '',
-    act: act,
-    size: (typeof c.Size === 'number') ? c.Size : 0,
-    mech: _bitsED(c.MechanicalTraits || 0, (typeof TRAITS_MEC !== 'undefined') ? TRAITS_MEC : []),
-    theme: _bitsED(c.ThemeTraits || 0, (typeof TRAITS_TEMA !== 'undefined') ? TRAITS_TEMA : []),
+    type: c.Type || c.type || (orig && orig.type) || '',
+    act: act || (orig && orig.act) || 1,
+    size: (typeof c.Size === 'number') ? c.Size : ((orig && orig.size) || 0),
+    mech: (orig && Array.isArray(orig.mech)) ? orig.mech.slice() : [],
+    theme: (orig && Array.isArray(orig.theme)) ? orig.theme.slice() : [],
     named: !!c.IsNamed,
     villain: !!c.IsVillain,
     perQuest: c.PerQuest || c.perQuest || 0,
