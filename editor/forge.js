@@ -635,6 +635,7 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   const c=existing || {id: (baseId? ('CUSTOM_'+baseId) : ('CUSTOM_ENEMY_'+(list.length+1))), name:(baseEnemy && (baseEnemy.name_en||baseEnemy.name)) || ('Custom monster '+(list.length+1)), base: (baseId||''), hp:(baseEnemy? baseEnemy.hp : 40), def:(baseEnemy? baseEnemy.def : 2), atk:(baseEnemy? baseEnemy.atk : 2), mech:(baseEnemy && Array.isArray(baseEnemy.mech))? baseEnemy.mech.filter(function(t){return t!=='Huge' && t!=='Small';}).slice() : [], theme:(baseEnemy && Array.isArray(baseEnemy.theme))? baseEnemy.theme.slice() : [], weaknesses: _forgeWeaknessesFromExisting(existing, baseId), immune: (existing && Array.isArray(existing.immune)) ? existing.immune.slice() : ((baseEnemy && Array.isArray(baseEnemy.immune)) ? baseEnemy.immune.slice() : []) };
   if (!Array.isArray(c.tiers) || !c.tiers.length) c.tiers = _baseTiers(c.base || baseId);
   if (!Array.isArray(c.immune)) c.immune = [];
+  if (!c._traitMode || typeof c._traitMode !== 'object') { c._traitMode={}; TRAIT_LIST.forEach(function(t){ c._traitMode[t]='none'; }); (c.weaknesses||[]).forEach(function(w){ if(w && w.damage) c._traitMode[w.damage] = (w.kind==='resist'?'resist':'weak'); }); }
   if (!c.activation) c.activation = _baseExtra(c.base || baseId).activation || (baseEnemy && baseEnemy.activation) || '';
   if (!c.tactics) c.tactics = _baseExtra(c.base || baseId).tactics || (baseEnemy && baseEnemy.tactics) || '';
   // pull detailed activation data from externally loaded game data (if available)
@@ -716,8 +717,7 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
       '<div class="field"><label>Name</label><input id="fce_name" value="'+esc(c.name||'')+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
     '</div>'+
 
-    '<input type="hidden" id="fce_hp" value="'+esc(c.hp)+'"><input type="hidden" id="fce_def" value="'+esc(c.def)+'"><input type="hidden" id="fce_atk" value="'+esc(c.atk)+'">'+    '<div class="field"><label style="font-weight:600;">Weak to</label><div id="fce_weak_checks" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px 8px;"></div></div>'+
-    '<div class="field"><label style="font-weight:600;">Resists</label><div id="fce_resist_checks" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px 8px;"></div></div>'+
+    '<input type="hidden" id="fce_hp" value="'+esc(c.hp)+'"><input type="hidden" id="fce_def" value="'+esc(c.def)+'"><input type="hidden" id="fce_atk" value="'+esc(c.atk)+'">'+    '<div class="field"><label style="font-weight:600;">Damage traits (W=Weak, R=Resist, blank=None)</label><div id="fce_trait_mode" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px 8px;"></div></div>'+
     '<div class="field"><label style="font-weight:600;">Immune to</label><div id="fce_immune_rows" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px 8px;"></div></div>'+
     '<div class="field"><label>Tiers (stats per hero count)</label>'+
       '<div id="fce_tiers" style="display:flex;flex-direction:column;gap:6px;margin-bottom:6px;"></div>'+
@@ -737,60 +737,48 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
 
   const TRAIT_LIST=['Crush','Slash','Pierce','Ignos','Anemos','Aquos','Terros','Lumos','Umbros','Vigos','Mortos','Toxos','Fortunos'];
   const TRAIT_GLYPH = function(d){ return d==='Crush'?'🔨':d==='Slash'?'🗡️':d==='Pierce'?'🏹':''; };
-  const weakBox=document.getElementById('fce_weak_checks');
-  const resistBox=document.getElementById('fce_resist_checks');
-  function weaknessTraits(kind){ return (c.weaknesses||[]).filter(function(w){return (w.kind||'weakness')===kind;}).map(function(w){return w.damage;}); }
-  function renderWeakChecks(){ if(!weakBox) return; const sel=weaknessTraits('weakness'); const _wo=['Slash','Pierce','Crush'].concat(TRAIT_LIST.filter(function(t){return ['Slash','Pierce','Crush'].indexOf(t)<0;})); const _pill=function(d){ return '<label style="display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="'+esc(d)+'" data-cw="weak" '+(sel.indexOf(d)>=0?'checked':'')+' style="margin:0;"> '+ (TRAIT_GLYPH(d)?TRAIT_GLYPH(d)+' ':'') + esc(d)+'</label>'; }; weakBox.innerHTML=_wo.slice(0,3).map(_pill).join('')+'<div style="grid-column:1 / -1;height:0;"></div>'+_wo.slice(3).map(_pill).join(''); }
-  function renderResistChecks(){ if(!resistBox) return; const sel=weaknessTraits('resist'); const _wo=['Slash','Pierce','Crush'].concat(TRAIT_LIST.filter(function(t){return ['Slash','Pierce','Crush'].indexOf(t)<0;})); const _pill=function(d){ return '<label style="display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="'+esc(d)+'" data-cw="resist" '+(sel.indexOf(d)>=0?'checked':'')+' style="margin:0;"> '+ (TRAIT_GLYPH(d)?TRAIT_GLYPH(d)+' ':'') + esc(d)+'</label>'; }; resistBox.innerHTML=_wo.slice(0,3).map(_pill).join('')+'<div style="grid-column:1 / -1;height:0;"></div>'+_wo.slice(3).map(_pill).join(''); }
-  renderWeakChecks(); renderResistChecks();
-  (function(){
-    function syncWeakResist(){
-      const wCh=[].slice.call(document.querySelectorAll('#fce_weak_checks input:checked')).map(function(x){return x.value;});
-      const rCh=[].slice.call(document.querySelectorAll('#fce_resist_checks input:checked')).map(function(x){return x.value;});
-      document.querySelectorAll('#fce_weak_checks input').forEach(function(cb){ cb.disabled = rCh.indexOf(cb.value)>=0 && cb.checked===false; });
-      document.querySelectorAll('#fce_resist_checks input').forEach(function(cb){ cb.disabled = wCh.indexOf(cb.value)>=0 && cb.checked===false; });
-    }
-    function onWeakResistChange(e){
-      const cb=e.target; if(!cb || cb.type!=='checkbox') return;
-      const otherBox = (cb.closest('#fce_weak_checks')? '#fce_resist_checks' : '#fce_weak_checks');
-      const other = document.querySelector(otherBox+' input[value="'+cb.value.replace(/"/g,'\\"')+'"]');
-      if(other){ if(cb.checked){ other.checked=false; other.disabled=true; } else { other.disabled=false; } }
-      syncWeakResist();
-    }
-    const _wb=document.getElementById('fce_weak_checks'); if(_wb) _wb.addEventListener('change', onWeakResistChange);
-    const _rb=document.getElementById('fce_resist_checks'); if(_rb) _rb.addEventListener('change', onWeakResistChange);
-    syncWeakResist();
-    window.syncWeakResistChecks = syncWeakResist;
-  })();
-  function renderWeakRows(){
-    const box=document.getElementById('fce_weak_rows'); if(!box) return;
-    box.innerHTML=(c.weaknesses||[]).map(function(w,i){
-      return '<div class="twfila" style="display:grid;grid-template-columns:minmax(120px,1fr) 110px 28px;gap:6px;align-items:center;margin-bottom:4px;">'+
-        '<select data-fcew="'+i+'|damage" style="width:100%;padding:5px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;font-size:12px;">'+TRAIT_LIST.map(function(d){return '<option '+(d===w.damage?'selected':'')+'>'+esc(d)+'</option>';}).join('')+'</select>'+
-        '<select data-fcew="'+i+'|kind" style="width:100%;padding:5px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;font-size:12px;"><option value="weakness" '+(w.kind!=='resist'?'selected':'')+'>Weakness</option><option value="resist" '+(w.kind==='resist'?'selected':'')+'>Resist</option></select>'+
-        '<button class="sm" data-fcewdel="'+i+'" style="background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:4px;padding:2px 4px;cursor:pointer;font-size:11px;">X</button>'+
-      '</div>';
-    }).join('') || '<p class="empty" style="color:var(--dim);font-size:11px;margin:4px 0;">No weakness/resistance entries.</p>';
-    box.querySelectorAll('[data-fcew]').forEach(function(sel){
-      sel.addEventListener('change', function(){
-        const parts=sel.getAttribute('data-fcew').split('|');
-        if(!c.weaknesses[+parts[0]]) return;
-        c.weaknesses[+parts[0]][parts[1]]=sel.value;
-      });
+const traitModeBox=document.getElementById('fce_trait_mode');
+  if(!c._traitMode){
+    c._traitMode={};
+    TRAIT_LIST.forEach(function(t){ c._traitMode[t]='none'; });
+    (c.weaknesses||[]).forEach(function(w){ if(w && w.damage) c._traitMode[w.damage]=(w.kind==='resist'?'resist':'weak'); });
+  }
+  function syncTraitModeWeaknesses(){
+    c.weaknesses=[];
+    Object.keys(c._traitMode).forEach(function(t){
+      if(c._traitMode[t]==='weak') c.weaknesses.push({damage:t, kind:'weakness', when:'always'});
+      else if(c._traitMode[t]==='resist') c.weaknesses.push({damage:t, kind:'resist', when:'always'});
     });
-    box.querySelectorAll('[data-fcewdel]').forEach(function(btn){
+  }
+  function renderTraitMode(){
+    if(!traitModeBox) return;
+    const order=['Slash','Pierce','Crush'].concat(TRAIT_LIST.filter(function(t){return ['Slash','Pierce','Crush'].indexOf(t)<0;}));
+    traitModeBox.innerHTML=order.map(function(t){
+      const mode=c._traitMode[t]||'none';
+      return '<div style="display:inline-flex;align-items:center;justify-content:space-between;gap:4px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;white-space:nowrap;">'+
+        '<span style="display:inline-flex;align-items:center;gap:2px;">'+(TRAIT_GLYPH(t)?TRAIT_GLYPH(t)+' ':'')+esc(t)+'</span>'+
+        '<span style="display:flex;gap:2px;">'+
+          '<button type="button" data-tm="'+esc(t)+'" data-mode="weak" class="sm" style="padding:1px 5px;font-size:10px;'+((mode==='weak')?'background:var(--torch);color:#000;':'')+'">W</button>'+
+          '<button type="button" data-tm="'+esc(t)+'" data-mode="resist" class="sm" style="padding:1px 5px;font-size:10px;'+((mode==='resist')?'background:var(--verd);color:#000;':'')+'">R</button>'+
+          '<button type="button" data-tm="'+esc(t)+'" data-mode="none" class="sm" style="padding:1px 5px;font-size:10px;'+((mode==='none')?'background:var(--dim);color:#fff;':'')+'">&#8211;</button>'+
+        '</span></div>';
+    }).join('');
+    traitModeBox.querySelectorAll('[data-tm]').forEach(function(btn){
       btn.addEventListener('click', function(){
-        c.weaknesses.splice(+btn.getAttribute('data-fcewdel'),1);
-        renderWeakRows();
+        const t=btn.getAttribute('data-tm');
+        const md=btn.getAttribute('data-mode');
+        if(c._traitMode[t]===md) c._traitMode[t]='none'; else c._traitMode[t]=md;
+        syncTraitModeWeaknesses();
+        renderTraitMode();
       });
     });
   }
-  renderWeakRows();
+  syncTraitModeWeaknesses();
+  renderTraitMode();
   const CONDS_IMMUNE=['Dazed','Enfeebled','Afflicted','Slowed','Exposed','Doomed','Confused'];
   const immuneBox=document.getElementById('fce_immune_rows');
-  function renderImmuneRows(){ if(!immuneBox) return; immuneBox.innerHTML=CONDS_IMMUNE.map(function(cd){ return '<label style="display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;white-space:nowrap;"><input type="checkbox" value="'+esc(cd)+'" data-ci="immune" '+((c.immune||[]).indexOf(cd)>=0?'checked':'')+' style="margin:0;"> '+esc(cd)+'</label>'; }).join(''); }
-  if(immuneBox) renderImmuneRows();
-  const tierBox=document.getElementById('fce_tiers');
+  function renderImmuneRows(){ if(!immuneBox) return; immuneBox.innerHTML=CONDS_IMMUNE.map(function(cd){ return '<label style="display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;white-space:nowrap;"><input type=\"checkbox\" value=\"'+esc(cd)+'\" data-ci=\"immune\" '+((c.immune||[]).indexOf(cd)>=0?'checked':'')+' style=\"margin:0;\"> '+esc(cd)+'</label>'; }).join(''); }
+  if(immuneBox) renderImmuneRows();  const tierBox=document.getElementById('fce_tiers');
   const renderTierRows=function(){
     if(!tierBox) return;
     tierBox.innerHTML=(c.tiers||[]).map(function(t,idx){
@@ -804,7 +792,14 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   };
   renderTierRows();
   const baseSel=document.getElementById('fce_base');
-  if(baseSel) baseSel.addEventListener('change', function(){ c.base=baseSel.value; c.weaknesses=_baseWeaknesses(baseSel.value).slice(); c.tiers=_baseTiers(baseSel.value); renderWeakChecks(); renderResistChecks(); if(window.syncWeakResistChecks) window.syncWeakResistChecks(); renderTierRows();
+  if(baseSel) baseSel.addEventListener('change', function(){ c.base=baseSel.value; c.weaknesses=_baseWeaknesses(baseSel.value).slice();
+    if(!c._traitMode) { c._traitMode={}; TRAIT_LIST.forEach(function(t){c._traitMode[t]='none';}); }
+    (c.weaknesses||[]).forEach(function(w){ if(w&&w.damage) c._traitMode[w.damage]=(w.kind==='resist'?'resist':'weak'); });
+    c.tiers=_baseTiers(baseSel.value);
+    if(typeof syncTraitModeWeaknesses==='function') syncTraitModeWeaknesses();
+    if(typeof renderTraitMode==='function') renderTraitMode();
+    renderTierRows();
+
     const _be=(typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies.find(function(e){return e.id===baseSel.value;}) : (window.DESCENTFORGE_EXTERNAL_GAME_DATA? _externalBaseEnemyED(baseSel.value) : null);
     if(_be && Array.isArray(_be.immune)) { c.immune=_be.immune.slice(); if(typeof renderImmuneRows==='function') renderImmuneRows(); }
     (function(){ const _st=_sizeTraits(baseSel.value); const _sz=document.getElementById('fce_size_traits'); if(_sz) _sz.innerHTML=['Huge','Small'].map(function(t){ return '<label style="font-size:11px;margin-right:8px;opacity:.7;"><input type="checkbox" value="'+esc(t)+'" '+( _st.indexOf(t)>=0 ? 'checked' : '')+' disabled> '+esc(t)+' (locked)</label>'; }).join(''); })();
@@ -833,9 +828,8 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
       const a=document.querySelector('[data-fcetier="'+idx+'|attack"]');
       return {tier:+t.tier, health:Math.max(1,parseInt(h&&h.value,10)||t.health), defense:Math.max(0,parseInt(d&&d.value,10)||t.defense), attack:Math.max(0,parseInt(a&&a.value,10)||t.attack)};
     });
-    const __weakChecked=[].slice.call(document.querySelectorAll('[data-cw="weak"]:checked')).map(function(x){return x.value;});
-    const __resistChecked=[].slice.call(document.querySelectorAll('[data-cw="resist"]:checked')).map(function(x){return x.value;});
-    const __warr=[]; __weakChecked.forEach(function(d){__warr.push({damage:d, kind:'weakness', when:'always'});}); __resistChecked.forEach(function(d){__warr.push({damage:d, kind:'resist', when:'always'});});
+    if(typeof syncTraitModeWeaknesses==='function') syncTraitModeWeaknesses();
+    const __warr = (c.weaknesses||[]).slice();
     const nc={id:(document.getElementById('fce_id').value.trim()||c.id), name:(document.getElementById('fce_name').value.trim()||c.id), base:document.getElementById('fce_base').value, hp:(parsedTiers[0]&&parsedTiers[0].health)||c.hp, def:(parsedTiers[0]&&parsedTiers[0].defense)||c.def, atk:(parsedTiers[0]&&parsedTiers[0].attack)||c.atk, tiers:parsedTiers, mech: mechVals.concat(_sizeTraits(document.getElementById('fce_base').value)), theme:themeVals, activation:(document.getElementById('fce_activation').value.trim()), tactics:(document.getElementById('fce_tactics').value.trim()), defense:(document.getElementById('fce_defense').value.trim()), weaknesses:__warr, immune:[].slice.call(document.querySelectorAll('[data-ci="immune"]:checked')).map(function(x){return x.value;}), named: (document.getElementById('fce_named') && document.getElementById('fce_named').checked)};
     const originalId=id;
     const list2=ensureCustomEnemies();
