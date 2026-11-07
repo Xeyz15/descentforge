@@ -1625,8 +1625,8 @@ const topClear=overlay.querySelector('#forgeTopClear');
 if(topClear) topClear.addEventListener('click',function(){ clearAllStartInv(); renderActiveCategory(); });
 
 function placeForge(){ var h=document.querySelector('header'); var top=h?(h.getBoundingClientRect().bottom||h.offsetHeight||0):0; overlay.style.top=top+'px'; }
-function openForge(){ window.__forgeOpen=true; placeForge(); overlay.style.display='block'; btn.classList.add('on'); renderActiveCategory(); }
-function closeForge(){ window.__forgeOpen=false; overlay.style.display='none'; btn.classList.remove('on'); }
+function openForge(){ window.__forgeOpen=true; placeForge(); overlay.style.display='block'; btn.classList.add('on'); document.querySelectorAll('#modesel [data-mode]').forEach(function(b){ b.classList.remove('on'); }); renderActiveCategory(); }
+function closeForge(){ window.__forgeOpen=false; overlay.style.display='none'; btn.classList.remove('on'); document.querySelectorAll('#modesel [data-mode]').forEach(function(b){ b.classList.toggle('on', b.dataset.mode === mode); }); }
 try {
   if (typeof addStartItem === 'function') {
     const origAddStartItem = addStartItem;

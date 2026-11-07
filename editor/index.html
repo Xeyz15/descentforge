@@ -1987,8 +1987,9 @@ function paintChrome(){
   document.querySelectorAll('[data-ttl]').forEach(e=>{ e.title=T(e.dataset.ttl); });
   document.querySelectorAll('#langsel [data-lang]')
     .forEach(b=>b.classList.toggle('on',b.dataset.lang===lang));
+  const forgeOpen = (typeof window!=='undefined' && (window.__forgeOpen || (document.getElementById('forgeOverlay')||{}).style && document.getElementById('forgeOverlay').style.display==='block'));
   document.querySelectorAll('#modesel [data-mode]')
-    .forEach(b=>b.classList.toggle('on',b.dataset.mode===mode));
+    .forEach(b=>b.classList.toggle('on', !forgeOpen && b.dataset.mode===mode));
 
   // las pestañas y los rótulos que cambian de significado según el modo
   const camp_=mode==='campaign';
