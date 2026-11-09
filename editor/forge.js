@@ -381,7 +381,7 @@ function renderSimpleCategory(title, items, imgFolder){
   const rows=items.map(function(x){
     const name = prettyName((typeof L==='function') ? L(x,'name') : (x.name_en||x.name||x.id));
     const isIn=inStartInv(x.id);
-    const img = imgFolder ? '<img src="../img/'+imgFolder+'/'+x.id+'.png" style="width:48px;height:48px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;margin-right:8px;" onerror="this.style.display=&quot;none&quot;;">' : '';
+    const img = imgFolder ? '<img src="../img/'+imgFolder+'/'+x.id+'.png" style="width:40px;height:40px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;margin-right:6px;" onerror="this.style.display=&quot;none&quot;;">' : '';
     return '<div style="padding:8px;margin-bottom:6px;border:1px solid var(--edge);background:var(--panel2);border-radius:6px;display:flex;justify-content:space-between;align-items:center;gap:8px;">'+
       '<div style="display:flex;align-items:center;gap:8px;">'+img+'<span>'+esc(name)+'</span></div>'+
       '<span style="font-size:11px;color:'+(isIn?'var(--verd)':'var(--dim)')+';">'+(isIn?'In Starting Inventory':'Not in Starting Inventory')+'</span>'+
@@ -553,7 +553,6 @@ function _baseTiers(baseId){
 }
 
 function _baseExtra(baseId){
-  if (baseId==='ENEMY_WARY_BANDIT_1') return {activation:'Serrated Bolt: During the defense, the first time the hero places a fatigue on a card, they also scar it.', tactics:'Tactic 1:\nThe Bandit sprints forward then backflips into the air, launching knives and bolts in all directions!\n\nMove to within 3 spaces of as many heroes as possible. Then, this attack targets all heroes within range.\n\nTactic 2:\nThe Bandit leaps from the defensive posture, daggers twirling through nimble fingers.\n\nTactic 3:\nBloodlust: After the Attack, the target is pushed 2 spaces.', defense:'Smokebomb: After the attack, this enemy shifts 2 away from the hero.'};
   return {activation:'', tactics:'', defense:''};
 }
 
@@ -567,6 +566,61 @@ function _forgeWeaknessesFromExisting(existing, baseHint){
   return _baseWeaknesses(bid);
 }
 
+
+function _externalBaseEnemyED(baseId){
+  const gd = window.DESCENTFORGE_EXTERNAL_GAME_DATA;
+  if(!gd) return null;
+  const src = (gd.catalogo) ? gd.catalogo : gd;
+  const mons = Array.isArray(src.monstros)? src.monstros : [];
+  return mons.find(function(m){ const id=m._id||m.id||m.Id; return id===baseId; }) || null;
+}
+function _resolveExternalActivationED(ref, gd){
+  if(!ref) return null;
+  const src = (gd && gd.catalogo) ? gd.catalogo : (gd||{});
+  const acts = src.ativacoes || {};
+  if(ref.id && acts[ref.id]) return acts[ref.id];
+  if(ref.ref){ const f=Object.values(acts).find(function(a){return a._name===ref.ref;}); if(f) return f; }
+  if(typeof ref==='string'){ if(acts[ref]) return acts[ref]; const f=Object.values(acts).find(function(a){return a._name===ref;}); if(f) return f; }
+  if(ref.speed!==undefined || ref.text_en!==undefined || ref.hint_en!==undefined || ref.text!==undefined) return ref;
+  return null;
+}
+function _externalActivationTextsED(ext, gd){
+  const out={activation:'', tactics:''};
+  if(!ext) return out;
+  const arrs = [ {src: ext.Activations || ext.activations || [], target:'activation'}, {src: ext.ManualActivations || ext.manualActivations || [], target:'tactics'} ];
+  arrs.forEach(function(w){
+    const lines=[];
+    (w.src||[]).forEach(function(ref){
+      const a=_resolveExternalActivationED(ref, gd);
+      if(!a) return;
+      const name = a._name || a.name || '';
+      const text = a.text_en || a.text || '';
+      const hint = a.hint_en || a.hint || '';
+      const stats = [];
+      if(a.speed!==undefined) stats.push('Speed: '+a.speed);
+      if(a.damage!==undefined) stats.push('Damage: '+a.damage);
+      if(a.aim!==undefined) stats.push('Aim: '+a.aim);
+      if(a.attack!==undefined) stats.push('Attack: '+a.attack);
+      if(a.range!==undefined) stats.push('Range: '+a.range);
+      if(a.healing!==undefined) stats.push('Healing: '+a.healing);
+      if(a.shield!==undefined) stats.push('Shield: '+a.shield);
+      if(a.initiative!==undefined) stats.push('Initiative: '+a.initiative);
+      if(a.rangeType!==undefined||a.RangeType!==undefined) stats.push('RangeType: '+(a.rangeType||a.RangeType));
+      if(a.next!==undefined|| (a.NextActivation && (a.NextActivation.id||a.NextActivation._name))) stats.push('Next: '+(a.next||(a.NextActivation&&(a.NextActivation.id||a.NextActivation._name))||''));
+      let block='';
+      if(name) block += '**'+name+'**';
+      const _t = text || '';
+      if(_t) block += (block?'\n\n':'')+_t;
+      if(hint) block += (block?'\n\n':'')+'Hint: '+hint;
+      if(stats.length) block += (block?'\n':'')+stats.join('\n');
+      if(block) lines.push(block);
+    });
+    out[w.target]=lines.join('\n\n');
+  });
+  return out;
+}
+
+
 function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseHint=",baseHint,"tiers=", (id && ensureCustomEnemies().find(c=>c.id===id)&&ensureCustomEnemies().find(c=>c.id===id).tiers) ? "yes":"no");
   const list=ensureCustomEnemies();
     let existing=id? list.find(function(c){return c.id===id;}) : null;
@@ -578,16 +632,57 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   let baseId = baseHint || (existing? existing.base : null);
   if(!baseId && id && (typeof DATA!=='undefined' && Array.isArray(DATA.enemies) && DATA.enemies.some(function(e){return e.id===id;}))) baseId=id;
   const baseEnemy = (typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies.find(function(e){return e.id===baseId;}) : null;
-  const c=existing || {id: (baseId? ('CUSTOM_'+baseId) : ('CUSTOM_ENEMY_'+(list.length+1))), name:(baseEnemy && (baseEnemy.name_en||baseEnemy.name)) || ('Custom monster '+(list.length+1)), base: (baseId||''), hp:(baseEnemy? baseEnemy.hp : 40), def:(baseEnemy? baseEnemy.def : 2), atk:(baseEnemy? baseEnemy.atk : 2), mech:(baseEnemy && Array.isArray(baseEnemy.mech))? baseEnemy.mech.filter(function(t){return t!=='Huge' && t!=='Small';}).slice() : [], theme:(baseEnemy && Array.isArray(baseEnemy.theme))? baseEnemy.theme.slice() : [], weaknesses: _forgeWeaknessesFromExisting(existing, baseId) };
+  const c=existing || {id: (baseId? ('CUSTOM_'+baseId) : ('CUSTOM_ENEMY_'+(list.length+1))), name:(baseEnemy && (baseEnemy.name_en||baseEnemy.name)) || ('Custom monster '+(list.length+1)), base: (baseId||''), hp:(baseEnemy? baseEnemy.hp : 40), def:(baseEnemy? baseEnemy.def : 2), atk:(baseEnemy? baseEnemy.atk : 2), mech:(baseEnemy && Array.isArray(baseEnemy.mech))? baseEnemy.mech.filter(function(t){return t!=='Huge' && t!=='Small';}).slice() : [], theme:(baseEnemy && Array.isArray(baseEnemy.theme))? baseEnemy.theme.slice() : [], weaknesses: _forgeWeaknessesFromExisting(existing, baseId), immune: (existing && Array.isArray(existing.immune)) ? existing.immune.slice() : ((baseEnemy && Array.isArray(baseEnemy.immune)) ? baseEnemy.immune.slice() : []) };
   if (!Array.isArray(c.tiers) || !c.tiers.length) c.tiers = _baseTiers(c.base || baseId);
+  if (!Array.isArray(c.immune)) c.immune = [];
+  if (!c._traitMode || typeof c._traitMode !== 'object') { c._traitMode={}; ['Crush','Slash','Pierce','Ignos','Anemos','Aquos','Terros','Lumos','Umbros','Vigos','Mortos','Toxos','Fortunos'].forEach(function(t){ c._traitMode[t]='none'; }); (c.weaknesses||[]).forEach(function(w){ if(w && w.damage) c._traitMode[w.damage] = (w.kind==='resist'?'resist':'weak'); }); }
   if (!c.activation) c.activation = _baseExtra(c.base || baseId).activation || (baseEnemy && baseEnemy.activation) || '';
   if (!c.tactics) c.tactics = _baseExtra(c.base || baseId).tactics || (baseEnemy && baseEnemy.tactics) || '';
+  // pull detailed activation data from externally loaded game data (if available)
+  try {
+    const ext = _externalBaseEnemyED(c.base || baseId || id);
+    if (ext) {
+      const gd = window.DESCENTFORGE_EXTERNAL_GAME_DATA;
+      const texts = _externalActivationTextsED(ext, gd);
+      if (texts.activation && (!c.activation || !String(c.activation).trim())) c.activation = texts.activation;
+      if (texts.tactics && (!c.tactics || !String(c.tactics).trim())) c.tactics = texts.tactics;
+      if (ext.defense_en && (!c.defense || !String(c.defense).trim())) c.defense = ext.defense_en;
+      if (Array.isArray(ext.immune) && (!Array.isArray(c.immune) || !c.immune.length)) c.immune = ext.immune.slice();
+    }
+  } catch(e){ console.warn('external activation pull failed', e); }
+
   if (c.defense==null && c.defence!=null) c.defense = c.defence;
   if (!c.defense) c.defense = _baseExtra(c.base || baseId).defense || (baseEnemy && baseEnemy.defense) || '';
   if (c.tiers && c.tiers.length) { c.hp=c.tiers[0].health; c.def=c.tiers[0].defense; c.atk=c.tiers[0].attack; }
 
+  // Build base options as FAMILY names (one representative enemy per family), so changing base changes the physical piece/model.
+  const _familyReps={};
+  if(typeof ENEMY_TYPE_CAPS!=='undefined'){
+    const _keys=Object.keys(ENEMY_TYPE_CAPS);
+    _keys.forEach(function(k){
+      const fam=ENEMY_TYPE_CAPS[k];
+      if(!fam) return;
+      if((fam.act||1) > 1 && !(typeof forgeAllowedAct2==='function' && forgeAllowedAct2())) return;
+      const name=fam.family_name ? fam.family_name : 'Other';
+      if(_familyReps[name]) return;
+      const members=(fam.member_ids||[]);
+      let rep=null;
+      for(let i=0;i<members.length;i++){ if((typeof DATA!=='undefined' && Array.isArray(DATA.enemies)) && DATA.enemies.some(function(e){return e.id===members[i];})){ rep=members[i]; break; } }
+      if(!rep && members.length) rep=members[0];
+      if(rep) _familyReps[name]=rep;
+    });
+  }
+  // Fallback: if no caps, keep per-enemy options
+  const _famNames=Object.keys(_familyReps).sort();
   const bases=((typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies : []);
-  const baseOpts=bases.map(function(e){ return '<option value="'+esc(e.id)+'" '+(e.id===c.base?'selected':'')+'>'+esc(e.name_en||e.name||e.id)+'</option>'; }).join('');
+  let baseOpts='';
+  if(_famNames.length){
+    baseOpts=_famNames.map(function(nm){ const rep=_familyReps[nm]; return '<option value="'+esc(rep)+'" '+(rep===c.base?'selected':'')+'>'+esc(nm)+'</option>'; }).join('')+
+      '<option value="" '+(c.base && !_famNames.some(function(nm){return _familyReps[nm]===c.base;})?'selected':'')+'>— original —</option>';
+  } else {
+    baseOpts=bases.map(function(e){ return '<option value="'+esc(e.id)+'" '+(e.id===c.base?'selected':'')+'>'+esc(e.name_en||e.name||e.id)+'</option>'; }).join('');
+  }
+
   const sizeTraits=_sizeTraits(c.base);
   const lockedSizeOpts=['Huge','Small'].map(function(t){ return '<label style="font-size:11px;margin-right:8px;opacity:.7;"><input type="checkbox" value="'+esc(t)+'" '+(sizeTraits.indexOf(t)>=0?'checked':'')+' disabled> '+esc(t)+' (locked)</label>'; }).join('');
   const _MEC=(typeof MECANICOS!=='undefined')?MECANICOS:['Melee','Ranged','Striker','Tank','Support','Debuffer','Fast','Slow','Flying','Huge','Small'];
@@ -607,29 +702,35 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   const lockedThemeOpts=lockedThemeTraits.map(function(t){ return '<label style="font-size:11px;margin-right:8px;"><input type="checkbox" value="'+esc(t)+'" data-cm="theme" '+((c.theme||[]).indexOf(t)>=0?'checked':'')+'> '+esc(t)+'</label>'; }).join('');
   const portraitSrc=(typeof arte==='function' && typeof ASSETS!=='undefined' && ASSETS.enemyFamily)? arte('portraits', (ASSETS.enemyFamily[c.base]||'')) : '';
   const body=
-    (portraitSrc? '<div style="text-align:center;margin-bottom:8px;"><img src="'+portraitSrc+'" style="width:64px;height:64px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;"></div>' : '')+
-    '<div class="field"><label>ID</label><input id="fce_id" value="'+esc(c.id)+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>Name</label><input id="fce_name" value="'+esc(c.name||'')+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>Base enemy</label><select id="fce_base" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div>'+
-    '<label class="chk" style="margin-bottom:8px;display:block;"><input type="checkbox" id="fce_named" '+(c.named?'checked':'')+'> Named</label>'+
-    '<div class="field"><label>HP</label><input id="fce_hp" type="number" value="'+esc(c.hp)+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>DEF</label><input id="fce_def" type="number" value="'+esc(c.def)+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>ATK</label><input id="fce_atk" type="number" value="'+esc(c.atk)+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>Weaknesses / Resistances</label>'+
-      '<div id="fce_weak_rows" style="display:flex;flex-direction:column;gap:4px;margin-bottom:6px;"></div>'+
-      '<button id="fce_wadd" class="sm" style="background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;">'+esc('Add')+'</button>'+
+    (portraitSrc
+      ? '<div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:6px;flex-wrap:wrap;">'+
+          '<img id="fce_portrait" src="'+portraitSrc+'" style="width:64px;height:64px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;">'+
+          '<div class="field" style="min-width:0;max-width:180px;"><label>Base enemy</label><select id="fce_base" style="width:75%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div>'+
+          '<div id="fce_size_traits" style="display:flex;align-items:center;gap:4px;font-size:11px;opacity:.75;">'+lockedSizeOpts+'</div>'+
+          '<label class="chk" style="margin-bottom:0;white-space:nowrap;"><input type="checkbox" id="fce_named" '+(c.named?'checked':'')+'> Named</label>'+
+        '</div>'
+      : '<div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:6px;flex-wrap:wrap;">'+
+          '<div class="field" style="min-width:0;max-width:180px;"><label>Base enemy</label><select id="fce_base" style="width:75%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;">'+baseOpts+'</select></div>'+
+          '<div style="display:flex;align-items:center;gap:4px;font-size:11px;opacity:.75;">'+lockedSizeOpts+'</div>'+
+          '<label class="chk" style="margin-bottom:0;white-space:nowrap;"><input type="checkbox" id="fce_named" '+(c.named?'checked':'')+'> Named</label>'+
+        '</div>')+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">'+
+      '<div class="field"><label>ID</label><input id="fce_id" value="'+esc(c.id)+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
+      '<div class="field"><label>Name</label><input id="fce_name" value="'+esc(c.name||'')+'" style="width:100%;padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
     '</div>'+
+
+    '<input type="hidden" id="fce_hp" value="'+esc(c.hp)+'"><input type="hidden" id="fce_def" value="'+esc(c.def)+'"><input type="hidden" id="fce_atk" value="'+esc(c.atk)+'">'+    '<div class="field"><label style="font-weight:600;">Damage traits (W=Weak, R=Resist, blank=None)</label><div id="fce_trait_mode" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px 8px;"></div></div>'+
+    '<div class="field"><label style="font-weight:600;">Immune to</label><div id="fce_immune_rows" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px 8px;"></div></div>'+
     '<div class="field"><label>Tiers (stats per hero count)</label>'+
       '<div id="fce_tiers" style="display:flex;flex-direction:column;gap:6px;margin-bottom:6px;"></div>'+
     '</div>'+
     '<div class="field"><label>Mechanical traits</label><div style="display:flex;flex-wrap:wrap;gap:6px;">'+mechOpts+'</div><p class="help" style="font-size:11px;margin-top:4px;">Huge/Small are inherited from the base and shown in Advanced.</p></div>'+
     '<div class="field"><label>Theme traits</label><div style="display:flex;flex-wrap:wrap;gap:6px;">'+themeOpts+'</div><p class="help" style="font-size:11px;margin-top:4px;">Locked traits (inherited from base): '+((_lockedThemeTraits(c.base)).length? _lockedThemeTraits(c.base).join(', ') : 'none')+'</p></div>'+
-    '<div class="field"><label>Activation</label><input id="fce_activation" value="'+esc(c.activation||'')+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>Tactics</label><input id="fce_tactics" value="'+esc(c.tactics||'')+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
-    '<div class="field"><label>Defense</label><input id="fce_defense" value="'+esc(c.defense||'')+'" style="width:100%;padding:6px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;box-sizing:border-box;"></div>'+
+    '<div class="field"><label>Activation</label><div id="fce_activation_view" style="display:flex;flex-direction:column;gap:6px;margin-bottom:4px;"></div><input type="hidden" id="fce_activation" value="'+esc(c.activation||'')+'"></div>'+
+    '<div class="field"><label>Tactics</label><div id="fce_tactics_view" style="display:flex;flex-direction:column;gap:6px;margin-bottom:4px;"></div><input type="hidden" id="fce_tactics" value="'+esc(c.tactics||'')+'"></div>'+
+    '<div class="field"><label>Defense</label><div id="fce_defense_view" style="display:flex;flex-direction:column;gap:6px;margin-bottom:4px;"></div><input type="hidden" id="fce_defense" value="'+esc(c.defense||'')+'"></div>'+
     '<button id="fce_advanced" class="sm" style="margin-top:4px;background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:4px;padding:4px 8px;cursor:pointer;font-size:11px;">Advanced (edit locked)</button>'+
     '<div id="fce_adv" style="display:none;margin-top:6px;padding:6px;border:1px dashed var(--edge);border-radius:4px;">'+
-      '<div style="font-size:10px;color:var(--dim);margin-bottom:4px;margin-top:2px;">Size traits (locked)</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;">'+lockedSizeOpts+'</div>'+
       '<div style="font-size:10px;color:var(--dim);margin-bottom:4px;margin-top:6px;">Locked theme traits</div><div style="display:flex;flex-wrap:wrap;gap:6px;">'+lockedThemeOpts+'</div>'+
     '</div>';
   if(typeof openDlg==='function'){ openDlg('Custom monster', body, '<button id="fce_save" class="primary">Save</button><button id="fce_cancel">Cancel</button>');
@@ -637,31 +738,49 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   else { alert('Dialog not available'); return; }
 
   const TRAIT_LIST=['Crush','Slash','Pierce','Ignos','Anemos','Aquos','Terros','Lumos','Umbros','Vigos','Mortos','Toxos','Fortunos'];
-  function renderWeakRows(){
-    const box=document.getElementById('fce_weak_rows'); if(!box) return;
-    box.innerHTML=(c.weaknesses||[]).map(function(w,i){
-      return '<div class="twfila" style="display:grid;grid-template-columns:minmax(120px,1fr) 110px 28px;gap:6px;align-items:center;margin-bottom:4px;">'+
-        '<select data-fcew="'+i+'|damage" style="width:100%;padding:5px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;font-size:12px;">'+TRAIT_LIST.map(function(d){return '<option '+(d===w.damage?'selected':'')+'>'+esc(d)+'</option>';}).join('')+'</select>'+
-        '<select data-fcew="'+i+'|kind" style="width:100%;padding:5px 8px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;font-size:12px;"><option value="weakness" '+(w.kind!=='resist'?'selected':'')+'>Weakness</option><option value="resist" '+(w.kind==='resist'?'selected':'')+'>Resist</option></select>'+
-        '<button class="sm" data-fcewdel="'+i+'" style="background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:4px;padding:2px 4px;cursor:pointer;font-size:11px;">X</button>'+
-      '</div>';
-    }).join('') || '<p class="empty" style="color:var(--dim);font-size:11px;margin:4px 0;">No weakness/resistance entries.</p>';
-    box.querySelectorAll('[data-fcew]').forEach(function(sel){
-      sel.addEventListener('change', function(){
-        const parts=sel.getAttribute('data-fcew').split('|');
-        if(!c.weaknesses[+parts[0]]) return;
-        c.weaknesses[+parts[0]][parts[1]]=sel.value;
-      });
+  const TRAIT_GLYPH = function(d){ return d==='Crush'?'🔨':d==='Slash'?'🗡️':d==='Pierce'?'🏹':''; };
+const traitModeBox=document.getElementById('fce_trait_mode');
+  if(!c._traitMode){
+    c._traitMode={};
+    ['Crush','Slash','Pierce','Ignos','Anemos','Aquos','Terros','Lumos','Umbros','Vigos','Mortos','Toxos','Fortunos'].forEach(function(t){ c._traitMode[t]='none'; });
+    (c.weaknesses||[]).forEach(function(w){ if(w && w.damage) c._traitMode[w.damage]=(w.kind==='resist'?'resist':'weak'); });
+  }
+  function syncTraitModeWeaknesses(){
+    c.weaknesses=[];
+    Object.keys(c._traitMode).forEach(function(t){
+      if(c._traitMode[t]==='weak') c.weaknesses.push({damage:t, kind:'weakness', when:'always'});
+      else if(c._traitMode[t]==='resist') c.weaknesses.push({damage:t, kind:'resist', when:'always'});
     });
-    box.querySelectorAll('[data-fcewdel]').forEach(function(btn){
+  }
+  function renderTraitMode(){
+    if(!traitModeBox) return;
+    const order=['Slash','Pierce','Crush'].concat(TRAIT_LIST.filter(function(t){return ['Slash','Pierce','Crush'].indexOf(t)<0;}));
+    traitModeBox.innerHTML=order.map(function(t){
+      const mode=c._traitMode[t]||'none';
+      return '<div style="display:inline-flex;align-items:center;justify-content:space-between;gap:4px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;white-space:nowrap;">'+
+        '<span style="display:inline-flex;align-items:center;gap:2px;">'+(TRAIT_GLYPH(t)?TRAIT_GLYPH(t)+' ':'')+esc(t)+'</span>'+
+        '<span style="display:flex;gap:2px;">'+
+          '<button type="button" data-tm="'+esc(t)+'" data-mode="weak" class="sm" style="padding:1px 5px;font-size:10px;'+((mode==='weak')?'background:var(--torch);color:#000;':'')+'">W</button>'+
+          '<button type="button" data-tm="'+esc(t)+'" data-mode="resist" class="sm" style="padding:1px 5px;font-size:10px;'+((mode==='resist')?'background:var(--verd);color:#000;':'')+'">R</button>'+
+          '<button type="button" data-tm="'+esc(t)+'" data-mode="none" class="sm" style="padding:1px 5px;font-size:10px;'+((mode==='none')?'background:var(--dim);color:#fff;':'')+'">&#8211;</button>'+
+        '</span></div>';
+    }).join('');
+    traitModeBox.querySelectorAll('[data-tm]').forEach(function(btn){
       btn.addEventListener('click', function(){
-        c.weaknesses.splice(+btn.getAttribute('data-fcewdel'),1);
-        renderWeakRows();
+        const t=btn.getAttribute('data-tm');
+        const md=btn.getAttribute('data-mode');
+        if(c._traitMode[t]===md) c._traitMode[t]='none'; else c._traitMode[t]=md;
+        syncTraitModeWeaknesses();
+        renderTraitMode();
       });
     });
   }
-  renderWeakRows();
-  const tierBox=document.getElementById('fce_tiers');
+  syncTraitModeWeaknesses();
+  renderTraitMode();
+  const CONDS_IMMUNE=['Dazed','Enfeebled','Afflicted','Slowed','Exposed','Doomed','Confused'];
+  const immuneBox=document.getElementById('fce_immune_rows');
+  function renderImmuneRows(){ if(!immuneBox) return; immuneBox.innerHTML=CONDS_IMMUNE.map(function(cd){ return '<label style="display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);font-size:11px;cursor:pointer;white-space:nowrap;"><input type=\"checkbox\" value=\"'+esc(cd)+'\" data-ci=\"immune\" '+((c.immune||[]).indexOf(cd)>=0?'checked':'')+' style=\"margin:0;\"> '+esc(cd)+'</label>'; }).join(''); }
+  if(immuneBox) renderImmuneRows();  const tierBox=document.getElementById('fce_tiers');
   const renderTierRows=function(){
     if(!tierBox) return;
     tierBox.innerHTML=(c.tiers||[]).map(function(t,idx){
@@ -675,10 +794,32 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
   };
   renderTierRows();
   const baseSel=document.getElementById('fce_base');
-  if(baseSel) baseSel.addEventListener('change', function(){ c.base=baseSel.value; c.weaknesses=_baseWeaknesses(baseSel.value).slice(); c.tiers=_baseTiers(baseSel.value); renderWeakRows(); renderTierRows(); });
+  if(baseSel) baseSel.addEventListener('change', function(){ c.base=baseSel.value; c.weaknesses=_baseWeaknesses(baseSel.value).slice();
+    if(!c._traitMode) { c._traitMode={}; TRAIT_LIST.forEach(function(t){c._traitMode[t]='none';}); }
+    (c.weaknesses||[]).forEach(function(w){ if(w&&w.damage) c._traitMode[w.damage]=(w.kind==='resist'?'resist':'weak'); });
+    c.tiers=_baseTiers(baseSel.value);
+    if(typeof syncTraitModeWeaknesses==='function') syncTraitModeWeaknesses();
+    if(typeof renderTraitMode==='function') renderTraitMode();
+    renderTierRows();
+
+    const _be=(typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies.find(function(e){return e.id===baseSel.value;}) : (window.DESCENTFORGE_EXTERNAL_GAME_DATA? _externalBaseEnemyED(baseSel.value) : null);
+    if(_be && Array.isArray(_be.immune)) { c.immune=_be.immune.slice(); if(typeof renderImmuneRows==='function') renderImmuneRows(); }
+    (function(){ const _st=_sizeTraits(baseSel.value); const _sz=document.getElementById('fce_size_traits'); if(_sz) _sz.innerHTML=['Huge','Small'].map(function(t){ return '<label style="font-size:11px;margin-right:8px;opacity:.7;"><input type="checkbox" value="'+esc(t)+'" '+( _st.indexOf(t)>=0 ? 'checked' : '')+' disabled> '+esc(t)+' (locked)</label>'; }).join(''); })();
+
+    const _p=document.getElementById('fce_portrait'); if(_p){ const _src=(typeof arte==='function' && typeof ASSETS!=='undefined' && ASSETS.enemyFamily)? arte('portraits', (ASSETS.enemyFamily[baseSel.value]||'')) : ''; if(_src){ _p.src=_src; _p.style.display=''; } else { _p.style.display='none'; } } });
   const wadd=document.getElementById('fce_wadd');
   if(wadd) wadd.addEventListener('click', function(){ (c.weaknesses=c.weaknesses||[]).push({damage:TRAIT_LIST[0],kind:'weakness',when:'always'}); renderWeakRows(); });
   // parse mech/theme on save unchanged; also ensure weaknesses remains c.weaknesses
+
+  (function(){
+    function splitBlocks(t){ return String(t||'').split(/\n\s*\n/).map(function(x){return x.trim();}).filter(Boolean); }
+    function formatGameText(t){ if(!t) return ''; let s=String(t); s=s.replace(/\*\*([^*\n]+?)\*\*/g, '<b>$1</b>'); s=s.replace('\uf5e3','💧'); s=s.replace('\uf5e5','💥'); s=s.replace('\uf5de','➕'); s=s.replace('\uf5e1','⚡'); s=s.replace('\uf5e8','⭐'); s=s.replace('\uf5d0','❤️'); s=s.replace('\uf5e4','🔺'); s=s.replace(/<style=Term[^>]*>([\s\S]*?)<\/style>/gi, function(m, inner){ const txt=inner.replace(/<link=[^>]*>/g,'').replace(/<\/link>/g,''); return '<span style="color:#e05a4f;font-weight:600">'+txt+'</span>'; }); s=s.replace(/<style=Term>/g,'').replace(/<\/style>/g,'').replace(/<link=[^>]*>/g,'').replace(/<\/link>/g,''); s=s.replace(/<b>/g,'').replace(/<\/b>/g,''); s=s.replace(/<(?!i|u|em)[^>]*>/g,''); var _tr=/\b(Affliction|affliction|conditions|Afflicted|afflicted|condition|enfeebled|terrified|terrifies|underlays|Enfeeble|confused|enfeeble|stresses|underlay|weakness|Prepare|afflict|confuse|exposed|impeded|infects|negates|prepare|scarred|terrify|wounded|Charge|Expose|Shifts|doomed|expose|impede|infect|injury|shifts|shroud|slowed|stress|Focus|Reach|Shift|dazed|focus|scars|shift|speed|tests|Doom|Scar|Slow|daze|doom|scar|slow|test|XP)\b/gi; s=s.replace(_tr, '<span style="color:#e05a4f;font-weight:600">$&</span>'); s=s.replace(/Tactic\s*\d+\s*:/g, function(m){ return '<b>'+m+'</b>'; }); return s; }
+    function renderBlocks(id, text){ if(id==='fce_tactics_view'){ var __n=0; text=String(text||'').replace(/(^|\n)(Tactic\s*(\d*)\s*:)/gi, function(m, prefix, header, num){ __n += 1; return '\n\n' + (num ? header : 'Tactic '+__n+':'); }); }
+      const el=document.getElementById(id); if(!el) return; el.innerHTML = splitBlocks(text).map(function(b){ return '<div style="padding:4px 6px;margin-bottom:4px;border:2px solid var(--edge);border-radius:6px;white-space:pre-wrap;background:var(--panel2);line-height:1.35;font-size:11px;">'+formatGameText(b)+'</div>'; }).join(''); }
+    renderBlocks('fce_activation_view', c.activation);
+    renderBlocks('fce_tactics_view', c.tactics);
+    renderBlocks('fce_defense_view', c.defense);
+  })();
   const save=document.getElementById('fce_save');
   if(save) save.onclick=function(){
     const mechVals=[].slice.call(document.querySelectorAll('[data-cm="mech"]:checked')).map(function(x){return x.value;});
@@ -689,7 +830,9 @@ function openForgeCustomEnemy(id, baseHint){ console.log("OPEN", "id=",id,"baseH
       const a=document.querySelector('[data-fcetier="'+idx+'|attack"]');
       return {tier:+t.tier, health:Math.max(1,parseInt(h&&h.value,10)||t.health), defense:Math.max(0,parseInt(d&&d.value,10)||t.defense), attack:Math.max(0,parseInt(a&&a.value,10)||t.attack)};
     });
-    const nc={id:(document.getElementById('fce_id').value.trim()||c.id), name:(document.getElementById('fce_name').value.trim()||c.id), base:document.getElementById('fce_base').value, hp:(parsedTiers[0]&&parsedTiers[0].health)||c.hp, def:(parsedTiers[0]&&parsedTiers[0].defense)||c.def, atk:(parsedTiers[0]&&parsedTiers[0].attack)||c.atk, tiers:parsedTiers, mech: mechVals.concat(_sizeTraits(document.getElementById('fce_base').value)), theme:themeVals, activation:(document.getElementById('fce_activation').value.trim()), tactics:(document.getElementById('fce_tactics').value.trim()), defense:(document.getElementById('fce_defense').value.trim()), weaknesses:(c.weaknesses||[]), named: (document.getElementById('fce_named') && document.getElementById('fce_named').checked)};
+    if(typeof syncTraitModeWeaknesses==='function') syncTraitModeWeaknesses();
+    const __warr = (c.weaknesses||[]).slice();
+    const nc={id:(document.getElementById('fce_id').value.trim()||c.id), name:(document.getElementById('fce_name').value.trim()||c.id), base:document.getElementById('fce_base').value, hp:(parsedTiers[0]&&parsedTiers[0].health)||c.hp, def:(parsedTiers[0]&&parsedTiers[0].defense)||c.def, atk:(parsedTiers[0]&&parsedTiers[0].attack)||c.atk, tiers:parsedTiers, mech: mechVals.concat(_sizeTraits(document.getElementById('fce_base').value)), theme:themeVals, activation:(document.getElementById('fce_activation').value.trim()), tactics:(document.getElementById('fce_tactics').value.trim()), defense:(document.getElementById('fce_defense').value.trim()), weaknesses:__warr, immune:[].slice.call(document.querySelectorAll('[data-ci="immune"]:checked')).map(function(x){return x.value;}), named: (document.getElementById('fce_named') && document.getElementById('fce_named').checked)};
     const originalId=id;
     const list2=ensureCustomEnemies();
     // Update or append in the Forge bank by the ORIGINAL selection id.
@@ -759,7 +902,7 @@ function renderEnemiesCategory(){
     const be=(typeof DATA!=='undefined' && Array.isArray(DATA.enemies))? DATA.enemies.find(function(e){return e.id===c.base;}) : null;
     return {id:c.id,name:c.name,name_en:c.name,hp:c.hp,def:c.def,atk:c.atk,act:(be && be.act)||1,mech:c.mech||[],theme:c.theme||[], named:!!c.named, weaknesses:c.weaknesses||[]};
   });
-  const items=baseItems.concat(customAsEnemies);
+  const items=baseItems;  // custom monsters are listed in the dedicated custom section below
 
   // Expose boss/mini tags as a Mech trait (like Huge/Small) for display and filtering.
   items.forEach(function(x){
@@ -842,18 +985,17 @@ function renderEnemiesCategory(){
     const act=actOf(x);
     const weak=weaknessDisplayOf(x.id);
     const src=portrait(x);
-    const img=src? '<img src="'+src+'" style="width:48px;height:48px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;margin-right:8px;">' : '';
+    const img=src? '<img src="'+src+'" style="width:40px;height:40px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;margin-right:6px;">' : '';
     const bossTagKey=(camp.enemyTags && camp.enemyTags[x.id]) || ENEMY_TAG_BY_LIST[x.id] || (/boss/i.test(String(x.id||'')) ? 'boss' : (/named/i.test(String(x.id||'')) ? 'mini' : ''));
     const bossTag=bossTagKey ? (bossTagKey==='boss' ? 'BOSS' : (bossTagKey==='mini' ? 'MINI' : (bossTagKey==='base' ? 'BASE' : ''))) : '';
     const border=bossTag==='BOSS' ? 'border-color:var(--torch);box-shadow:0 0 0 1px var(--torch);' : (bossTag==='MINI' ? 'border-color:#d9a441;box-shadow:0 0 0 1px #d9a441;' : (bossTag==='BASE' ? 'border-color:var(--verd);box-shadow:0 0 0 1px var(--verd);' : ''));
-    return '<div style="padding:6px;margin-bottom:4px;border:1px solid var(--edge);'+border+'background:var(--panel2);border-radius:6px;display:flex;flex-direction:column;gap:4px;">'+
+    return '<div style="padding:4px;margin-bottom:2px;border:1px solid var(--edge);'+border+'background:var(--panel2);border-radius:6px;display:flex;flex-direction:column;gap:2px;">'+
       '<div style="display:flex;align-items:flex-start;gap:8px;">'+
         img+
         '<div style="flex:1;min-width:0;">'+
           '<div style="font-size:12px;">'+esc(x.name_en||x.name||x.id)+'</div>'+
           '<div style="color:var(--dim);font-size:11px;">'+esc(x.id)+'</div>'+
-          '<div style="color:var(--dim);font-size:11px;">HP '+esc(x.hp)+' | DEF '+esc(x.def)+' | ATK '+esc(x.atk)+' | Act '+((x.act||1)>=2?'II':'I')+'</div>'+
-          '<div style="color:var(--dim);font-size:10px;">Mech: '+esc((x.mech||[]).join(', ')||'---')+' | Theme: '+esc((x.theme||[]).join(', ')||'---')+'</div>'+
+          '<div style="color:var(--dim);font-size:10px;">HP '+esc(x.hp)+' | DEF '+esc(x.def)+' | ATK '+esc(x.atk)+' | Act '+((x.act||1)>=2?'II':'I')+'  •  Mech: '+esc((x.mech||[]).join(', ')||'---')+'  •  Theme: '+esc((x.theme||[]).join(', ')||'---')+'</div>'+
           '<div style="color:var(--verd);font-size:11px;">Weak: '+(weak.length? weak.join(', ') : 'none listed')+'</div>'+
           (bossTag? '<div style="display:inline-block;margin-top:2px;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700;background:'+(bossTag==='BOSS'?'var(--torch)':(bossTag==='MINI'?'#d9a441':'var(--verd)'))+';color:#000;">'+bossTag+'</div>' : '')+
         '</div>'+
@@ -890,11 +1032,14 @@ function renderEnemiesCategory(){
     });
     const rows=list.map(row).join('');
     const famCap=(function(){ const fx=familyOf(list && list[0]? list[0].id : ''); return (fx && fx.cap!=null) ? ' (cap '+fx.cap+')' : ''; })();
-    return '<div style="margin-bottom:10px;border:1px solid var(--edge);border-radius:6px;padding:8px;background:var(--panel);">'+
+    return '<div data-fam="'+esc(famName)+'" style="margin-bottom:10px;border:1px solid var(--edge);border-radius:6px;padding:8px;background:var(--panel);">'+
       '<h3 style="margin:0 0 6px 0;font-size:14px;">'+esc(famName)+famCap+'</h3>'+
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">'+rows+'</div>'+
     '</div>';
   }).join('');
+  const famNav = '<div style="width:180px;max-width:100%;display:flex;flex-direction:column;gap:4px;position:sticky;top:8px;height:calc(100vh - 220px);overflow-y:auto;padding:6px;border:1px solid var(--edge);border-radius:6px;background:var(--panel);">' +
+      (order||[]).map(function(f){ return '<button type="button" data-famjump="'+esc(f)+'" style="display:block;width:100%;padding:4px 6px;border:1px solid var(--edge);border-radius:4px;background:var(--panel2);color:var(--text);cursor:pointer;font-size:11px;text-align:left;">'+esc(f)+'</button>'; }).join('') +
+    '</div>';
   const mechOpts=Array.from(new Set(filteredBase.reduce(function(acc,x){ if(Array.isArray(x.mech)) x.mech.forEach(function(t){ if(['Base','Mini','Boss'].indexOf(t)<0) acc.push(t); }); return acc; },[]))).sort();
   const themeOpts=Array.from(new Set(filteredBase.reduce(function(acc,x){ if(Array.isArray(x.theme)) x.theme.forEach(function(t){acc.push(t);}); return acc; },[]))).sort();
   const customOpts=['Base','Mini','Boss'].filter(function(t){ return (filteredBase||[]).some(function(x){ return Array.isArray(x.mech) && x.mech.indexOf(t)>=0; }); });
@@ -904,20 +1049,7 @@ function renderEnemiesCategory(){
   const createBtn='<button id="enemCreatePool" style="padding:4px 8px;border:1px solid var(--edge);background:var(--torch);color:var(--ink);border-radius:4px;cursor:pointer;font-size:11px;">Create pool</button>';
   const poolSel= (camp.enemyPools.length? '<select id="enemPoolSel" style="padding:4px 6px;border:1px solid var(--edge);background:var(--panel2);color:var(--text);border-radius:4px;">'+
             camp.enemyPools.map(function(p,i){return '<option value="'+i+'" '+(i===enemyPoolsSelected?'selected':'')+'>pool'+(i+1)+' ('+(p.enemies||[]).length+')</option>';}).join('')+ '</select>' : '');
-  const customRows=(camp.customEnemies||[]).map(function(c){
-    const src=(typeof arte==='function' && typeof ASSETS!=='undefined' && ASSETS.enemyFamily)? arte('portraits', (ASSETS.enemyFamily[c.base]||'')) : '';
-    const img=src? '<img src="'+src+'" style="width:40px;height:40px;object-fit:contain;background:var(--ink);border:1px solid var(--edge);border-radius:4px;margin-right:8px;">' : '';
-    return '<div style="padding:6px;margin-bottom:4px;border:1px solid var(--edge);background:var(--panel2);border-radius:6px;display:flex;align-items:center;gap:8px;">'+
-      img+
-      '<div style="flex:1;min-width:0;">'+
-        '<div style="font-size:12px;">'+esc(c.name||c.id)+'</div>'+
-        '<div style="color:var(--dim);font-size:11px;">'+esc(c.id)+' | HP '+esc(c.hp)+' | DEF '+esc(c.def)+' | ATK '+esc(c.atk)+(c.base?' | base '+esc(c.base):'')+'</div>'+
-      '</div>'+
-      '<button class="sm" data-forcustedit="'+c.id+'" style="background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:4px;padding:4px 8px;cursor:pointer;font-size:11px;">Edit</button>'+
-      '<button class="sm" data-forcustdel="'+c.id+'" style="background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:4px;padding:4px 8px;cursor:pointer;font-size:11px;">Del</button>'+
-      (Array.isArray(c.weaknesses) && c.weaknesses.length ? '<div style="width:100%;color:var(--verd);font-size:11px;margin-top:2px;">Weak: '+esc(c.weaknesses.map(function(w){return (w.kind==='resist'?'Resist: ':'')+w.damage;}).join(', '))+'</div>' : '')+
-    '</div>';
-  }).join('');
+  const customRows=(Array.isArray(customAsEnemies) && customAsEnemies.length) ? customAsEnemies.map(row).join('') : (camp.customEnemies||[]).map(function(c){ return ''; }).join('');
   const customSection='<div style="margin-top:12px;border:1px solid var(--edge);border-radius:6px;padding:8px;background:var(--panel);max-width:980px;margin-left:auto;margin-right:auto;">'+
     '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'+
       '<h3 style="margin:0;font-size:14px;">Custom</h3>'+
@@ -962,9 +1094,14 @@ const idList=rankedIds.map(function(id){ const e=enemyById && enemyById[id]; con
   '</div>';
   main.innerHTML=
     '<div style="width:980px;max-width:100%;margin:0 auto 8px;display:flex;flex-direction:column;gap:4px;border:1px solid var(--edge);border-radius:6px;padding:6px;background:var(--panel2);">'+mechSel+themeSel+customSel+
-      '<div style="text-align:right;"><button id="enemyFilterMode" class="sm" type="button" style="border:1px solid var(--edge);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:10px;background:var(--panel2);color:var(--text);">Filter: '+(enemyFilterMode==='and'?'AND (all selected)':'OR (any selected)')+'</button></div>'+
+      '<div style="text-align:right;display:flex;gap:4px;justify-content:flex-end;align-items:center;flex-wrap:wrap;">'+
+        '<button id="loadExtEnemyData" class="sm" type="button" style="border:1px solid var(--edge);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:10px;background:var(--panel2);color:var(--text);">Load game data</button>'+
+        '<span id="extEnemyDataStatus" style="font-size:10px;color:var(--dim);margin-left:6px;">External enemy data: not loaded</span>'+
+        '<button id="enemyFilterMode" class="sm" type="button" style="border:1px solid var(--edge);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:10px;background:var(--panel2);color:var(--text);">Filter: '+(enemyFilterMode==='and'?'AND (all selected)':'OR (any selected)')+'</button>'+
+      '</div>'+
     '</div>'+
-    '<div style="display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:12px;max-width:1320px;margin:0 auto;align-items:start;">'+
+    '<div style="display:grid;grid-template-columns:180px minmax(0,1fr) 360px;gap:12px;max-width:1520px;margin:0 auto;align-items:start;">'+
+      famNav+
       '<div style="min-width:0;">'+blocks+(customSection||'')+'</div>'+
       '<div style="position:sticky;top:8px;height:calc(100vh - 220px);overflow-y:scroll;overscroll-behavior:contain;">'+poolSection+'</div>'+
     '</div>';
@@ -973,6 +1110,8 @@ const idList=rankedIds.map(function(id){ const e=enemyById && enemyById[id]; con
   main.querySelectorAll('[data-mech]').forEach(function(cb){ cb.addEventListener('change', function(){ var t=cb.getAttribute('data-mech'); if(cb.checked){ if(enemyMechFilter.indexOf(t)<0) enemyMechFilter.push(t); } else { enemyMechFilter=enemyMechFilter.filter(function(v){return v!==t;}); } renderEnemiesCategory(); }); });
   main.querySelectorAll('[data-theme]').forEach(function(cb){ cb.addEventListener('change', function(){ var t=cb.getAttribute('data-theme'); if(cb.checked){ if(enemyThemeFilter.indexOf(t)<0) enemyThemeFilter.push(t); } else { enemyThemeFilter=enemyThemeFilter.filter(function(v){return v!==t;}); } renderEnemiesCategory(); }); });
   const _fm=main.querySelector('#enemyFilterMode'); if(_fm) _fm.addEventListener('click', function(){ enemyFilterMode = (enemyFilterMode==='and' ? 'or' : 'and'); renderEnemiesCategory(); });
+  const _led=main.querySelector('#loadExtEnemyData'); if(_led) _led.addEventListener('click', function(){ openExternalEnemyGameDataPicker(); });
+  main.querySelectorAll('[data-famjump]').forEach(function(btn){ btn.addEventListener('click', function(){ var name=btn.getAttribute('data-famjump'); var tg=main.querySelector('[data-fam="'+(window.CSS && CSS.escape ? CSS.escape(name) : name)+'"]'); if(tg) tg.scrollIntoView({behavior:'smooth', block:'start'}); }); });
   const _c=main.querySelector('#enemCreatePool'); if(_c) _c.addEventListener('click',function(){ if(!camp.enemyPools) camp.enemyPools=[]; camp.enemyPools.push({enemies:[]}); enemyPoolsSelected=camp.enemyPools.length-1; renderEnemiesCategory(); if(typeof ensureMapEnemyPoolsFromCamp==='function'){ ensureMapEnemyPoolsFromCamp(); if(typeof renderPalette==='function') renderPalette(); if(typeof renderRight==='function') renderRight(); if(typeof refreshRandomPoolDropdown==='function') refreshRandomPoolDropdown(); } });
   const _s=main.querySelector('#enemPoolSel'); if(_s) _s.addEventListener('change',function(){ enemyPoolsSelected=parseInt(_s.value,10); renderEnemiesCategory(); });
   main.querySelectorAll('[data-enempool]').forEach(function(btn){ btn.addEventListener('click',function(){ var id=btn.getAttribute('data-enempool'); var pi=parseInt(btn.getAttribute('data-pool'),10); var p=camp.enemyPools && camp.enemyPools[pi]; if(!p) return; if(!Array.isArray(p.enemies)) p.enemies=[]; var i=p.enemies.indexOf(id); if(i<0) p.enemies.push(id); else p.enemies.splice(i,1); renderEnemiesCategory(); if(typeof ensureMapEnemyPoolsFromCamp==='function'){ ensureMapEnemyPoolsFromCamp(); if(typeof renderPalette==='function') renderPalette(); if(typeof renderRight==='function') renderRight(); if(typeof refreshRandomPoolDropdown==='function') refreshRandomPoolDropdown(); } }); });
@@ -1527,8 +1666,8 @@ const topClear=overlay.querySelector('#forgeTopClear');
 if(topClear) topClear.addEventListener('click',function(){ clearAllStartInv(); renderActiveCategory(); });
 
 function placeForge(){ var h=document.querySelector('header'); var top=h?(h.getBoundingClientRect().bottom||h.offsetHeight||0):0; overlay.style.top=top+'px'; }
-function openForge(){ window.__forgeOpen=true; placeForge(); overlay.style.display='block'; btn.classList.add('on'); renderActiveCategory(); }
-function closeForge(){ window.__forgeOpen=false; overlay.style.display='none'; btn.classList.remove('on'); }
+function openForge(){ window.__forgeOpen=true; placeForge(); overlay.style.display='block'; btn.classList.add('on'); document.querySelectorAll('#modesel [data-mode]').forEach(function(b){ b.classList.remove('on'); }); renderActiveCategory(); }
+function closeForge(){ window.__forgeOpen=false; overlay.style.display='none'; btn.classList.remove('on'); document.querySelectorAll('#modesel [data-mode]').forEach(function(b){ b.classList.toggle('on', b.dataset.mode === mode); }); }
 try {
   if (typeof addStartItem === 'function') {
     const origAddStartItem = addStartItem;
@@ -1553,3 +1692,114 @@ if(modesel){
   modesel.addEventListener('click',function(e){ const real=e.target.closest('[data-mode]'); if(real) closeForge(); });
 }
 })();
+
+// === DescentForge external game data (enemy) override ===
+function _bitsED(mask, list){ const out=[]; if(!mask || !list) return out; for(let i=0;i<list.length;i++){ if(mask & (1<<i)) out.push(list[i]); } return out; }
+function _traitNameED(v){ try{ if(typeof TRAITS !== 'undefined' && TRAITS[v]) return TRAITS[v]; }catch(e){} return v; }
+function convertExternalEnemyED(c){
+  const tiers = Array.isArray(c.Tiers) ? c.Tiers : [];
+  const first = tiers.length ? tiers[0] : {};
+  const act = (typeof c._act === 'number') ? (c._act + 1) : (c.act || 1);
+  const id = c._id || c.id || c.Id;
+  // keep curated mech/theme from the embedded snapshot when available (bitmasks differ by game version)
+  const orig = (typeof DATA !== 'undefined' && Array.isArray(DATA.enemies)) ? DATA.enemies.find(function(e){ return e && e.id === id; }) : null;
+  return {
+    id: id,
+    name: c.name_en || c._name || c.name || id,
+    name_en: c.name_en || c._name || '',
+    type: c.Type || c.type || (orig && orig.type) || '',
+    act: act || (orig && orig.act) || 1,
+    size: (typeof c.Size === 'number') ? c.Size : ((orig && orig.size) || 0),
+    mech: (orig && Array.isArray(orig.mech)) ? orig.mech.slice() : [],
+    theme: (orig && Array.isArray(orig.theme)) ? orig.theme.slice() : [],
+    named: !!c.IsNamed,
+    villain: !!c.IsVillain,
+    immune: _bitsED(c.ImmuneTo || 0, ['Dazed','Enfeebled','Afflicted','Slowed','Exposed','Doomed','Confused']),
+    perQuest: c.PerQuest || c.perQuest || 0,
+    hp: first.StartingHealth || 0,
+    def: first.Defense || 0,
+    atk: first.BaseAttack || 0,
+    tiers: tiers.map(function(t){ return t.Tier; }),
+    tierStats: (function(){ const o={}; tiers.forEach(function(t){ o[t.Tier]={hp:t.StartingHealth,def:t.Defense,atk:t.BaseAttack}; }); return o; })(),
+    custom: false,
+    _external: true
+  };
+}
+function applyExternalEnemyGameData(parsed){
+  try {
+    window.DESCENTFORGE_EXTERNAL_GAME_DATA = parsed;
+    const src = (parsed && parsed.catalogo) ? parsed.catalogo : parsed || {};
+    const mons = Array.isArray(src.monstros) ? src.monstros : (Array.isArray(parsed && parsed.monstros) ? parsed.monstros : []);
+    const conv = mons.map(convertExternalEnemyED).filter(function(e){ return e && e.id; });
+    if(!conv.length) return false;
+    updateExtEnemyDataStatus('External enemy data: '+conv.length+' loaded (button)');
+    // keep custom enemies already in editor
+    const custom = (DATA.enemies || []).filter(function(e){ return e && e.custom; });
+    // Keep virtual/special base entries (like RANDOM_POOL) that external catalogs do not contain.
+    DATA.enemies = custom.concat(conv);
+    window.DESCENTFORGE_EXTERNAL_ENEMY_COUNT = conv.length;
+    return true;
+  } catch(err){ console.warn('external enemy game data apply failed', err); return false; }
+}
+function extractJsonED(text){
+  text = String(text||'').trim();
+  try { return JSON.parse(text); } catch(e){}
+  const a = text.indexOf('{'), b = text.lastIndexOf('}');
+  if(a>=0 && b>a){ try { return JSON.parse(text.slice(a,b+1)); } catch(e){} }
+  return null;
+}
+function openExternalEnemyGameDataPicker(){
+  const inp = document.createElement('input');
+  inp.type='file';
+  inp.accept='.js,.json';
+  inp.onchange = async function(){
+    const f = inp.files && inp.files[0]; if(!f) return;
+    try {
+      const txt = await f.text();
+      const parsed = extractJsonED(txt);
+      if(!parsed){ alert('Could not parse file'); return; }
+      const ok = applyExternalEnemyGameData(parsed);
+      if(!ok){ alert('No enemies found in file'); return; }
+      if(typeof renderEnemiesCategory==='function') renderEnemiesCategory();
+      alert('Loaded '+ (window.DESCENTFORGE_EXTERNAL_ENEMY_COUNT||0) +' enemies from game data.');
+    } catch(err){ alert('Load failed: '+(err&&err.message?err.message:err)); }
+  };
+  inp.click();
+}
+function updateExtEnemyDataStatus(msg){ try { const el=document.getElementById('extEnemyDataStatus'); if(el) el.textContent=msg; } catch(e){} }
+
+function tryAutoExternalEnemyGameData(){
+  function applyAndReport(parsed, note){
+    if(!parsed) return false;
+    const ok = applyExternalEnemyGameData(parsed);
+    if(ok){ updateExtEnemyDataStatus('External enemy data: '+ (window.DESCENTFORGE_EXTERNAL_ENEMY_COUNT||0) +' loaded ('+note+')'); if(typeof renderEnemiesCategory==='function') renderEnemiesCategory(); return true; }
+    updateExtEnemyDataStatus('External enemy data: parse found no enemies');
+    return false;
+  }
+  // Already present?
+  if(window.DESCENTFORGE_EXTERNAL_GAME_DATA){ applyAndReport(window.DESCENTFORGE_EXTERNAL_GAME_DATA, 'global'); return; }
+  if(window.BIGORNA_JOGO){ window.DESCENTFORGE_EXTERNAL_GAME_DATA = window.BIGORNA_JOGO; applyAndReport(window.BIGORNA_JOGO, 'global JS'); return; }
+  // Prefer injected script (works better under file://)
+  try {
+    const sc = document.createElement('script');
+    sc.src = 'descentforge-game-data.js';
+    sc.async = true;
+    sc.onload = function(){ try { const g = window.BIGORNA_JOGO || window.DESCENTFORGE_GAME_DATA; if(g){ window.DESCENTFORGE_EXTERNAL_GAME_DATA=g; applyAndReport(g, 'auto-loaded file'); } else { updateExtEnemyDataStatus('External enemy data: file loaded but no game data global'); } } catch(e){ updateExtEnemyDataStatus('External enemy data: error '+ (e&&e.message?e.message:e)); } };
+    sc.onerror = function(){ updateExtEnemyDataStatus('External enemy data: no default file (use button to load)'); };
+    document.head.appendChild(sc);
+  } catch(e){ updateExtEnemyDataStatus('External enemy data: auto-load failed'); }
+  // fetch fallback (may be blocked on file://)
+  try {
+    fetch('descentforge-game-data.js').then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); }).then(function(txt){
+      try {
+        // if script tag didn't succeed, try JSON-ish parse
+        if(!window.DESCENTFORGE_EXTERNAL_GAME_DATA){
+          const parsed = extractJsonED ? extractJsonED(txt) : null;
+          if(parsed){ window.DESCENTFORGE_EXTERNAL_GAME_DATA = parsed; applyAndReport(parsed, 'fetch'); }
+        }
+      } catch(e){ console.warn(e); }
+    }).catch(function(){ /* silent; button remains */ });
+  } catch(e){}
+}
+
+try { setTimeout(tryAutoExternalEnemyGameData, 0); } catch(e){}
