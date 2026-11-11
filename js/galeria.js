@@ -15,7 +15,7 @@
 (function () {
   'use strict';
 
-  var REPO = 'Xeyz15/descentforge';
+  var REPO = 'wintechr-alt/descentforge_shared';
   var INDICE = 'mapas/indice.json';
   var TOPE_URL = 7000;                    // por encima, el paquete viaja por el portapapeles
 

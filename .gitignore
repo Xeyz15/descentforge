@@ -11,3 +11,7 @@ _captura-*.html
 LEEME.md
 
 __pycache__/
+
+# Game-extracted data: never commit; users regenerate locally.
+Descentforge-game-data.js
+*-game-data.js

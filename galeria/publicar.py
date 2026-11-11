@@ -366,7 +366,7 @@ def main():
     numero, usuario = issue.get("number"), (issue.get("user") or {}).get("login") or "?"
     try:
         publica, avisos = publicar(numero, usuario, issue.get("body") or "")
-        url = f"https://xeyz15.github.io/descentforge/escenarios.html#{publica['id']}"
+        url = f"https://wintechr-alt.github.io/descentforge_shared/escenarios.html#{publica['id']}"
         comentario = (f"✅ **Publicado:** [{publica['titulo']}]({url})\n\n"
                       f"Ya está en la galería. Si quieres corregirlo, **edita este mismo mensaje** con el paquete nuevo "
                       f"y se vuelve a publicar en su sitio.\n\n"
