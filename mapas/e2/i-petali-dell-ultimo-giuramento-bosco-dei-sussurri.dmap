@@ -1,0 +1,308 @@
+{
+  "format": "dmap",
+  "version": 2,
+  "meta": {
+    "id": "i-petali-dell-ultimo-giuramento-bosco-dei-sussurri",
+    "name": "I Petali dell’Ultimo Giuramento — Bosco dei Sussurri",
+    "author": "Silvio Di Carlo",
+    "description": "Prima scena esplorativa (25–30 minuti): 3 eroi, lupi, 3 alberi con pozioni, indizi opzionali e accesso al santuario. Ogni tessera è unica e le caselle sono collegate. Le ricompense testuali vanno gestite dal gruppo.",
+    "difficulty": "hard",
+    "heroCount": [
+      3,
+      3
+    ],
+    "intro": "Nel Bosco dei Sussurri il vento tace. Brynn sente qualcuno pronunciare il suo nome. Sorte: «Dimmi che hai sentito un uccello». Brynn: «Ha pronunciato il mio nome». Sorte: «Un uccello molto istruito».",
+    "music": {
+      "file": "",
+      "title": "",
+      "when": "map",
+      "loop": true,
+      "url": ""
+    },
+    "created": "2026-10-09"
+  },
+  "board": {
+    "gridSize": [
+      44,
+      44
+    ],
+    "levels": 1,
+    "tiles": [
+      {
+        "tile": "17b",
+        "pos": [
+          15,
+          22
+        ],
+        "rot": 0,
+        "level": 0
+      },
+      {
+        "tile": "12b",
+        "pos": [
+          17,
+          18
+        ],
+        "rot": 0,
+        "level": 0
+      },
+      {
+        "tile": "16b",
+        "pos": [
+          13,
+          9
+        ],
+        "rot": 180,
+        "level": 0
+      },
+      {
+        "tile": "5b",
+        "pos": [
+          11,
+          15
+        ],
+        "rot": 90,
+        "level": 0
+      },
+      {
+        "tile": "9b",
+        "pos": [
+          11,
+          23
+        ],
+        "rot": 90,
+        "level": 0
+      },
+      {
+        "tile": "2b",
+        "pos": [
+          18,
+          23
+        ],
+        "rot": 90,
+        "level": 0
+      },
+      {
+        "tile": "15b",
+        "pos": [
+          23,
+          17
+        ],
+        "rot": 180,
+        "level": 0
+      }
+    ],
+    "blocked": [],
+    "floor": "grass"
+  },
+  "spawns": {
+    "heroStart": [
+      [
+        17,
+        20,
+        0
+      ],
+      [
+        16,
+        20,
+        0
+      ],
+      [
+        18,
+        20,
+        0
+      ]
+    ],
+    "enemies": [
+      {
+        "enemy": "ENEMY_WOLF_1",
+        "pos": [
+          17,
+          14
+        ],
+        "level": 0,
+        "tier": 3,
+        "group": "lupi_del_bosco"
+      },
+      {
+        "enemy": "ENEMY_WOLF_1",
+        "pos": [
+          13,
+          10
+        ],
+        "level": 0,
+        "tier": 3,
+        "group": "lupi_del_bosco"
+      },
+      {
+        "enemy": "ENEMY_WOLF_PUTRID",
+        "pos": [
+          12,
+          20
+        ],
+        "level": 0,
+        "tier": 3,
+        "group": "lupi_del_bosco"
+      }
+    ],
+    "interactables": [
+      {
+        "type": "Tree",
+        "pos": [
+          17,
+          21
+        ],
+        "level": 0,
+        "rot": 0,
+        "name": "Quercia delle gocce",
+        "text": "Tra le radici trovi una pozione curativa. Segnate una pozione di cura per il gruppo.",
+        "behavior": "custom",
+        "uses": "1",
+        "freeAction": false,
+        "loot": {
+          "mode": "none",
+          "items": [],
+          "traits": [],
+          "points": 0
+        }
+      },
+      {
+        "type": "Tree",
+        "pos": [
+          13,
+          11
+        ],
+        "level": 0,
+        "rot": 0,
+        "name": "Albero dei sussurri",
+        "text": "Un ramo cavo custodisce due pozioni curative. Brynn sente: «Non abbandonarlo».",
+        "behavior": "custom",
+        "uses": "1",
+        "freeAction": false,
+        "loot": {
+          "mode": "none",
+          "items": [],
+          "traits": [],
+          "points": 0
+        }
+      },
+      {
+        "type": "Tree",
+        "pos": [
+          12,
+          21
+        ],
+        "level": 0,
+        "rot": 0,
+        "name": "Olmo del viandante",
+        "text": "Sotto la corteccia si nasconde una pozione curativa e una pagina di diario.",
+        "behavior": "custom",
+        "uses": "1",
+        "freeAction": false,
+        "loot": {
+          "mode": "none",
+          "items": [],
+          "traits": [],
+          "points": 0
+        }
+      },
+      {
+        "type": "Chest",
+        "pos": [
+          12,
+          16
+        ],
+        "level": 0,
+        "rot": 0,
+        "name": "Provviste del campo",
+        "text": "Ricompensa: un consumabile utile e un indizio sul cavaliere.",
+        "behavior": "custom",
+        "uses": "1",
+        "freeAction": false,
+        "loot": {
+          "mode": "none",
+          "items": [],
+          "traits": [],
+          "points": 0
+        }
+      },
+      {
+        "type": "SightToken",
+        "pos": [
+          17,
+          15
+        ],
+        "level": 0,
+        "rot": 0,
+        "name": "Orme impossibili",
+        "text": "Galaden riconosce tracce di una stessa ronda ripetuta per secoli.",
+        "behavior": "custom",
+        "uses": "1",
+        "freeAction": false,
+        "loot": {
+          "mode": "none",
+          "items": [],
+          "traits": [],
+          "points": 0
+        }
+      },
+      {
+        "type": "InteractToken",
+        "pos": [
+          19,
+          23
+        ],
+        "level": 0,
+        "rot": 0,
+        "name": "Medaglione di Aiyara",
+        "text": "Brynn vede una sacerdotessa sorridere sotto un pesco. La voce dice: «Non ricordo più il suono della sua risata».",
+        "behavior": "custom",
+        "uses": "1",
+        "freeAction": false,
+        "loot": {
+          "mode": "none",
+          "items": [],
+          "traits": [],
+          "points": 0
+        }
+      },
+      {
+        "type": "InteractToken",
+        "pos": [
+          21,
+          20
+        ],
+        "level": 0,
+        "rot": 0,
+        "name": "Verso il santuario",
+        "text": "Quando il gruppo ha trovato almeno due indizi, può terminare la scena e proseguire verso il Santuario Dimenticato.",
+        "behavior": "custom",
+        "uses": "1",
+        "freeAction": false,
+        "loot": {
+          "mode": "none",
+          "items": [],
+          "traits": [],
+          "points": 0
+        }
+      }
+    ]
+  },
+  "objectives": {
+    "primary": [
+      {
+        "id": "defeat_all",
+        "params": {},
+        "text": "Defeat all enemies."
+      }
+    ],
+    "optional": [],
+    "failConditions": [
+      {
+        "id": "all_heroes_defeated",
+        "params": {}
+      }
+    ]
+  },
+  "triggers": []
+}

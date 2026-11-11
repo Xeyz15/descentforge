@@ -1,0 +1,3640 @@
+{
+ "quests": [
+  {
+   "id": "SIDE_QUEST_1",
+   "name": "S1",
+   "act": "I",
+   "type": "side",
+   "nameKey": "SIDE_QUEST_1",
+   "descKey": "SIDE_QUEST_1_DESC",
+   "coords": [
+    -570.0,
+    16.0
+   ],
+   "music": "mystery",
+   "requiredHeroes": [],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Side/S1/S1.unity"
+  },
+  {
+   "id": "SIDE_QUEST_2",
+   "name": "S2",
+   "act": "I",
+   "type": "side",
+   "nameKey": "SIDE_QUEST_2",
+   "descKey": "SIDE_QUEST_2_DESC",
+   "coords": [
+    -261.0,
+    271.0
+   ],
+   "music": "mystery",
+   "requiredHeroes": [],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Side/S2/S2.unity"
+  },
+  {
+   "id": "STORY_QUEST_1",
+   "name": "Q1",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_1",
+   "descKey": "STORY_QUEST_1_DESC",
+   "coords": [
+    -287.0,
+    -400.0
+   ],
+   "music": "mystery",
+   "requiredHeroes": [],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q1/Q1.unity"
+  },
+  {
+   "id": "STORY_QUEST_10",
+   "name": "Q10",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_10",
+   "descKey": "STORY_QUEST_10_DESC",
+   "coords": [
+    198.0,
+    -160.0
+   ],
+   "music": "danger",
+   "requiredHeroes": [
+    "HERO_BRYNN"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q10/Q10.unity"
+  },
+  {
+   "id": "STORY_QUEST_11",
+   "name": "Q11 - Refuge",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_11",
+   "descKey": "STORY_QUEST_11_DESC",
+   "coords": [
+    -235.5,
+    123.8
+   ],
+   "music": "danger",
+   "requiredHeroes": [
+    "HERO_CHANCE"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q11 - Refuge/Q11 - Refuge.unity"
+  },
+  {
+   "id": "STORY_QUEST_12",
+   "name": "Q12",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_12",
+   "descKey": "STORY_QUEST_12_DESC",
+   "coords": [
+    245.0,
+    -81.0
+   ],
+   "music": "mystery",
+   "requiredHeroes": [
+    "HERO_SYRUS"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q12/Q12.unity"
+  },
+  {
+   "id": "STORY_QUEST_13",
+   "name": "Q13 - Vaerix 2",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_13",
+   "descKey": "STORY_QUEST_13_DESC",
+   "coords": [
+    525.0,
+    -115.0
+   ],
+   "music": "danger",
+   "requiredHeroes": [
+    "HERO_VAERIX"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q13 - Vaerix 2/Q13 - Vaerix 2.unity"
+  },
+  {
+   "id": "STORY_QUEST_14",
+   "name": "Q14 - Return to Highmount",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_14",
+   "descKey": "STORY_QUEST_14_DESC",
+   "coords": [
+    230.0,
+    -168.0
+   ],
+   "music": "danger",
+   "requiredHeroes": [],
+   "requireWin": true,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q14 - Return to Highmount/Q14 - Return to Highmount.unity"
+  },
+  {
+   "id": "STORY_QUEST_2",
+   "name": "Q2",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_2",
+   "descKey": "STORY_QUEST_2_DESC",
+   "coords": [
+    -220.0,
+    -160.0
+   ],
+   "music": "desperation",
+   "requiredHeroes": [
+    "HERO_KEHLI"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q2/Q2.unity"
+  },
+  {
+   "id": "STORY_QUEST_3",
+   "name": "Q3 - Chance 1",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_3",
+   "descKey": "STORY_QUEST_3_DESC",
+   "coords": [
+    297.0,
+    128.0
+   ],
+   "music": "mystery",
+   "requiredHeroes": [
+    "HERO_CHANCE"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q3 - Chance 1/Q3 - Chance 1.unity"
+  },
+  {
+   "id": "STORY_QUEST_4_S",
+   "name": "Q4 - Galaden 1",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_4",
+   "descKey": "STORY_QUEST_4_DESC",
+   "coords": [
+    -608.0,
+    188.0
+   ],
+   "music": "mystery",
+   "requiredHeroes": [
+    "HERO_GALADEN"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q4 - Galaden 1/Q4 - Galaden 1.unity"
+  },
+  {
+   "id": "STORY_QUEST_5",
+   "name": "Q5",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_5",
+   "descKey": "STORY_QUEST_5_DESC",
+   "coords": [
+    -609.0,
+    -50.0
+   ],
+   "music": "mystery",
+   "requiredHeroes": [
+    "HERO_SYRUS"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q5/Q5.unity"
+  },
+  {
+   "id": "STORY_QUEST_6",
+   "name": "Q6 - Fate of Fallowhearth",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_6",
+   "descKey": "STORY_QUEST_6_DESC",
+   "coords": [
+    -90.0,
+    88.0
+   ],
+   "music": "desperation",
+   "requiredHeroes": [
+    "HERO_BRYNN"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q6 - Fate of Fallowhearth/Q6 - Fate of Fallowhearth.unity"
+  },
+  {
+   "id": "STORY_QUEST_7",
+   "name": "Q7 - Let It Stay Buried",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_7",
+   "descKey": "STORY_QUEST_7_DESC",
+   "coords": [
+    25.0,
+    -168.0
+   ],
+   "music": "mystery",
+   "requiredHeroes": [
+    "HERO_VAERIX"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q7 - Let It Stay Buried/Q7 - Let It Stay Buried.unity"
+  },
+  {
+   "id": "STORY_QUEST_8",
+   "name": "Q8",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_8",
+   "descKey": "STORY_QUEST_8_DESC",
+   "coords": [
+    366.0,
+    300.0
+   ],
+   "music": "danger",
+   "requiredHeroes": [
+    "HERO_KEHLI"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q8/Q8.unity"
+  },
+  {
+   "id": "STORY_QUEST_9",
+   "name": "Q9",
+   "act": "I",
+   "type": "main",
+   "nameKey": "STORY_QUEST_9",
+   "descKey": "STORY_QUEST_9_DESC",
+   "coords": [
+    -446.0,
+    273.0
+   ],
+   "music": "desperation",
+   "requiredHeroes": [
+    "HERO_GALADEN"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/Act1/Story/Q9/Q9.unity"
+  },
+  {
+   "id": "ACT2_QUEST_1",
+   "name": "A2Q01 - Introduction",
+   "act": "II",
+   "type": "main",
+   "nameKey": "STORY_A2Q01",
+   "descKey": "STORY_A2Q01_DESC",
+   "coords": [
+    -397.5,
+    145.9
+   ],
+   "music": "desperation",
+   "requiredHeroes": [],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {
+    "afterQuests": [
+     ""
+    ]
+   },
+   "scene": "D3/Quests/Act2/A2Q01 - Introduction/A2Q01 - Introduction.unity"
+  },
+  {
+   "id": "ACT2_QUEST_2",
+   "name": "A2Q02",
+   "act": "II",
+   "type": "main",
+   "nameKey": "STORY_A2Q02",
+   "descKey": "STORY_A2Q02_DESC",
+   "coords": [
+    232.7,
+    389.4
+   ],
+   "music": "desperation",
+   "requiredHeroes": [
+    "HERO_BRYNN"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {
+    "auto": true,
+    "afterCityEvents": [
+     "A2_S01_CITADEL"
+    ]
+   },
+   "scene": "D3/Quests/Act2/A2Q02 - The Last Marshal/A2Q02.unity"
+  },
+  {
+   "id": "ACT2_QUEST_3",
+   "name": "A2Q03",
+   "act": "II",
+   "type": "main",
+   "nameKey": "STORY_A2Q03",
+   "descKey": "STORY_A2Q03_DESC",
+   "coords": [
+    -315.3,
+    358.1
+   ],
+   "music": "mystery",
+   "requiredHeroes": [
+    "HERO_CHANCE"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {
+    "auto": true,
+    "afterCityEvents": [
+     "A2_S01_CITADEL"
+    ]
+   },
+   "scene": "D3/Quests/Act2/A2Q03/A2Q03.unity"
+  },
+  {
+   "id": "ACT2_QUEST_4",
+   "name": "A2Q04",
+   "act": "II",
+   "type": "main",
+   "nameKey": "STORY_A2Q04",
+   "descKey": "STORY_A2Q04_DESC",
+   "coords": [
+    -468.0,
+    256.5
+   ],
+   "music": "danger",
+   "requiredHeroes": [],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {
+    "auto": true,
+    "afterCityEvents": [
+     "A2_S02_ELDER_BRIDGE"
+    ]
+   },
+   "scene": "D3/Quests/Act2/A2Q04 - The Elder Bridge/A2Q04.unity"
+  },
+  {
+   "id": "ACT2_QUEST_5",
+   "name": "A2Q05",
+   "act": "II",
+   "type": "main",
+   "nameKey": "STORY_A2Q05",
+   "descKey": "STORY_A2Q05_DESC",
+   "coords": [
+    -396.4,
+    -383.9
+   ],
+   "music": "mystery",
+   "requiredHeroes": [],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {
+    "auto": true,
+    "afterNarrative": [
+     "SS07_DEATH_AND_BETRAYAL"
+    ]
+   },
+   "scene": "D3/Quests/Act2/A2Q05 - The Dragonslayer/A2Q05.unity"
+  },
+  {
+   "id": "ACT2_QUEST_6",
+   "name": "A2Q06",
+   "act": "II",
+   "type": "main",
+   "nameKey": "STORY_A2Q06",
+   "descKey": "STORY_A2Q06_DESC",
+   "coords": [
+    672.1,
+    126.2
+   ],
+   "music": "desperation",
+   "requiredHeroes": [
+    "HERO_KEHLI"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {
+    "auto": true,
+    "afterCityEvents": [
+     "A2_S04_DRAGON_QUEEN"
+    ]
+   },
+   "scene": "D3/Quests/Act2/A2Q06 - The Dragon's Lair/A2Q06.unity"
+  },
+  {
+   "id": "ACT2_QUEST_7",
+   "name": "A2Q07",
+   "act": "II",
+   "type": "main",
+   "nameKey": "STORY_A2Q07",
+   "descKey": "STORY_A2Q07_DESC",
+   "coords": [
+    -88.9,
+    270.1
+   ],
+   "music": "mystery",
+   "requiredHeroes": [
+    "HERO_VAERIX"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {
+    "auto": true,
+    "afterCityEvents": [
+     "A2_S04_DRAGON_QUEEN"
+    ]
+   },
+   "scene": "D3/Quests/Act2/A2Q07 - Touchstones/A2Q07.unity"
+  },
+  {
+   "id": "ACT2_QUEST_8",
+   "name": "A2Q08",
+   "act": "II",
+   "type": "main",
+   "nameKey": "STORY_A2Q08",
+   "descKey": "STORY_A2Q08_DESC",
+   "coords": [
+    76.2,
+    -357.2
+   ],
+   "music": "mystery",
+   "requiredHeroes": [
+    "HERO_SYRUS"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {
+    "auto": true,
+    "afterCityEvents": [
+     "A2_S05_DRAGONSBANE"
+    ]
+   },
+   "scene": "D3/Quests/Act2/A2Q08 - Beyond the Wheel/A2Q08.unity"
+  },
+  {
+   "id": "ACT2_QUEST_9",
+   "name": "A2Q09",
+   "act": "II",
+   "type": "main",
+   "nameKey": "STORY_A2Q09",
+   "descKey": "STORY_A2Q09_DESC",
+   "coords": [
+    -54.2,
+    -7.7
+   ],
+   "music": "danger",
+   "requiredHeroes": [
+    "HERO_GALADEN"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {
+    "auto": true,
+    "afterCityEvents": [
+     "A2_S05_DRAGONSBANE"
+    ]
+   },
+   "scene": "D3/Quests/Act2/A2Q09 - A Clean Cut/A2Q09.unity"
+  },
+  {
+   "id": "ACT2_QUEST_10",
+   "name": "A2Q10",
+   "act": "II",
+   "type": "main",
+   "nameKey": "STORY_A2Q10",
+   "descKey": "STORY_A2Q10_DESC",
+   "coords": [
+    246.2,
+    -5.8
+   ],
+   "music": "danger",
+   "requiredHeroes": [],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {
+    "auto": true,
+    "afterCityEvents": [
+     "A2_S06_MONSTERS_BALL"
+    ]
+   },
+   "scene": "D3/Quests/Act2/A2Q10/A2Q10.unity"
+  },
+  {
+   "id": "ACT2_QUEST_11",
+   "name": "A2Q11",
+   "act": "II",
+   "type": "main",
+   "nameKey": "STORY_A2Q11",
+   "descKey": "STORY_A2Q11_DESC",
+   "coords": [
+    -482.6,
+    124.0
+   ],
+   "music": "danger",
+   "requiredHeroes": [],
+   "requireWin": true,
+   "hasArrivalDT": false,
+   "spawn": {
+    "auto": true,
+    "afterNarrative": [
+     "SS07_DEATH_AND_BETRAYAL"
+    ],
+    "afterCityEvents": [
+     "A2_S05_DRAGONSBANE"
+    ]
+   },
+   "scene": "D3/Quests/Act2/A2Q11/A2Q11.unity"
+  },
+  {
+   "id": "DEVELOPER_ENEMY_TOOL",
+   "name": "Enemy Tool",
+   "act": "I",
+   "type": "main",
+   "nameKey": "",
+   "descKey": "",
+   "coords": [
+    0.0,
+    0.0
+   ],
+   "music": "none",
+   "requiredHeroes": [],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/DEVELOPER - Enemy Tool/Enemy Tool.unity"
+  },
+  {
+   "id": "DEVELOPER_ENEMY_TOOL_2",
+   "name": "Enemy Tool v2",
+   "act": "II",
+   "type": "main",
+   "nameKey": "",
+   "descKey": "",
+   "coords": [
+    0.0,
+    0.0
+   ],
+   "music": "none",
+   "requiredHeroes": [],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/DEVELOPER - Enemy Tool v2/Enemy Tool v2.unity"
+  },
+  {
+   "id": "OBSTACLE_COURSE",
+   "name": "Obstacle Course",
+   "act": "I",
+   "type": "main",
+   "nameKey": "",
+   "descKey": "",
+   "coords": [
+    0.0,
+    0.0
+   ],
+   "music": "danger",
+   "requiredHeroes": [],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/DEVELOPER - Obstacle Course/Obstacle Course.unity"
+  },
+  {
+   "id": "REPEATING_QUEST1",
+   "name": "Repeating Quest 1",
+   "act": "I",
+   "type": "repeating",
+   "nameKey": "REPEATING_QUEST1_NAME",
+   "descKey": "REPEATING_QUEST1_DESC",
+   "coords": [
+    0.0,
+    0.0
+   ],
+   "music": "none",
+   "requiredHeroes": [],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/WorldMap Test Quests/Repeating Quest 1.unity"
+  },
+  {
+   "id": "SIDE_QUEST1",
+   "name": "Side Quest 1",
+   "act": "I",
+   "type": "side",
+   "nameKey": "SIDE_QUEST1_NAME",
+   "descKey": "SIDE_QUEST1_DESC",
+   "coords": [
+    0.0,
+    0.0
+   ],
+   "music": "none",
+   "requiredHeroes": [
+    "HERO_BRYNN"
+   ],
+   "requireWin": false,
+   "hasArrivalDT": false,
+   "spawn": {},
+   "scene": "D3/Quests/WorldMap Test Quests/Side Quest 1.unity"
+  }
+ ],
+ "narrativeEvents": [
+  {
+   "id": "E10A_CHOICES",
+   "name": "E10A A Hard Woman Making Hard Choices",
+   "act": "I",
+   "nameKey": "E10A_CHOICES_NAME",
+   "descKey": "E10A_CHOICES_DESC",
+   "coords": [
+    -274.6,
+    -40.8
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E11A_GUILD",
+   "name": "E11A The New Thieves' Guild",
+   "act": "I",
+   "nameKey": "E11A_GUILD_NAME",
+   "descKey": "E11A_GUILD_DESC",
+   "coords": [
+    -568.0,
+    -117.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E12A_EYRIE",
+   "name": "E12A The Eyrie",
+   "act": "I",
+   "nameKey": "E12A_EYRIE_NAME",
+   "descKey": "E12A_EYRIE_DESC",
+   "coords": [
+    196.0,
+    -241.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E13A_WORD",
+   "name": "E13A The Word",
+   "act": "I",
+   "nameKey": "E13A_WORD_NAME",
+   "descKey": "E13A_WORD_DESC",
+   "coords": [
+    399.0,
+    257.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E2A_MEETING",
+   "name": "E2A Meeting of Guilds",
+   "act": "I",
+   "nameKey": "E2A_MEETING_NAME",
+   "descKey": "E2A_MEETING_DESC",
+   "coords": [
+    404.0,
+    308.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E2B_BURIED",
+   "name": "E2B Buried in Stone",
+   "act": "I",
+   "nameKey": "E2B_BURIED_NAME",
+   "descKey": "E2B_BURIED_DESC",
+   "coords": [
+    368.0,
+    300.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E3B_THIEF",
+   "name": "E3B It Takes a Thief",
+   "act": "I",
+   "nameKey": "E3B_THIEF_NAME",
+   "descKey": "E3B_THIEF_DESC",
+   "coords": [
+    11.0,
+    -11.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E4A_HUNTING",
+   "name": "E4A Hunting Party",
+   "act": "I",
+   "nameKey": "E4A_HUNTING_NAME",
+   "descKey": "E4A_HUNTING_DESC",
+   "coords": [
+    8.0,
+    118.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E4B_CARTHRIDGE",
+   "name": "E4B The Army of Carthridge",
+   "act": "I",
+   "nameKey": "E4B_CARTHRIDGE_NAME",
+   "descKey": "E4B_CARTHRIDGE_DESC",
+   "coords": [
+    -656.0,
+    67.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E5A_EGGS",
+   "name": "E5A The Dragon Eggs",
+   "act": "I",
+   "nameKey": "E5A_EGGS_NAME",
+   "descKey": "E5A_EGGS_DESC",
+   "coords": [
+    -568.0,
+    -117.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E5B_PRICE",
+   "name": "E5B The Price of Knowledge",
+   "act": "I",
+   "nameKey": "E5B_PRICE_NAME",
+   "descKey": "E5B_PRICE_DESC",
+   "coords": [
+    20.0,
+    -20.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E6A_REST",
+   "name": "E6A Put to Rest",
+   "act": "I",
+   "nameKey": "E6A_REST_NAME",
+   "descKey": "E6A_REST_DESC",
+   "coords": [
+    250.0,
+    -188.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E7A_TEACHER",
+   "name": "E7A Not for Teacher",
+   "act": "I",
+   "nameKey": "E7A_TEACHER_NAME",
+   "descKey": "E7A_TEACHER_DESC",
+   "coords": [
+    496.0,
+    44.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E8A_RUNESTONE",
+   "name": "E8A The Runestone",
+   "act": "I",
+   "nameKey": "E8A_RUNESTONE_NAME",
+   "descKey": "E8A_RUNESTONE_DESC",
+   "coords": [
+    478.7,
+    279.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E8B_THELGRIM",
+   "name": "E8B The Gates of Thelgrim",
+   "act": "I",
+   "nameKey": "E8B_THELGRIM_NAME",
+   "descKey": "E8B_THELGRIM_DESC",
+   "coords": [
+    478.7,
+    279.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E9B_STALKING",
+   "name": "E9B The Stalking Darkness",
+   "act": "I",
+   "nameKey": "E9B_STALKING_NAME",
+   "descKey": "E9B_STALKING_DESC",
+   "coords": [
+    395.0,
+    -354.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "E9C_HORDES",
+   "name": "E9C The Broken Hordes",
+   "act": "I",
+   "nameKey": "E9C_HORDES_NAME",
+   "descKey": "E9C_HORDES_DESC",
+   "coords": [
+    -76.0,
+    312.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "EC1_ORCS",
+   "name": "EC1 The Orcs of Forthyn",
+   "act": "I",
+   "nameKey": "EC1_ORCS_NAME",
+   "descKey": "EC1_ORCS_DESC",
+   "coords": [
+    579.0,
+    -15.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "EC2_CRIME",
+   "name": "EC2 Crime Sometimes Pays",
+   "act": "I",
+   "nameKey": "EC2_CRIME_NAME",
+   "descKey": "EC2_CRIME_DESC",
+   "coords": [
+    -134.0,
+    135.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "EC3_SCOOBY",
+   "name": "EC3 Now Let's Find Out Who You Really Are",
+   "act": "I",
+   "nameKey": "EC3_SCOOBY_NAME",
+   "descKey": "EC3_SCOOBY_DESC",
+   "coords": [
+    -737.0,
+    74.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "EC4_MIRROR",
+   "name": "EC4 A Dark Mirror",
+   "act": "I",
+   "nameKey": "EC4_SPREADING_NAME",
+   "descKey": "EC4_SPREADING_DESC",
+   "coords": [
+    -126.0,
+    214.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "ES1_SHADOW",
+   "name": "ES1 The Shadow of the Betrayer",
+   "act": "I",
+   "nameKey": "ES1_SHADOW_NAME",
+   "descKey": "ES1_SHADOW_DESC",
+   "coords": [
+    399.0,
+    257.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {}
+  },
+  {
+   "id": "A2SE01_JUST_DESSERTS",
+   "name": "A2SE01 Just Desserts",
+   "act": "II",
+   "nameKey": "A2SE01_JUST_DESSERTS_NAME",
+   "descKey": "A2SE01_JUST_DESSERTS_DESC",
+   "coords": [
+    232.7,
+    389.4
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 4
+   }
+  },
+  {
+   "id": "A2SE02_JUST_US",
+   "name": "A2SE02 Just Us",
+   "act": "II",
+   "nameKey": "A2SE02_JUST_US_NAME",
+   "descKey": "A2SE02_JUST_US_DESC",
+   "coords": [
+    232.7,
+    389.4
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 4
+   }
+  },
+  {
+   "id": "A2SE03_WAKING_WORLD",
+   "name": "A2SE03 The Waking World",
+   "act": "II",
+   "nameKey": "A2SE03_WAKING_WORLD_NAME",
+   "descKey": "A2SE03_WAKING_WORLD_DESC",
+   "coords": [
+    454.0,
+    8.7
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 8,
+    "afterCityEvents": [
+     "A2_S06_MONSTERS_BALL"
+    ]
+   }
+  },
+  {
+   "id": "A2SE04_COULD_BE_HEROES",
+   "name": "A2SE04 We Could Be Heroes",
+   "act": "II",
+   "nameKey": "A2SE04_COULD_BE_HEROES_NAME",
+   "descKey": "A2SE04_COULD_BE_HEROES_DESC",
+   "coords": [
+    -136.4,
+    -181.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "afterNarrative": [
+     "A2SE11_ANOTHER_ROUND"
+    ],
+    "afterCityEvents": [
+     "A2_S05_DRAGONSBANE"
+    ]
+   }
+  },
+  {
+   "id": "A2SE05_NEW_FIELD_OF_STUDY",
+   "name": "A2SE05 New Field of Study",
+   "act": "II",
+   "nameKey": "A2SE05_NEW_FIELD_OF_STUDY_NAME",
+   "descKey": "A2SE05_NEW_FIELD_OF_STUDY_DESC",
+   "coords": [
+    -468.0,
+    256.5
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "afterCityEvents": [
+     "A2_S06_MONSTERS_BALL"
+    ]
+   }
+  },
+  {
+   "id": "A2SE06_UNRAVELING",
+   "name": "A2SE06 The Unraveling",
+   "act": "II",
+   "nameKey": "A2SE06_UNRAVELING_NAME",
+   "descKey": "A2SE06_UNRAVELING_DESC",
+   "coords": [
+    53.1,
+    106.2
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 9
+   }
+  },
+  {
+   "id": "S2SE10_AFTER_THE_FLAMES",
+   "name": "A2SE10 After the Flames",
+   "act": "II",
+   "nameKey": "A2SE10_AFTER_THE_FLAMES_NAME",
+   "descKey": "A2SE10_AFTER_THE_FLAMES_DESC",
+   "coords": [
+    -592.1,
+    -14.2
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "questsThisAct": 3
+   }
+  },
+  {
+   "id": "A2SE11_ANOTHER_ROUND",
+   "name": "A2SE11 Another Round",
+   "act": "II",
+   "nameKey": "A2SE11_ANOTHER_ROUND_NAME",
+   "descKey": "A2SE11_ANOTHER_ROUND_DESC",
+   "coords": [
+    -227.1,
+    -177.3
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "questsThisAct": 6
+   }
+  },
+  {
+   "id": "A2SE12_MY_SHADOW",
+   "name": "A2SE12 My Shadow",
+   "act": "II",
+   "nameKey": "A2SE12_MY_SHADOW_NAME",
+   "descKey": "A2SE12_MY_SHADOW_DESC",
+   "coords": [
+    -400.9,
+    393.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "questsThisAct": 7,
+    "afterQuests": [
+     "ACT2_QUEST_4"
+    ]
+   }
+  },
+  {
+   "id": "A2SE14_HAUNTED_WOODS",
+   "name": "A2SE14 The Haunted Woods",
+   "act": "II",
+   "nameKey": "A2SE14_HAUNTED_WOODS_NAME",
+   "descKey": "A2SE14_HAUNTED_WOODS_DESC",
+   "coords": [
+    -179.7,
+    255.3
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 3
+   }
+  },
+  {
+   "id": "A2SE15_HAUNTED_SMITHY",
+   "name": "A2SE15 Haunted Smithy",
+   "act": "II",
+   "nameKey": "A2SE15_HAUNTED_SMITH_NAME",
+   "descKey": "A2SE15_HAUNTED_SMITH_DESC",
+   "coords": [
+    -691.6,
+    -210.5
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 4
+   }
+  },
+  {
+   "id": "A2SE16_SPIRITS_EVENTIDE",
+   "name": "A2SE16 Spirits of Eventide",
+   "act": "II",
+   "nameKey": "A2SE16_SPIRITS_EVENTIDE_NAME",
+   "descKey": "A2SE16_SPIRITS_EVENTIDE_DESC",
+   "coords": [
+    -695.9,
+    -192.5
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 7,
+    "afterNarrative": [
+     "A2SE14_HAUNTED_WOODS",
+     "A2SE15_HAUNTED_SMITHY"
+    ]
+   }
+  },
+  {
+   "id": "A2SE17_BOAR_TAMALIR",
+   "name": "A2SE17 Boar of Tamalir",
+   "act": "II",
+   "nameKey": "A2SE17_BOAR_TAMALIR_NAME",
+   "descKey": "A2SE17_BOAR_TAMALIR_DESC",
+   "coords": [
+    183.7,
+    228.3
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 2
+   }
+  },
+  {
+   "id": "A2SE17A_BOAR_TAMALIR",
+   "name": "A2SE17A Return to Arden",
+   "act": "II",
+   "nameKey": "A2SE17A_BOAR_TAMALIR_NAME",
+   "descKey": "A2SE17A_BOAR_TAMALIR_DESC",
+   "coords": [
+    183.7,
+    228.3
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 1,
+    "afterNarrative": [
+     "A2SE17_BOAR_TAMALIR"
+    ]
+   }
+  },
+  {
+   "id": "A2SE18_IRONMONGER",
+   "name": "A2SE18 Ironmongery",
+   "act": "II",
+   "nameKey": "A2SE18_IRONMONGER_NAME",
+   "descKey": "A2SE18_IRONMONGER_DESC",
+   "coords": [
+    539.2,
+    361.1
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 4,
+    "afterNarrative": [
+     "A2SE17_BOAR_TAMALIR"
+    ]
+   }
+  },
+  {
+   "id": "A2SE19_MURDER_ROAD",
+   "name": "A2SE19 Murder on the Road",
+   "act": "II",
+   "nameKey": "A2SE19_MURDER_ROAD_NAME",
+   "descKey": "A2SE19_MURDER_ROAD_DESC",
+   "coords": [
+    459.1,
+    304.5
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 6,
+    "afterNarrative": [
+     "A2SE18_IRONMONGER"
+    ]
+   }
+  },
+  {
+   "id": "A2SE20_BURNING_HAND",
+   "name": "A2SE20The Burning Hand",
+   "act": "II",
+   "nameKey": "A2SE20_BURNING_HAND_NAME",
+   "descKey": "A2SE20_BURNING_HAND_DESC",
+   "coords": [
+    618.4,
+    -303.6
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 9
+   }
+  },
+  {
+   "id": "A2SE21_HYDRA_SHARD",
+   "name": "A2SE21 The Hydra Shard",
+   "act": "II",
+   "nameKey": "A2SE21_HYDRA_SHARD_NAME",
+   "descKey": "A2SE21_HYDRA_SHARD_DESC",
+   "coords": [
+    -430.0,
+    -152.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "questsThisAct": 7
+   }
+  },
+  {
+   "id": "A2SE23_TRAINING_DAY",
+   "name": "A2SE23 Training Day",
+   "act": "II",
+   "nameKey": "A2SE23_TRAINING_DAY_NAME",
+   "descKey": "A2SE23_TRAINING_DAY_DESC",
+   "coords": [
+    -621.3,
+    47.5
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "questsThisAct": 8,
+    "afterQuests": [
+     "ACT2_QUEST_4"
+    ]
+   }
+  },
+  {
+   "id": "SS07_DEATH_AND_BETRAYAL",
+   "name": "A2SS07 Death and Betrayal",
+   "act": "II",
+   "nameKey": "A2SS07_DEATH_BETRAYAL_NAME",
+   "descKey": "A2SS07_DEATH_BETRAYAL_DESC",
+   "coords": [
+    310.7,
+    -145.2
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "afterQuests": [
+     "ACT2_QUEST_10"
+    ]
+   }
+  },
+  {
+   "id": "ACT_2_DEBUG",
+   "name": "Act 2 Debug error fix",
+   "act": "II",
+   "nameKey": "Chapter 2 Quest Fix",
+   "descKey": "If there are no quests or events on the map after the \"Lords and Loyalists\" event, use this node to spawn the quests that should have appeared.",
+   "coords": [
+    -482.6,
+    124.0
+   ],
+   "hasArrivalDT": true,
+   "spawn": {
+    "auto": true,
+    "afterCityEvents": [
+     "A2_S03_LORDS_LOYALISTS"
+    ]
+   }
+  }
+ ],
+ "cityEvents": [
+  {
+   "id": "CITY_EVENT_8",
+   "name": "Act 2 Transfer",
+   "act": "I",
+   "titleKey": "CITY_EVENT_NAME_A1C08",
+   "spawn": {}
+  },
+  {
+   "id": "CITY_EVENT_7",
+   "name": "Dragon Eggs",
+   "act": "I",
+   "titleKey": "CITY_EVENT_NAME_A1C07",
+   "spawn": {}
+  },
+  {
+   "id": "CITY_EVENT_0",
+   "name": "E_C1_0 Chance Armor",
+   "act": "I",
+   "titleKey": "CITY_EVENT_NAME_A1C00",
+   "spawn": {}
+  },
+  {
+   "id": "CITY_EVENT_4",
+   "name": "E_C1_1 Kehli Recipes",
+   "act": "I",
+   "titleKey": "CITY_EVENT_NAME_A1C04",
+   "spawn": {}
+  },
+  {
+   "id": "CITY_EVENT_1",
+   "name": "E_C2_0 (Transition)",
+   "act": "I",
+   "titleKey": "CITY_EVENT_NAME_A1C01",
+   "spawn": {}
+  },
+  {
+   "id": "CITY_EVENT_2",
+   "name": "E_C3_0",
+   "act": "I",
+   "titleKey": "CITY_EVENT_NAME_A1C02",
+   "spawn": {}
+  },
+  {
+   "id": "CITY_EVENT_5",
+   "name": "Pre Finale",
+   "act": "I",
+   "titleKey": "CITY_EVENT_NAME_A1C05",
+   "spawn": {}
+  },
+  {
+   "id": "CITY_EVENT_6",
+   "name": "Pre Quest 9",
+   "act": "I",
+   "titleKey": "CITY_EVENT_NAME_A1C06",
+   "spawn": {}
+  },
+  {
+   "id": "A2_S01_CITADEL",
+   "name": "A2S01 The Citadel",
+   "act": "II",
+   "titleKey": "CITY_EVENT_NAMEA2S01",
+   "spawn": {
+    "auto": true,
+    "afterQuests": [
+     "ACT2_QUEST_1"
+    ]
+   }
+  },
+  {
+   "id": "A2_S02_ELDER_BRIDGE",
+   "name": "A2S02 The Elder Bridge",
+   "act": "II",
+   "titleKey": "CITY_EVENT_NAMEA2S02",
+   "spawn": {
+    "auto": true,
+    "afterQuests": [
+     "ACT2_QUEST_2",
+     "ACT2_QUEST_3"
+    ]
+   }
+  },
+  {
+   "id": "A2_S03_LORDS_LOYALISTS",
+   "name": "A2S03 Lords and Loyalists",
+   "act": "II",
+   "titleKey": "CITY_EVENT_NAMEA2S03",
+   "spawn": {
+    "auto": true,
+    "afterQuests": [
+     "ACT2_QUEST_4"
+    ]
+   }
+  },
+  {
+   "id": "A2_S04_DRAGON_QUEEN",
+   "name": "A2S04 The Dragon Queen",
+   "act": "II",
+   "titleKey": "CITY_EVENT_NAMEA2S04",
+   "spawn": {
+    "auto": true,
+    "afterQuests": [
+     "ACT2_QUEST_5"
+    ]
+   }
+  },
+  {
+   "id": "A2_S05_DRAGONSBANE",
+   "name": "A2S05 Dragonsbane",
+   "act": "II",
+   "titleKey": "CITY_EVENT_NAMEA2S05",
+   "spawn": {
+    "auto": true,
+    "afterQuests": [
+     "ACT2_QUEST_6",
+     "ACT2_QUEST_7"
+    ]
+   }
+  },
+  {
+   "id": "A2_S06_MONSTERS_BALL",
+   "name": "A2S06 Monsters Ball",
+   "act": "II",
+   "titleKey": "CITY_EVENT_NAMEA2S06",
+   "spawn": {
+    "auto": true,
+    "afterQuests": [
+     "ACT2_QUEST_8",
+     "ACT2_QUEST_9"
+    ]
+   }
+  },
+  {
+   "id": "A2_S07_DEATH_BETRAYAL",
+   "name": "A2S07 Death and Betrayal (OLD)",
+   "act": "II",
+   "titleKey": "",
+   "spawn": {
+    "afterQuests": [
+     "ACT2_QUEST_10"
+    ]
+   }
+  },
+  {
+   "id": "A2SE13_NIGHT_TERRORS",
+   "name": "A2SE13 Night Terrors",
+   "act": "II",
+   "titleKey": "CITY_EVENT_NAME_A2SE13",
+   "spawn": {
+    "questsThisAct": 5
+   }
+  },
+  {
+   "id": "A2SE22_LAST_SECRET",
+   "name": "A2SE22 Timmorrans Last Secret",
+   "act": "II",
+   "titleKey": "CITY_EVENT_NAME_A2SE22",
+   "spawn": {
+    "questsThisAct": 4
+   }
+  }
+ ],
+ "travelEvents": [
+  {
+   "id": "TEST_TRAVEL_EVENT10",
+   "name": "TestTravelEvent 10",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT1",
+   "name": "TestTravelEvent 1",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT2",
+   "name": "TestTravelEvent 2",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT3",
+   "name": "TestTravelEvent 3",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT4",
+   "name": "TestTravelEvent 4",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT5",
+   "name": "TestTravelEvent 5",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT6",
+   "name": "TestTravelEvent 6",
+   "act": "I",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT7",
+   "name": "TestTravelEvent 7",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT8",
+   "name": "TestTravelEvent 8",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT9",
+   "name": "TestTravelEvent 9",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT11",
+   "name": "TestTravelEvent 11",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT12",
+   "name": "TestTravelEvent 12",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT13",
+   "name": "TestTravelEvent 13",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_GALADEN",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT14",
+   "name": "TestTravelEvent 14",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT15",
+   "name": "TestTravelEvent 15",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_BRYNN",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT16",
+   "name": "TestTravelEvent 16",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT17",
+   "name": "TestTravelEvent 17",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT18",
+   "name": "TestTravelEvent 18",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_SYRUS",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT19",
+   "name": "TestTravelEvent 19",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT20",
+   "name": "TestTravelEvent 20",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_VAERIX",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT21",
+   "name": "TestTravelEvent 21",
+   "act": "I",
+   "traits": [
+    "water"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT22",
+   "name": "TestTravelEvent 22",
+   "act": "I",
+   "traits": [
+    "water"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT23",
+   "name": "TestTravelEvent 23",
+   "act": "I",
+   "traits": [
+    "water"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT24",
+   "name": "TestTravelEvent 24",
+   "act": "I",
+   "traits": [
+    "elevation"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT25",
+   "name": "TestTravelEvent 25",
+   "act": "I",
+   "traits": [
+    "elevation"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT26",
+   "name": "TestTravelEvent 26",
+   "act": "I",
+   "traits": [
+    "elevation"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT27",
+   "name": "TestTravelEvent 27",
+   "act": "I",
+   "traits": [
+    "forest"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT28",
+   "name": "TestTravelEvent 28",
+   "act": "I",
+   "traits": [
+    "forest"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT29",
+   "name": "TestTravelEvent 29",
+   "act": "I",
+   "traits": [
+    "forest"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT30",
+   "name": "TestTravelEvent 30",
+   "act": "I",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT31",
+   "name": "TestTravelEvent 31",
+   "act": "I",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT32",
+   "name": "TestTravelEvent 32",
+   "act": "I",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT33",
+   "name": "TestTravelEvent 33",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT34",
+   "name": "TestTravelEvent 34",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT35",
+   "name": "TestTravelEvent 35",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_CHANCE",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT36",
+   "name": "TestTravelEvent 36",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_KEHLI",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT37",
+   "name": "TestTravelEvent 37",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT38",
+   "name": "TestTravelEvent 38",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_CHANCE",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT39",
+   "name": "TestTravelEvent 39",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_GALADEN",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT40",
+   "name": "TestTravelEvent 40",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT41",
+   "name": "TestTravelEvent 41",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT42",
+   "name": "TestTravelEvent 42",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT43",
+   "name": "TestTravelEvent 43",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_BRYNN",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT45",
+   "name": "TestTravelEvent 45",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_CHANCE",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT47",
+   "name": "TestTravelEvent 47",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_GALADEN",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT49",
+   "name": "TestTravelEvent 49",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_KEHLI",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT51",
+   "name": "TestTravelEvent 51",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_SYRUS",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT53",
+   "name": "TestTravelEvent 53",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_VAERIX",
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT55",
+   "name": "TestTravelEvent 55",
+   "act": "I",
+   "traits": [
+    "uthuk"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT56",
+   "name": "TestTravelEvent 56",
+   "act": "I",
+   "traits": [
+    "waiqar"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT57",
+   "name": "TestTravelEvent 57",
+   "act": "I",
+   "traits": [
+    "waiqar"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT58",
+   "name": "TestTravelEvent 58",
+   "act": "I",
+   "traits": [
+    "waiqar"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT59",
+   "name": "TestTravelEvent 59",
+   "act": "I",
+   "traits": [
+    "dragon"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT60",
+   "name": "TestTravelEvent 60",
+   "act": "I",
+   "traits": [
+    "dragon"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT61",
+   "name": "TestTravelEvent 61",
+   "act": "I",
+   "traits": [
+    "dragon"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT62",
+   "name": "TestTravelEvent 62",
+   "act": "I",
+   "traits": [
+    "uthuk"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT63",
+   "name": "TestTravelEvent 63",
+   "act": "I",
+   "traits": [
+    "uthuk"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TEST_TRAVEL_EVENT64",
+   "name": "TestTravelEvent 64",
+   "act": "I",
+   "traits": [
+    "uthuk"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_UNDYING_SKULL",
+   "name": "Travel Undying Skull",
+   "act": "I",
+   "traits": [
+    "forest"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "VIRTUE_TRAVEL_EVENT_BRYNN_1",
+   "name": "VirtueTravelEvent Brynn 1",
+   "act": "I",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_BRYNN",
+   "afterEvents": []
+  },
+  {
+   "id": "VIRTUE_TRAVEL_EVENT_CHANCE_1",
+   "name": "VirtueTravelEvent Chance 1",
+   "act": "I",
+   "traits": [
+    "forest"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_CHANCE",
+   "afterEvents": []
+  },
+  {
+   "id": "VIRTUE_TRAVEL_EVENT_GALADEN_1",
+   "name": "VirtueTravelEvent Galaden 1",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_GALADEN",
+   "afterEvents": []
+  },
+  {
+   "id": "VIRTUE_TRAVEL_EVENT_KEHLI_1",
+   "name": "VirtueTravelEvent Kehli 1",
+   "act": "I",
+   "traits": [
+    "uthuk"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_KEHLI",
+   "afterEvents": []
+  },
+  {
+   "id": "VIRTUE_TRAVEL_EVENT_SYRUS_1",
+   "name": "VirtueTravelEvent Syrus 1",
+   "act": "I",
+   "traits": [
+    "none"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_SYRUS",
+   "afterEvents": []
+  },
+  {
+   "id": "VIRTUE_TRAVEL_EVENT_VAERIX_1",
+   "name": "VirtueTravelEvent Vaerix 1",
+   "act": "I",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_VAERIX",
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_01",
+   "name": "Act 2 Travel Event 1",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_BRYNN",
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_10",
+   "name": "Act 2 Travel Event 10",
+   "act": "II",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_KEHLI",
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_11",
+   "name": "Act 2 Travel Event 11",
+   "act": "II",
+   "traits": [
+    "forest"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_KEHLI",
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_13",
+   "name": "Act 2 Travel Event 13",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_SYRUS",
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_14",
+   "name": "Act 2 Travel Event 14",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_SYRUS",
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_16",
+   "name": "Act 2 Travel Event 16",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_VAERIX",
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_17",
+   "name": "Act 2 Travel Event 17",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_VAERIX",
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_19",
+   "name": "Act 2 Travel Event 19",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_02",
+   "name": "Act 2 Travel Event 2",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_BRYNN",
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_20",
+   "name": "Act 2 Travel Event 20",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_21",
+   "name": "Act 2 Travel Event 21",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_22",
+   "name": "Act 2 Travel Event 22",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_23",
+   "name": "Act 2 Travel Event 23",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_24",
+   "name": "Act 2 Travel Event 24",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_25",
+   "name": "Act 2 Travel Event 25",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_26",
+   "name": "Act 2 Travel Event 26",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_27",
+   "name": "Act 2 Travel Event 27",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_28",
+   "name": "Act 2 Travel Event 28",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_29",
+   "name": "Act 2 Travel Event 29",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_30",
+   "name": "Act 2 Travel Event 30",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_31",
+   "name": "Act 2 Travel Event 31",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_32",
+   "name": "Act 2 Travel Event 32",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_33",
+   "name": "Act 2 Travel Event 33",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_34",
+   "name": "Act 2 Travel Event 34",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_35",
+   "name": "Act 2 Travel Event 35",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_36",
+   "name": "Act 2 Travel Event 36",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_37",
+   "name": "Act 2 Travel Event 37",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_38",
+   "name": "Act 2 Travel Event 38",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_39",
+   "name": "Act 2 Travel Event 39",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_04",
+   "name": "Act 2 Travel Event 4",
+   "act": "II",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": "HERO_CHANCE",
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_40",
+   "name": "Act 2 Travel Event 40",
+   "act": "II",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_41",
+   "name": "Act 2 Travel Event 41",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_42",
+   "name": "Act 2 Travel Event 42",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_43",
+   "name": "Act 2 Travel Event 43",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_44",
+   "name": "Act 2 Travel Event 44",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_45",
+   "name": "Act 2 Travel Event 45",
+   "act": "II",
+   "traits": [
+    "forest"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_46",
+   "name": "Act 2 Travel Event 46",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_47",
+   "name": "Act 2 Travel Event 47",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_48",
+   "name": "Act 2 Travel Event 48",
+   "act": "II",
+   "traits": [
+    "elevation"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_49",
+   "name": "Act 2 Travel Event 49",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_05",
+   "name": "Act 2 Travel Event 5",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_CHANCE",
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_50",
+   "name": "Act 2 Travel Event 50",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_51",
+   "name": "Act 2 Travel Event 51",
+   "act": "II",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_52",
+   "name": "Act 2 Travel Event 52",
+   "act": "II",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_53",
+   "name": "Act 2 Travel Event 53",
+   "act": "II",
+   "traits": [
+    "forest"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_54",
+   "name": "Act 2 Travel Event 54",
+   "act": "II",
+   "traits": [
+    "elevation"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_55",
+   "name": "Act 2 Travel Event 55",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_56",
+   "name": "Act 2 Travel Event 56",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_57",
+   "name": "Act 2 Travel Event 57",
+   "act": "II",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_58",
+   "name": "Act 2 Travel Event 58",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_59",
+   "name": "Act 2 Travel Event 59",
+   "act": "II",
+   "traits": [
+    "civilized"
+   ],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_60",
+   "name": "Act 2 Travel Event 60",
+   "act": "II",
+   "traits": [],
+   "passive": false,
+   "prequest": false,
+   "requiredHero": null,
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_07",
+   "name": "Act 2 Travel Event 7",
+   "act": "II",
+   "traits": [
+    "forest"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_GALADEN",
+   "afterEvents": []
+  },
+  {
+   "id": "TRAVEL_EVENT_A2_08",
+   "name": "Act 2 Travel Event 8",
+   "act": "II",
+   "traits": [
+    "forest"
+   ],
+   "passive": false,
+   "prequest": true,
+   "requiredHero": "HERO_GALADEN",
+   "afterEvents": []
+  }
+ ],
+ "characters": [
+  {
+   "id": "STORY_CHARACTER_NEW",
+   "name": "NEW",
+   "act": "II",
+   "nameKey": "NPC_NEW_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/_NEW/NEW_Dialogue.png"
+   },
+   "size": [
+    1056.0,
+    964.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_ALYS",
+   "name": "AlysRaine",
+   "act": "II",
+   "nameKey": "NPC_NAME_ALYS",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/AlysRaine/AlysRaine_Dialogue.png"
+   },
+   "size": [
+    898.0,
+    784.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_ARDEN",
+   "name": "Arden",
+   "act": "II",
+   "nameKey": "NPC_NAME_ARDEN",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Arden/Arden_Dialogue.png"
+   },
+   "size": [
+    753.0,
+    810.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_ASTARRA",
+   "name": "Astarra",
+   "act": "I",
+   "nameKey": "NPC_ASTARRA_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Astarra/Astarra_Dialogue.png"
+   },
+   "size": [
+    1092.0,
+    879.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_BARONESS_ADELYNN",
+   "name": "BaronessAdelynn",
+   "act": "I",
+   "nameKey": "NPC_BARONESS_ADELYNN_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/BaronessAdelynn/BaronessAdelynn_Dialogue.png"
+   },
+   "size": [
+    863.0,
+    865.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_GRACE",
+   "name": "BaronessGrace",
+   "act": "II",
+   "nameKey": "NPC_NAME_GRACE",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/BaronessGrace/BaronessGrace_Dialogue.png"
+   },
+   "size": [
+    634.0,
+    836.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_BARONESSMAGRIT",
+   "name": "BaronessMagrit",
+   "act": "I",
+   "nameKey": "NPC_BARONESSMAGRIT_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/BaronessMagrit/BaronessMagrit_Dialogue.png"
+   },
+   "size": [
+    748.0,
+    898.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_PRYOR",
+   "name": "BaronessPryor",
+   "act": "II",
+   "nameKey": "NPC_NAME_PRYOR",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/BaronessPryor/BaronessPryor_Dialogue.png"
+   },
+   "size": [
+    605.0,
+    793.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_GILLIAM",
+   "name": "BaronGilliam",
+   "act": "II",
+   "nameKey": "NPC_NAME_GILLIAM",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/BaronGilliam/BaronGilliam_Dialogue.png"
+   },
+   "size": [
+    449.0,
+    808.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_GILLIAM_EVIL",
+   "name": "BaronGilliamEvil",
+   "act": "II",
+   "nameKey": "NPC_NAME_GILLIAM",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/BaronGilliamEvil/BaronGilliamEvil_Dialogue.png"
+   },
+   "size": [
+    449.0,
+    808.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_GREIGORY",
+   "name": "BaronGreigory",
+   "act": "II",
+   "nameKey": "NPC_NAME_GREIGORY",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/BaronGreigory/BaronGreigory_Dialogue.png"
+   },
+   "size": [
+    694.0,
+    834.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_TREVALYN",
+   "name": "BaronTrevalyn",
+   "act": "II",
+   "nameKey": "NPC_NAME_TREVALYN",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/BaronTrevalyn/BaronTrevalyn_Dialogue.png"
+   },
+   "size": [
+    733.0,
+    828.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_BARONZACHARETH",
+   "name": "BaronZachareth",
+   "act": "I",
+   "nameKey": "NPC_BARON_ZACHARETH_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/BaronZachareth/BaronZachareth_Dialogue.png"
+   },
+   "size": [
+    887.0,
+    888.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_BLOOD_SISTER",
+   "name": "BloodSister",
+   "act": "I",
+   "nameKey": "NPC_NEKRUL_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/BloodSister/BloodSister_Dialogue.png"
+   },
+   "size": [
+    830.0,
+    974.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_BRYNN",
+   "name": "Brynn",
+   "act": "I",
+   "nameKey": "HERO_BRYNN_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "d3/Story Characters/Brynn/ActI/Brynn_Dialogue.png",
+    "actI": "d3/Story Characters/Brynn/ActI/Brynn_Dialogue.png",
+    "actII": "d3/Story Characters/Brynn/ActII/Brynn_Dialogue.png"
+   },
+   "size": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_BUTTON",
+   "name": "Button",
+   "act": "II",
+   "nameKey": "NPC_NAME_BUTTON",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Button/Button_Dialogue.png"
+   },
+   "size": [
+    563.0,
+    815.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_CAPTRAND",
+   "name": "CAPTRand",
+   "act": "II",
+   "nameKey": "NPC_NAME_CAPTRAND",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/CAPTRand/CAPTRand_Dialogue.png"
+   },
+   "size": [
+    677.0,
+    890.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_CHANCE",
+   "name": "Chance",
+   "act": "I",
+   "nameKey": "HERO_CHANCE_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "d3/Story Characters/Chance/ActI/Chance_Dialogue.png",
+    "actI": "d3/Story Characters/Chance/ActI/Chance_Dialogue.png",
+    "actII": "d3/Story Characters/Chance/ActII/Chance_Dialogue.png"
+   },
+   "size": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_CHANCE_SHADOW",
+   "name": "ChancesShadow",
+   "act": "II",
+   "nameKey": "NPC_NAME_SHADOW",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Chance's Shadow/ChancesShadow_Dialogue.png"
+   },
+   "size": [
+    836.0,
+    827.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_COUNTESSDUCARD",
+   "name": "CountessDucard",
+   "act": "I",
+   "nameKey": "NPC_COUNTESSDUCARD_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/CountessDucard/CountessDucard_Dialogue.png"
+   },
+   "size": [
+    554.0,
+    906.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_RENEYR",
+   "name": "CountReneyr",
+   "act": "II",
+   "nameKey": "NPC_NAME_RENEYR",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/CountReneyr/CountReneyr_Dialogue.png"
+   },
+   "size": [
+    511.0,
+    840.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_DELPHYNDRA",
+   "name": "Delphyndra",
+   "act": "II",
+   "nameKey": "NPC_NAME_DELPHYNDRA",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Delphyndra/Delphyndra_Dialogue.png"
+   },
+   "size": [
+    861.0,
+    884.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_DRAGON_HYBRID",
+   "name": "DragonHybrid",
+   "act": "I",
+   "nameKey": "NPC_XENITH_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/DragonHybrid/DragonHybrid_Dialogue.png"
+   },
+   "size": [
+    1322.0,
+    1087.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_ELDERMOK",
+   "name": "ElderMok",
+   "act": "I",
+   "nameKey": "NPC_ELDERMOK_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/ElderMok/ElderMok_Dialogue.png"
+   },
+   "size": [
+    976.0,
+    1046.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_GALADEN",
+   "name": "Galaden",
+   "act": "I",
+   "nameKey": "HERO_GALADEN_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "d3/Story Characters/Galaden/ActI/Galaden_Dialogue.png",
+    "actI": "d3/Story Characters/Galaden/ActI/Galaden_Dialogue.png",
+    "actII": "d3/Story Characters/Galaden/ActII/Galaden_Dialogue.png"
+   },
+   "size": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_GREYSDON",
+   "name": "Greysdon",
+   "act": "I",
+   "nameKey": "NPC_GREYSDON_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Greysdon/Greysdon_Dialogue.png"
+   },
+   "size": [
+    981.0,
+    891.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_HERBIE",
+   "name": "Herbie",
+   "act": "I",
+   "nameKey": "NPC_HERBIE_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Herbie/Herbie_Dialogue.png"
+   },
+   "size": [
+    650.0,
+    870.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_KATHRYN",
+   "name": "Kathryn",
+   "act": "I",
+   "nameKey": "NPC_KATHRYN_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Kathryn/Kathryn_Dialogue.png"
+   },
+   "size": [
+    977.0,
+    962.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_KEHLI",
+   "name": "Kehli",
+   "act": "I",
+   "nameKey": "HERO_KEHLI_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "d3/Story Characters/Kehli/ActI/Kehli_Dialogue.png",
+    "actI": "d3/Story Characters/Kehli/ActI/Kehli_Dialogue.png",
+    "actII": "d3/Story Characters/Kehli/ActII/Kehli_Dialogue.png"
+   },
+   "size": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_LAUREL",
+   "name": "Laurel",
+   "act": "I",
+   "nameKey": "NPC_LAUREL_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Laurel/Laurel_Dialogue.png"
+   },
+   "size": [
+    898.0,
+    878.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_LEVIRAX",
+   "name": "Levirax",
+   "act": "I",
+   "nameKey": "NPC_LEVIRAX_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Levirax/Levirax_Dialogue.png"
+   },
+   "size": [
+    1273.0,
+    1199.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_LTRAND",
+   "name": "LTRand",
+   "act": "I",
+   "nameKey": "NPC_LTRAND_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/LTRand/LTRand_Dialogue.png"
+   },
+   "size": [
+    677.0,
+    890.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_MASTERBRULI",
+   "name": "MasterBruli",
+   "act": "I",
+   "nameKey": "NPC_MASTERBRULI_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/MasterBruli/MasterBruli_Dialogue.png"
+   },
+   "size": [
+    517.0,
+    706.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_MASTERFLINT",
+   "name": "MasterFlint",
+   "act": "I",
+   "nameKey": "NPC_MASTERFLINT_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/MasterFlint/MasterFlint_Dialogue.png"
+   },
+   "size": [
+    641.0,
+    664.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_MASTERGALGORAZ",
+   "name": "MasterGalgoraz",
+   "act": "I",
+   "nameKey": "NPC_MASTERGALGORAZ_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/MasterGalgoraz/MasterGalgoraz_Dialogue.png"
+   },
+   "size": [
+    860.0,
+    995.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_MEZA",
+   "name": "Meza",
+   "act": "II",
+   "nameKey": "NPC_NAME_MEZA",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Meza/Meza_Dialogue.png"
+   },
+   "size": [
+    1300.0,
+    1100.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_MORANT",
+   "name": "Morant",
+   "act": "II",
+   "nameKey": "NPC_NAME_MORANT",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Morant/Morant_Dialogue.png"
+   },
+   "size": [
+    773.0,
+    897.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_NARA",
+   "name": "NaraTheFang",
+   "act": "II",
+   "nameKey": "NPC_NAME_NARA",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/NaraTheFang/NaraTheFang_Dialogue.png"
+   },
+   "size": [
+    697.0,
+    878.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_NAVOTH",
+   "name": "Navoth",
+   "act": "II",
+   "nameKey": "NPC_NAME_NAVOTH",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Navoth/Navoth_Dialogue.png"
+   },
+   "size": [
+    886.0,
+    854.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_OUTLAWPRINCE",
+   "name": "OutlawPrince",
+   "act": "I",
+   "nameKey": "NPC_OUTLAWPRINCE_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/OutlawPrince/OutlawPrince_Dialogue.png"
+   },
+   "size": [
+    851.0,
+    915.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_SHADOW_RENEYR",
+   "name": "Reneyr's Shadow",
+   "act": "II",
+   "nameKey": "NPC_NAME_SHADOW",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Reneyr's Shadow/Reneyr's Shadow_Dialogue.png"
+   },
+   "size": [
+    568.0,
+    900.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_RONAN",
+   "name": "Ronan",
+   "act": "I",
+   "nameKey": "NPC_RONAN_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Ronan/Ronan_Dialogue.png"
+   },
+   "size": [
+    886.0,
+    991.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_SIRBALTHAIN",
+   "name": "SirBalthain",
+   "act": "I",
+   "nameKey": "NPC_SIRBALTHAIN_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/SirBalthain/SirBalthain_Dialogue.png"
+   },
+   "size": [
+    562.0,
+    941.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_SYRUS",
+   "name": "Syrus",
+   "act": "I",
+   "nameKey": "HERO_SYRUS_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "d3/Story Characters/Syrus/ActI/Syrus_Dialogue.png",
+    "actI": "d3/Story Characters/Syrus/ActI/Syrus_Dialogue.png",
+    "actII": "d3/Story Characters/Syrus/ActII/Syrus_Dialogue.png"
+   },
+   "size": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_TETHERYS",
+   "name": "Tetherys",
+   "act": "I",
+   "nameKey": "NPS_TETHERYS_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Tetherys/Tetherys_Dialogue.png"
+   },
+   "size": [
+    880.0,
+    808.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_VAERIX",
+   "name": "Vaerix",
+   "act": "I",
+   "nameKey": "HERO_VAERIX_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "d3/Story Characters/Vaerix/ActI/Vaerix_Dialogue.png",
+    "actI": "d3/Story Characters/Vaerix/ActI/Vaerix_Dialogue.png",
+    "actII": "d3/Story Characters/Vaerix/ActII/Vaerix_Dialogue.png"
+   },
+   "size": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_VARIABLE_HERO1",
+   "name": "VariableHero1",
+   "act": "I",
+   "nameKey": "",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Variable Characters/VariableHero1_Dialogue.png"
+   },
+   "size": [
+    1024.0,
+    1024.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_VARIABLE_HERO2",
+   "name": "VariableHero2",
+   "act": "I",
+   "nameKey": "",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Variable Characters/VariableHero2_Dialogue.png"
+   },
+   "size": [
+    1024.0,
+    1024.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_VARIABLE_HERO3",
+   "name": "VariableHero3",
+   "act": "I",
+   "nameKey": "",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Variable Characters/VariableHero3_Dialogue.png"
+   },
+   "size": [
+    1024.0,
+    1024.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_VARIABLE_HERO4",
+   "name": "VariableHero4",
+   "act": "I",
+   "nameKey": "",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Variable Characters/VariableHero4_Dialogue.png"
+   },
+   "size": [
+    1024.0,
+    1024.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_VETA",
+   "name": "Veta",
+   "act": "II",
+   "nameKey": "NPC_NAME_VETA",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Veta/Veta_Dialogue.png"
+   },
+   "size": [
+    840.0,
+    810.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_VRASKHAR",
+   "name": "Vraskhar",
+   "act": "II",
+   "nameKey": "NPC_NAME_VRASKHAR",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Vraskhar/Vraskhar_Dialogue.png"
+   },
+   "size": [
+    850.0,
+    837.0
+   ]
+  },
+  {
+   "id": "STORY_CHARACTER_WAIQAR",
+   "name": "Waiqar",
+   "act": "I",
+   "nameKey": "NPC_WAIQAR_NAME",
+   "bundle": "d3/storymessagecharacters",
+   "art": {
+    "default": "D3/Story Characters/Waiqar/Waiqar_Dialogue.png"
+   },
+   "size": [
+    1179.0,
+    1138.0
+   ]
+  }
+ ],
+ "map": {
+  "canvas": [
+   1600,
+   900
+  ],
+  "bounds": {
+   "minX": -737.0,
+   "maxX": 672.1,
+   "minY": -400.0,
+   "maxY": 393.0
+  },
+  "count": 75,
+  "note": "coordenadas = localPosition en el lienzo del mapa, origen al centro, Y hacia arriba"
+ },
+ "languages": [
+  "en",
+  "es",
+  "fr",
+  "de",
+  "it",
+  "pt",
+  "pl",
+  "hu",
+  "zh-CN",
+  "cs",
+  "ko",
+  "ru",
+  "zh-TW"
+ ],
+ "travelTraits": [
+  "none",
+  "civilized",
+  "elevation",
+  "forest",
+  "water",
+  "dragon",
+  "uthuk",
+  "waiqar"
+ ],
+ "acts": [
+  "I",
+  "II",
+  "III"
+ ]
+}
