@@ -59,4 +59,3 @@ it needs it.
 The logo and illustrations on this page were drawn for this project. The
 screenshots show the editor in use and, along with it, copyrighted game material
 that belongs to its owners.
->>>>>>> 91c42e2508fa7d5c4cb5bc91693376ac96c67ece
