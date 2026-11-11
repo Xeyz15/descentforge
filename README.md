@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 
-=======
 # DescentForge — Web
 
 DescentForge is a fan project for creating your own missions and campaigns for the
